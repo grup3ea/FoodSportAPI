@@ -1,0 +1,49 @@
+{
+  "name": "Foods-Sport",
+  "version": "0.0.1",
+  "description": "SERVER side",
+  "author": "Max",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": "https://github.com/grup3ea/Foods-Sports",
+  "contributors": [
+    {
+      "name": "Max",
+      "email": "max9@dr.com"
+    },
+    {
+      "name": "Arnau",
+      "email": "idoctnef@openmailbox.org"
+    },
+    {
+      "name": "Joan",
+      "email": "joanjerezt@gmail.com"
+    },
+    {
+      "name": "Sergi",
+      "email": "sergi.galceran@estudiant.upc.edu"
+    }
+  ],
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "bcryptjs": "*",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "express-session": "*",
+    "express-validator": "*",
+    "mongoose": "latest",
+    "mongoose-middleware": "",
+    "mongoose-unique-validator": "^1.0.2",
+    "morgan": "latest",
+    "serve-favicon": "~2.3.0",
+    "jwt-simple": "^0.3.1",
+    "jsonwebtoken": "latest",
+    "passport": "^0.3.0",
+    "passport-jwt": "^1.2.1",
+    "passport-http": "*",
+    "passport-local": "*"
+  }
+}
