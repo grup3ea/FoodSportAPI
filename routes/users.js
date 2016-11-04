@@ -11,6 +11,7 @@ var config = require('../config/config'); // get our config file
 app.set('superSecret', config.secret); // secret variable
 
 
+/*
 //GET - GET all users
 router.get('/users', function (req, res) {
     User.find(function (err, users) {
@@ -22,7 +23,6 @@ router.get('/users', function (req, res) {
 
 //GET - Get a single user
 router.get('/users/:name', function (req, res) {
-    console.log('GET user: '+req.params.name);
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
@@ -61,7 +61,6 @@ router.post('/login',  function (req, res) {
             var usuario = JSON.stringify(user);
             var pwd1 = JSON.stringify(req.body.password);
             if (pwd1 != 0) {
-                console.log ("Login Correcto");
                 return res.status(200).jsonp({"loginSuccessful": true, "user": user});
             }
             else {
@@ -70,13 +69,56 @@ router.post('/login',  function (req, res) {
         }
     });
 });
+*/
 
 router.get('/logout', function(req, res){
     req.logout();
-
-    req.flash('success_msg', 'You are logged out');
-
     res.redirect('/users/login');
 });
 
-module.exports = router;
+
+/*******************************************/
+
+// process the login form
+router.post('/login', passport.authenticate('local-login', {
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/login', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+}));
+
+// process the signup form
+router.post('/signup', passport.authenticate('local-signup', {
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/signup', // redirect back to the signup page if there is an error
+}));
+
+// =====================================
+// PROFILE SECTION =========================
+// =====================================
+// we will want this protected so you have to be logged in to visit
+// we will use route middleware to verify this (the isLoggedIn function)
+router.get('/profile', isLoggedIn, function(req, res) {
+    User.find({name: req.params.name}, function (err, user) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(user);
+    });
+});
+
+// =====================================
+// LOGOUT ==============================
+// =====================================
+router.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
+
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
+module.exports = router,passport;

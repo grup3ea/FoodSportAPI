@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var mongooseUniqueValidator = require('mongoose-unique-validator');
+var bcrypt   = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 
@@ -84,18 +85,13 @@ module.exports.createUser = function(newUser, callback){
     });
 };
 
-module.exports.getUserByUsername = function(username, callback){
-    var query = {username: username};
-    User.findOne(query, callback);
+// methods ======================
+// generating a hash
+userSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-module.exports.getUserById = function(id, callback){
-    User.findById(id, callback);
-};
-
-module.exports.comparePassword = function(candidatePassword, hash, callback){
-    bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
-        if(err) throw err;
-        callback(null, isMatch);
-    });
+// checking if password is valid
+userSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.local.password);
 };

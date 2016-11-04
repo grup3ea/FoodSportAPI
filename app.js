@@ -13,6 +13,7 @@ var users = require('./routes/users');
 /*Inicio Express*/
 var app = express();
 var server = require('http').Server(app);
+require('./config/passport')(passport); // pass passport for configuration
 
 
 // Express Session
