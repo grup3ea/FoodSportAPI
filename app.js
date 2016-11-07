@@ -6,7 +6,6 @@ var passport	     = require('passport');
 var jwt              = require('jwt-simple');
 var expressValidator = require('express-validator');
 var session          = require('express-session');
-var passport         = require('passport');
 
 var users = require('./routes/users');
 
@@ -39,9 +38,7 @@ app.use(passport.session());
 // Express Validator
 app.use(expressValidator({
     errorFormatter: function(param, msg, value) {
-        var namespace = param.split('.')
-            , root    = namespace.shift()
-            , formParam = root;
+        var namespace = param.split('.'), root = namespace.shift(), formParam = root;
 
         while(namespace.length) {
             formParam += '[' + namespace.shift() + ']';
