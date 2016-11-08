@@ -3,7 +3,6 @@ var mongooseUniqueValidator = require('mongoose-unique-validator');
 var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
-
 var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
@@ -87,11 +86,9 @@ var userSchema = new Schema({
     }]
 });
 
-userSchema.plugin(mongooseUniqueValidator);
-
 module.exports.createUser = function (newUser, callback) {
     bcrypt.genSalt(10, function (err, salt) {
-        if (err) err.message;
+        if (err) throw err;
         bcrypt.hash(newUser.password, salt, function (err, hash) {
             if (err) return err.message;
             newUser.password = hash;
@@ -122,5 +119,7 @@ userSchema.methods.hashPassword = function(password) {
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };
+
+userSchema.plugin(mongooseUniqueValidator);
 
 module.exports = mongoose.model('User', userSchema);

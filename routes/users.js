@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 var User = require('../models/user');
-var auth = require('./authtoken');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -13,7 +12,6 @@ app.set('superSecret', config.secret); // secret variable
 
 //POST - Add User in DB
 router.post('/register', function (req, res) {
-    var name = req.body.name;
 
     var user = new User({
         name: req.body.name,
@@ -55,6 +53,7 @@ router.post('/login', function (req, res) {
         }
     });
 });
+
 /**Logout & Invalidate Token so the user is really out**/
 router.get('/logout', function logout(req, res, callback) {
     // invalidate the token
@@ -85,7 +84,7 @@ router.get('/logout', function logout(req, res, callback) {
 /**Might be in bad position so it doesn't apply the protection of the desired route?**/
 router.use(function (req, res, next) {
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.params('token') || req.headers['x-access-token'];
+    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
     // decode token
     if (token) {
         // verifies secret and checks exp
@@ -108,37 +107,6 @@ router.use(function (req, res, next) {
     }
 });
 
-/*
-/!******************************************!/
-/!******Trying to Setup Passport Login******!/
-/!******************************************!/
-
-// process the login form
-router.post('/getin', passport.authenticate('local-login', {
-    successMessage: 'You are logged in',
-    failureMessage: 'Couldnt Login, Please contacte the Admin',
-    failureFlash: true // allow flash messages
-}));
-
-// process the signup form
-router.post('/signup', passport.authenticate('local-signup', {
-    successMessage: 'You are now registered',
-    failureMessage: 'Couldnt Register, Please contacte the Admin',
-}));
-
-// =====================================
-// PROFILE SECTION =========================
-// =====================================
-// we will want this protected so you have to be logged in to visit
-// we will use route middleware to verify this (the isLoggedIn function)
-router.get('/profile', isLoggedIn, function (req, res) {
-    User.find({name: req.params.name}, function (err, user) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(user);
-    });
-});
-*/
-
 //GET - GET all users has to be a protected route
 router.get('/users', isLoggedIn, function (req, res) {
     User.find(function (err, users) {
@@ -155,14 +123,6 @@ router.get('/users/profile', isLoggedIn, function (req, res) {
         res.status(200).jsonp(user);
     });
 });
-
-// =====================================
-// LOGOUT ==============================
-// =====================================
-router.get('/logout', function (req, res) {
-    req.logout();
-});
-
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
