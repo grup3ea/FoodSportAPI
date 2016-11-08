@@ -11,26 +11,6 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config/config'); // get our config file
 app.set('superSecret', config.secret); // secret variable
 
-
-//GET - GET all users has to be a protected route
-router.get('/users', function (req, res, authenticated) {
-    User.find(function (err, users) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(users);
-    });
-
-});
-
-//GET - Get a single user has to be a protected route
-router.get('/users/:name', function (req, res, authenticated) {
-    User.find({name: req.params.name}, function (err, user) {
-        if (err) res.send(500, err.message);
-        console.log(user);
-        res.status(200).jsonp(user);
-    });
-});
-
-
 //POST - Add User in DB
 router.post('/register', function (req, res) {
     var name = req.body.name;
@@ -84,9 +64,11 @@ router.get('/logout', function logout(req, res, callback) {
     if (decoded) { // otherwise someone can force the server to crash by sending a bad token!
         // asynchronously read and invalidate
         db.get(decoded.auth, function (err, record) {
+            if (err) throw err;
             var updated = JSON.parse(record);
             updated.valid = false;
             db.put(decoded.auth, updated, function (err) {
+                if (err) throw err;
                 // console.log('updated: ', updated)
                 res.writeHead(200, {'content-type': 'text/plain'});
                 res.end('Logged Out!');
@@ -158,7 +140,7 @@ router.get('/profile', isLoggedIn, function (req, res) {
 */
 
 //GET - GET all users has to be a protected route
-router.get('/users', isLoggedIn, function (req, res, authenticated) {
+router.get('/users', isLoggedIn, function (req, res) {
     User.find(function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
@@ -166,7 +148,7 @@ router.get('/users', isLoggedIn, function (req, res, authenticated) {
 });
 
 //GET - Get a single user has to be a protected route
-router.get('/users/profile', isLoggedIn, function (req, res, authenticated) {
+router.get('/users/profile', isLoggedIn, function (req, res) {
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);

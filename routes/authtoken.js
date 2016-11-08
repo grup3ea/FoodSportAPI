@@ -42,6 +42,7 @@ function generateAndStoreToken(req, opts) {
     };
 
     db.put(GUID, JSON.stringify(record), function (err) {
+        if (err) throw err;
         // console.log("record saved ", record);
     });
 
@@ -158,4 +159,4 @@ module.exports = {
     validate : validate,
     verify : verify,
     generateAndStoreToken: generateAndStoreToken
-}
+};

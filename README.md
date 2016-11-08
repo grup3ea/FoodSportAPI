@@ -1,6 +1,12 @@
 ##Project EA 2016-17 Group 3
 Combining Nutrition with Physical preparation this application acts as a hub between healthy food delivery, trainers and clients.
 
+[![bitHound Overall Score](https://www.bithound.io/github/grup3ea/FoodSportAPI/badges/score.svg)](https://www.bithound.io/github/grup3ea/FoodSportAPI)
+
+[![bitHound Dependencies](https://www.bithound.io/github/grup3ea/FoodSportAPI/badges/dependencies.svg)](https://www.bithound.io/github/grup3ea/FoodSportAPI/master/dependencies/npm)
+
+[![bitHound Code](https://www.bithound.io/github/grup3ea/FoodSportAPI/badges/code.svg)](https://www.bithound.io/github/grup3ea/FoodSportAPI)
+
 The technologies used are part of the MEAN 2.0:
  * MongoDB
  * NodeJS
