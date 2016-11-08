@@ -8,7 +8,8 @@ var expressValidator = require('express-validator');
 var session = require('express-session');
 
 var users = require('./routes/users');
-var fbapi = require('./routes/fbroutes');
+var app = express();
+var fbapi = require('./routes/fbroutes')(app, passport);
 var config = require('./config/config');
 
 /*Inicio Express*/
@@ -36,6 +37,7 @@ app.set('superSecret', config.secret);
 // Passport init
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 // Express Validator
 app.use(expressValidator({
@@ -74,8 +76,9 @@ app.use(function (req, res, next) {
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + config.port + '/api or /fbapi');
 });
+
 app.use('/api', users);
-app.use('fbapi',fbapi);
+//app.use('/fbapi',fbapi);
 
 /*Conexión a la base de datos de MongoDB que tenemos en local*/
 mongoose.Promise = global.Promise;

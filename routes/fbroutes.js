@@ -4,6 +4,7 @@ module.exports = function (app, passport) {
     // =====================================
 
     // process the login form
+
     app.post('/fblogin', passport.authenticate('local-login', {
         successMessage: 'You Logged with FB', // redirect to the secure profile section
         failureMessage: 'You couldn Log with FACE. This might be good', // redirect back to the signup page if there is an error

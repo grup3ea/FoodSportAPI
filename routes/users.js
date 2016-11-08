@@ -81,7 +81,7 @@ router.get('/logout', function logout(req, res, callback) {
 });
 
 /**Used to check if the Token is valid**/
-/**Might be in bad position so it doesn't apply the protection of the desired route?**/
+/**Everything after this is protected route**/
 router.use(function (req, res, next) {
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.param('token') || req.headers['x-access-token'];
@@ -108,7 +108,7 @@ router.use(function (req, res, next) {
 });
 
 //GET - GET all users has to be a protected route
-router.get('/users', isLoggedIn, function (req, res) {
+router.get('/users', function (req, res) {
     User.find(function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
@@ -116,20 +116,12 @@ router.get('/users', isLoggedIn, function (req, res) {
 });
 
 //GET - Get a single user has to be a protected route
-router.get('/users/profile', isLoggedIn, function (req, res) {
+router.get('/users/profile',  function (req, res) {
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
         res.status(200).jsonp(user);
     });
 });
-
-function isLoggedIn(req, res, next) {
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
 
 module.exports = router;
