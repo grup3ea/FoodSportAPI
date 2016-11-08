@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 var User = require('../models/user');
-var auth = require('./auth');
+var auth = require('./authtoken');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -10,7 +10,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config/config'); // get our config file
 app.set('superSecret', config.secret); // secret variable
-
 
 
 //GET - GET all users has to be a protected route
@@ -33,17 +32,17 @@ router.get('/users/:name', function (req, res, authenticated) {
 
 
 //POST - Add User in DB
-router.post('/register',  function (req, res) {
+router.post('/register', function (req, res) {
     var name = req.body.name;
 
     var user = new User({
-        name:       req.body.name,
-        role:       req.body.role,
-        password:   req.body.password,
-        email:      req.body.email
+        name: req.body.name,
+        role: req.body.role,
+        password: req.body.password,
+        email: req.body.email
     });
-    user.save(function(err, user) {
-        if(err) return res.status(500).send(err.message);
+    user.save(function (err, user) {
+        if (err) return res.status(500).send(err.message);
         res.status(200).jsonp(user);
     });
 });
@@ -76,17 +75,17 @@ router.post('/login', function (req, res) {
         }
     });
 });
- /**Logout & Invalidate Token so the user is really out**/
+/**Logout & Invalidate Token so the user is really out**/
 router.get('/logout', function logout(req, res, callback) {
     // invalidate the token
     var token = req.headers.authorization;
     // console.log(' >>> ', token)
     var decoded = verify(token);
-    if(decoded) { // otherwise someone can force the server to crash by sending a bad token!
+    if (decoded) { // otherwise someone can force the server to crash by sending a bad token!
         // asynchronously read and invalidate
-        db.get(decoded.auth, function(err, record){
-            var updated    = JSON.parse(record);
-            updated.valid  = false;
+        db.get(decoded.auth, function (err, record) {
+            var updated = JSON.parse(record);
+            updated.valid = false;
             db.put(decoded.auth, updated, function (err) {
                 // console.log('updated: ', updated)
                 res.writeHead(200, {'content-type': 'text/plain'});
@@ -102,15 +101,15 @@ router.get('/logout', function logout(req, res, callback) {
 
 /**Used to check if the Token is valid**/
 /**Might be in bad position so it doesn't apply the protection of the desired route?**/
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+    var token = req.body.token || req.params('token') || req.headers['x-access-token'];
     // decode token
     if (token) {
         // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
             if (err) {
-                return res.json({ success: false, message: 'Failed to authenticate token.' });
+                return res.json({success: false, message: 'Failed to authenticate token.'});
             } else {
                 // if everything is good, save to request for use in other routes
                 req.decoded = decoded;
@@ -127,21 +126,22 @@ router.use(function(req, res, next) {
     }
 });
 
-/******************************************/
-/******Trying to Setup Passport Login******/
-/******************************************/
+/*
+/!******************************************!/
+/!******Trying to Setup Passport Login******!/
+/!******************************************!/
 
 // process the login form
 router.post('/getin', passport.authenticate('local-login', {
-    successMessage : 'You are logged in',
-    failureMessage : 'Couldnt Login, Please contacte the Admin',
-    failureFlash : true // allow flash messages
+    successMessage: 'You are logged in',
+    failureMessage: 'Couldnt Login, Please contacte the Admin',
+    failureFlash: true // allow flash messages
 }));
 
 // process the signup form
 router.post('/signup', passport.authenticate('local-signup', {
-    successMessage : 'You are now registered',
-    failureMessage : 'Couldnt Register, Please contacte the Admin',
+    successMessage: 'You are now registered',
+    failureMessage: 'Couldnt Register, Please contacte the Admin',
 }));
 
 // =====================================
@@ -149,24 +149,24 @@ router.post('/signup', passport.authenticate('local-signup', {
 // =====================================
 // we will want this protected so you have to be logged in to visit
 // we will use route middleware to verify this (the isLoggedIn function)
-router.get('/profile', isLoggedIn, function(req, res) {
+router.get('/profile', isLoggedIn, function (req, res) {
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(user);
     });
 });
+*/
 
 //GET - GET all users has to be a protected route
-router.get('/users',isLoggedIn, function (req, res, authenticated) {
+router.get('/users', isLoggedIn, function (req, res, authenticated) {
     User.find(function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
     });
-
 });
 
 //GET - Get a single user has to be a protected route
-router.get('/users/profile',isLoggedIn, function (req, res, authenticated) {
+router.get('/users/profile', isLoggedIn, function (req, res, authenticated) {
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
@@ -177,7 +177,7 @@ router.get('/users/profile',isLoggedIn, function (req, res, authenticated) {
 // =====================================
 // LOGOUT ==============================
 // =====================================
-router.get('/logout', function(req, res) {
+router.get('/logout', function (req, res) {
     req.logout();
 });
 
