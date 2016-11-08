@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-var User = require('../models/user.js');
+var User = require('../models/user');
+var auth = require('./auth');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -11,9 +12,9 @@ var config = require('../config/config'); // get our config file
 app.set('superSecret', config.secret); // secret variable
 
 
-/*
-//GET - GET all users
-router.get('/users', function (req, res) {
+
+//GET - GET all users has to be a protected route
+router.get('/users', function (req, res, authenticated) {
     User.find(function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
@@ -21,14 +22,15 @@ router.get('/users', function (req, res) {
 
 });
 
-//GET - Get a single user
-router.get('/users/:name', function (req, res) {
+//GET - Get a single user has to be a protected route
+router.get('/users/:name', function (req, res, authenticated) {
     User.find({name: req.params.name}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
         res.status(200).jsonp(user);
     });
 });
+
 
 //POST - Add User in DB
 router.post('/register',  function (req, res) {
@@ -39,7 +41,6 @@ router.post('/register',  function (req, res) {
         role:       req.body.role,
         password:   req.body.password,
         email:      req.body.email
-        //token
     });
     user.save(function(err, user) {
         if(err) return res.status(500).send(err.message);
@@ -47,40 +48,96 @@ router.post('/register',  function (req, res) {
     });
 });
 
-
-//POST - Comprovar user en DB
-router.post('/login',  function (req, res) {
-
-    User.findOne({name:req.body.name},function(err, user) {
-        if (err) res.send(500, err.message);
-
-        else if (user==null){
-            return res.status(404).jsonp({"loginSuccessful": false, "email": req.body.name});
-        }
-        else{
-            var usuario = JSON.stringify(user);
-            var pwd1 = JSON.stringify(req.body.password);
-            if (pwd1 != 0) {
-                return res.status(200).jsonp({"loginSuccessful": true, "user": user});
-            }
-            else {
-                return res.status(404).jsonp({"loginSuccessful": false, "email": req.body.email});
+//Check if user is in DB and provide him with a token
+router.post('/login', function (req, res) {
+    // find the user
+    User.findOne({
+        name: req.body.name
+    }, function (err, user) {
+        if (err) throw err;
+        if (!user) {
+            res.json({success: false, message: 'Authentication failed. User not found.'});
+        } else if (user) {
+            // check if password matches
+            if (user.password != req.body.password) {
+                res.json({success: false, message: 'Authentication failed. Wrong password.'});
+            } else {
+                // if user is found and password is right
+                // create a token
+                var token = jwt.sign(user, app.get('superSecret'), {
+                    expiresIn: 86400 // expires in 24 hours
+                });
+                res.json({
+                    success: true,
+                    message: 'Enjoy your token!',
+                    token: token
+                });
             }
         }
     });
 });
-*/
 
-router.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/users/login');
+router.get('/logout', function logout(req, res, callback) {
+    // invalidate the token
+    var token = req.headers.authorization;
+    // console.log(' >>> ', token)
+    var decoded = verify(token);
+    if(decoded) { // otherwise someone can force the server to crash by sending a bad token!
+        // asynchronously read and invalidate
+        db.get(decoded.auth, function(err, record){
+            var updated    = JSON.parse(record);
+            updated.valid  = false;
+            db.put(decoded.auth, updated, function (err) {
+                // console.log('updated: ', updated)
+                res.writeHead(200, {'content-type': 'text/plain'});
+                res.end('Logged Out!');
+                return callback(res);
+            });
+        });
+    } else {
+        authFail(res, done);
+        return callback(res);
+    }
 });
 
+router.use(function(req, res, next) {
 
-/*******************************************/
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+
+        // verifies secret and checks exp
+        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+            if (err) {
+                return res.json({ success: false, message: 'Failed to authenticate token.' });
+            } else {
+                // if everything is good, save to request for use in other routes
+                req.decoded = decoded;
+                next();
+            }
+        });
+
+    } else {
+
+        // if there is no token
+        // return an error
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+
+    }
+
+});
+
+/******************************************/
+/******Trying to Setup Passport Login******/
+/******************************************/
 
 // process the login form
-router.post('/login', passport.authenticate('local-login', {
+router.post('/getin', passport.authenticate('local-login', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
