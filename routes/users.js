@@ -76,7 +76,7 @@ router.post('/login', function (req, res) {
         }
     });
 });
-
+ /**Logout & Invalidate Token so the user is really out**/
 router.get('/logout', function logout(req, res, callback) {
     // invalidate the token
     var token = req.headers.authorization;
@@ -100,14 +100,13 @@ router.get('/logout', function logout(req, res, callback) {
     }
 });
 
+/**Used to check if the Token is valid**/
+/**Might be in bad position so it doesn't apply the protection of the desired route?**/
 router.use(function(req, res, next) {
-
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.param('token') || req.headers['x-access-token'];
-
     // decode token
     if (token) {
-
         // verifies secret and checks exp
         jwt.verify(token, app.get('superSecret'), function(err, decoded) {
             if (err) {
@@ -118,18 +117,14 @@ router.use(function(req, res, next) {
                 next();
             }
         });
-
     } else {
-
         // if there is no token
         // return an error
         return res.status(403).send({
             success: false,
             message: 'No token provided.'
         });
-
     }
-
 });
 
 /******************************************/
@@ -138,15 +133,15 @@ router.use(function(req, res, next) {
 
 // process the login form
 router.post('/getin', passport.authenticate('local-login', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
+    successMessage : 'You are logged in',
+    failureMessage : 'Couldnt Login, Please contacte the Admin',
     failureFlash : true // allow flash messages
 }));
 
 // process the signup form
 router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/signup', // redirect back to the signup page if there is an error
+    successMessage : 'You are now registered',
+    failureMessage : 'Couldnt Register, Please contacte the Admin',
 }));
 
 // =====================================
@@ -161,12 +156,29 @@ router.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
+//GET - GET all users has to be a protected route
+router.get('/users',isLoggedIn, function (req, res, authenticated) {
+    User.find(function (err, users) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(users);
+    });
+
+});
+
+//GET - Get a single user has to be a protected route
+router.get('/users/profile',isLoggedIn, function (req, res, authenticated) {
+    User.find({name: req.params.name}, function (err, user) {
+        if (err) res.send(500, err.message);
+        console.log(user);
+        res.status(200).jsonp(user);
+    });
+});
+
 // =====================================
 // LOGOUT ==============================
 // =====================================
 router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
 });
 
 

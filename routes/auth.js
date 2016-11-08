@@ -1,8 +1,6 @@
 var qs   = require('querystring');
 var path = require('path');
 
-var level = require('level');
-
 
 var jwt  = require('jsonwebtoken');
 var secret = process.env.JWT_SECRET || "CHANGE_THIS_TO_SOMETHING_RANDOM"; // super secret
@@ -159,6 +157,5 @@ module.exports = {
     success : authSuccess,
     validate : validate,
     verify : verify,
-    view : loadView,
     generateAndStoreToken: generateAndStoreToken
 }
