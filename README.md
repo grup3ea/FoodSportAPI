@@ -1,4 +1,5 @@
 ##Project EA 2016-17 Group 3
+#API
 Combining Nutrition with Physical preparation this application acts as a hub between healthy food delivery, trainers and clients.
 
 [![bitHound Overall Score](https://www.bithound.io/github/grup3ea/FoodSportAPI/badges/score.svg)](https://www.bithound.io/github/grup3ea/FoodSportAPI)
@@ -11,7 +12,6 @@ The technologies used are part of the MEAN 2.0:
  * MongoDB
  * NodeJS
  * ExpressJS
- * AngularJS 2
 
 **~~------------------------~~**
 
