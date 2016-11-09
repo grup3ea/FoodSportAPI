@@ -9,7 +9,7 @@ var session = require('express-session');
 
 var users = require('./routes/users');
 var app = express();
-var fbapi = require('./routes/fbroutes')(app, passport);
+var fbapi = require('./routes/fbroutes')
 var config = require('./config/config');
 
 /*Inicio Express*/
