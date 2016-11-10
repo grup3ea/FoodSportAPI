@@ -16,7 +16,8 @@ router.post('/register', function (req, res) {
         name: req.body.name,
         role: req.body.role,
         password: req.body.password,
-        email: req.body.email
+        email: req.body.email,
+        token:req.body.token
     });
     user.save(function (err, user) {
         if (err) return res.status(500).send(err.message);
@@ -43,10 +44,11 @@ router.post('/login', function (req, res) {
                 var token = jwt.sign(user, app.get('superSecret'), {
                     expiresIn: 86400 // expires in 24 hours
                 });
+                user.token = token;
                 res.json({
+                    user: user,
                     success: true,
-                    message: 'Enjoy your token!',
-                    token: token
+                    message: 'Enjoy your token!'
                 });
             }
         }
