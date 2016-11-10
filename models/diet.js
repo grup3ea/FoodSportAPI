@@ -7,7 +7,9 @@ var dietSchema = new Schema({
     title: {type: String},
     description: {type: String},
     days: [{
+        title: {type: String},
         meals: [{
+            title: {type: String},
             submeal: [{
                 title: {type: String},
                 description: {type: String},
