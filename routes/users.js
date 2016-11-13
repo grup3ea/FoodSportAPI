@@ -17,7 +17,8 @@ router.post('/register', function (req, res) {
         role: req.body.role,
         password: req.body.password,
         email: req.body.email,
-        token:req.body.token
+        token:req.body.token,
+        avatar: req.body.avatar
     });
     user.save(function (err, user) {
         if (err) return res.status(500).send(err.message);
