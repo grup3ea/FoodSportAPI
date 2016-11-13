@@ -7,15 +7,16 @@ var passport = require('passport');
 var User = require('../models/user');
 var config = require('../config/config'); // get our config file
 
+var crypto = require('crypto');
+
 app.set('superSecret', config.secret); // secret variable
 
 //POST - Add User in DB
 router.post('/register', function (req, res) {
-
     var user = new User({
         name: req.body.name,
         role: req.body.role,
-        password: req.body.password,
+        password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
         token:req.body.token,
         avatar: req.body.avatar
@@ -36,6 +37,9 @@ router.post('/login', function (req, res) {
         if (!user) {
             res.json({success: false, message: 'Authentication failed. User not found.'});
         } else if (user) {
+          //passa la password rebuda al hash
+          req.body.password=crypto.createHash('sha256').update(req.body.password).digest('base64');
+
             // check if password matches
             if (user.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
