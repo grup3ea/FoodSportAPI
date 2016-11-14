@@ -31,7 +31,7 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res) {
     // find the user
     User.findOne({
-        name: req.body.name
+        email: req.body.email
     }, function (err, user) {
         if (err) throw err;
         if (!user) {
