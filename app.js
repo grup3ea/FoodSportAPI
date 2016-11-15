@@ -10,7 +10,9 @@ var session = require('express-session');
 
 var users = require('./routes/users');
 var app = express();
-var fbapi = require('./routes/fbroutes');
+//var fbapi = require('./routes/fbroutes');
+
+require('./config/passport')(passport);
 var config = require('./config/config');
 
 /*Inicio Express*/
@@ -75,6 +77,10 @@ app.use(function (req, res, next) {
     next();
 });
 
+/* passport */
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + config.port + '/api or /fbapi');
 });
@@ -89,6 +95,8 @@ mongoose.connect(config.database, function (err, res) {
     if (err) throw err;
     console.log('Conectado con éxito a la Base de Datos');
 });
+
+
 
 // Start server
 server.listen(config.port, function () {

@@ -16,10 +16,16 @@ var userSchema = new Schema({
         name: {type: String}
     },
     twitter: {
-        id: {type: String},
+        /*id: {type: String},
         token: {type: String},
         displayName: {type: String},
-        username: {type: String}
+        username: {type: String}*/
+        name : {type: String},
+        provider : {type: String},
+        provider_id : {type: String, unique: true},
+        photo : {type: String},
+        createdAt : {type: Date, default: Date.now}
+
     },
     google: {
         id: {type: String},

@@ -31,7 +31,7 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res) {
     // find the user
     User.findOne({
-        email: req.body.email
+        name: req.body.name
     }, function (err, user) {
         if (err) throw err;
         if (!user) {
@@ -86,62 +86,28 @@ router.get('/logout', function logout(req, res, callback) {
     }
 });
 
-// =====================================
-// LOGIN ===============================
-// =====================================
 
-// process the login form
-
-router.post('/fblogin', passport.authenticate('local-login', {
-    successMessage: 'You Logged with FB', // redirect to the secure profile section
-    failureMessage: 'You couldn Log with FACE. This might be good', // redirect back to the signup page if there is an error
-    failureFlash: true // allow flash messages
-}));
-
-// =====================================
-// SIGNUP ==============================
-// =====================================
-
-// process the signup form
-router.post('/signup', passport.authenticate('local-signup', {
-    successMessage: 'Yo, You registered with Faisbuk', // redirect to the secure profile section
-    failureMessage: 'Yo, No facebook for you. This might be good...', // redirect back to the signup page if there is an error
-    failureFlash: true // allow flash messages
-}));
-
-// =====================================
-// PROFILE SECTION =========================
-// =====================================
-// we will want this protected so you have to be logged in to visit
-// we will use route middleware to verify this (the isLoggedIn function)
-router.get('/profile', isLoggedIn, function (req, res) {
-    User.find(function (err, users) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(users);
-    });
+/* Rutas de Passport */
+// Ruta para desloguearse
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
 });
-
-// =====================================
-// FACEBOOK ROUTES =====================
-// =====================================
-// route for facebook authentication and login
-router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'email'}));
-
-// handle the callback after facebook has authenticated the user
-router.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-        successMessage: 'FB Authenticated',
-        failureMessage: 'NO FB Auth'
-    }));
-
-// =====================================
-// LOGOUT ==============================
-// =====================================
-router.get('/fblogout', function (req, res) {
-    req.logout();
-    res.status(200).send();
-});
-
+// Ruta para autenticarse con Twitter (enlace de login)
+router.get('/auth/twitter', passport.authenticate('twitter'));
+// Ruta para autenticarse con Facebook (enlace de login)
+router.get('/auth/facebook', passport.authenticate('facebook'));
+// Ruta de callback, a la que redirigirá tras autenticarse con Twitter.
+// En caso de fallo redirige a otra vista '/login'
+router.get('/auth/twitter/callback', passport.authenticate('twitter',
+  { successRedirect: '/', failureRedirect: '/login' }
+));
+// Ruta de callback, a la que redirigirá tras autenticarse con Facebook.
+// En caso de fallo redirige a otra vista '/login'
+router.get('/auth/facebook/callback', passport.authenticate('facebook',
+  { successRedirect: '/', failureRedirect: '/login' }
+));
+/* fin de rutas de passport */
 
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
@@ -200,4 +166,3 @@ function isLoggedIn(req, res, next) {
 }
 
 module.exports = router;
-module.exports = getUser();
