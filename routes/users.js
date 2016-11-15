@@ -170,12 +170,16 @@ router.use(function (req, res, next) {
     }
 });
 
-//GET - GET all users has to be a protected route
-router.get('/users', function (req, res) {
+function getUser(res) {
     User.find(function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
     });
+}
+
+//GET - GET all users has to be a protected route
+router.get('/users', function (req, res) {
+    getUser();
 });
 
 //GET - Get a single user has to be a protected route
@@ -196,3 +200,4 @@ function isLoggedIn(req, res, next) {
 }
 
 module.exports = router;
+module.exports = getUser();

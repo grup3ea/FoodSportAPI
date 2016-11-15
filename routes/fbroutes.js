@@ -35,8 +35,8 @@ var config = require('../config/config');
     // we will use route middleware to verify this (the isLoggedIn function)
     router.get('/profile', isLoggedIn, function (req, res) {
         User.find(function (err, users) {
-            if (err) res.send(500, err.message);
-            res.status(200).jsonp(users);
+            if (err) res.send(500, err.message,'User was not found');
+            res.status(200).jsonp(users); //We found the user
         });
     });
 

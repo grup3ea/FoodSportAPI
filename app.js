@@ -1,4 +1,4 @@
-var cors = require('cors')
+var cors = require('cors');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -10,7 +10,7 @@ var session = require('express-session');
 
 var users = require('./routes/users');
 var app = express();
-var fbapi = require('./routes/fbroutes')
+var fbapi = require('./routes/fbroutes');
 var config = require('./config/config');
 
 /*Inicio Express*/
