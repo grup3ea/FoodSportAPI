@@ -13,16 +13,18 @@ app.set('superSecret', config.secret); // secret variable
 
 //POST - Add User in DB
 router.post('/register', function (req, res) {
+  console.log(req.body);
     var user = new User({
         name: req.body.name,
         role: req.body.role,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
-        email: req.body.email,
-        token:req.body.token,
-        avatar: req.body.avatar
+        email: req.body.email
     });
     user.save(function (err, user) {
-        if (err) return res.status(500).send(err.message);
+        if (err){
+          console.log(err.message);
+           return res.status(500).send(err.message);
+         }
         res.status(200).jsonp(user);
     });
 });

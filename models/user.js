@@ -22,7 +22,7 @@ var userSchema = new Schema({
         username: {type: String}*/
         name : {type: String},
         provider : {type: String},
-        provider_id : {type: String, unique: true},
+        provider_id : {type: String},
         photo : {type: String},
         createdAt : {type: Date, default: Date.now}
 
