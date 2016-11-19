@@ -31,7 +31,7 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res) {
     // find the user
     User.findOne({
-        name: req.body.name
+        email: req.body.email
     }, function (err, user) {
         if (err) throw err;
         if (!user) {
@@ -113,7 +113,9 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
 /**Everything after this is protected route**/
 router.use(function (req, res, next) {
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+    //var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    console.log(token);
     // decode token
     if (token) {
         // verifies secret and checks exp
