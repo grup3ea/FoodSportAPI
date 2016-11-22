@@ -148,6 +148,21 @@ router.get('/users', function (req, res) {
     });
 });
 
+//GET - GET clients
+router.get('/users/clients', function (req, res) {
+    User.find({role: req.params.role = 'client'}, function (err, users) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(users);
+    });
+});
+
+//GET - GET trainers
+router.get('/users/trainers', function (req, res) {
+    User.find({role: req.params.role = 'trainer'}, function (err, users) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(users);
+    });
+});
 //GET - Get a single user has to be a protected route
 router.get('/users/profile',  function (req, res) {
     User.find({name: req.params.name}, function (err, user) {
