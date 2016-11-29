@@ -8,47 +8,27 @@ var jwt = require('jwt-simple');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 
-/*var users = require('./routes/users');*/
 var app = express();
-//var fbapi = require('./routes/fbroutes');
-
-/*
-require('./config/passport')(passport); //això també està repetit
-*/
 var config = require('./config/config');
 
-/*Inicio Express*/
+/**Inicio Express**/
 var app = express();
 var server = require('http').Server(app);
-/*
-require('./config/passport')(passport); // pass passport for configuration //això també està repetit
-*/
+
 var secret = config.secret;
-// Express Session
+/** Express Session **/
 app.use(session({
     secret: secret,
     saveUninitialized: true,
     resave: true
 }));
 
-// Set Static Folder
+/**Set Static Folder**/
 app.use(express.static(__dirname + '/public'));
 
-var config = require('./config/config'); // get our config file
-
-/*
-// Use the passport package in our application
-app.use(passport.initialize());
-*/
 app.set('superSecret', config.secret);
 
-// Passport init
-/*
-app.use(passport.initialize()); //això està repetit
-app.use(passport.session());
-*/
-
-// Express Validator
+/** Express Validator **/
 app.use(expressValidator({
     errorFormatter: function (param, msg, value) {
         var namespace = param.split('.'), root = namespace.shift(), formParam = root;
@@ -64,18 +44,18 @@ app.use(expressValidator({
     }
 }));
 
-/*Middlewares express*/
+/**Middlewares express**/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
-/* developing mode */
-// use morgan to log requests to the console
+/** developing mode **/
+/** use morgan to log requests to the console**/
 var morgan = require('morgan');
 app.use(morgan('dev'));
 
+/**CORS Filter**/
 app.use(cors());
-//CORS
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -83,27 +63,28 @@ app.use(function (req, res, next) {
     next();
 });
 
-/* passport repetit
-app.use(passport.initialize()); //això està repetit
-app.use(passport.session());
-*/
-
-
 app.get('/', function (req, res) {
-    res.send('Hello! The API is at http://localhost:' + config.port + '/api or /fbapi');
+    res.send('Hello! The API is at http://localhost:' + config.port + '/api');
 });
 
-// Import MODELS and CONTROLLERS
+/**------------------------------------------------------------------ **/
+/**--------------------IMPORT of Models & Controllers---------------- **/
+/**------------------------------------------------------------------ **/
 var userMdl     = require('./models/userModel')(app, mongoose);
 var userCtrl = require('./controllers/userController');
-
 var dietMdl     = require('./models/dietModel')(app, mongoose);
 var dietCtrl = require('./controllers/dietController');
 var routineMdl     = require('./models/routineModel')(app, mongoose);
 var routineCtrl = require('./controllers/routineController');
 var trainerMdl     = require('./models/trainerModel')(app, mongoose);
 var trainerCtrl = require('./controllers/trainerController');
-// API routes ------------------------------------------------------
+var publicationMdl      = require('./models/publicationModel')(app,mongoose);
+var publicationCtrl     = require('./controllers/publicationController');
+
+
+/**------------------------------------------------------------------ **/
+/**-----------------------------API routes--------------------------- **/
+/**------------------------------------------------------------------ **/
 var apiRoutes = express.Router();
 
 apiRoutes.route('/register')
@@ -112,8 +93,6 @@ apiRoutes.route('/login')
   .post(userCtrl.login);
 apiRoutes.route('/logout')
   .post(userCtrl.logout);
-apiRoutes.route('/users')
-  .get(userCtrl.getUsers);
 
 apiRoutes.route('/diets')
   .get(dietCtrl.getDiets);
@@ -124,7 +103,7 @@ apiRoutes.route('/trainers')
 
   /**Used to check if the Token is valid**/
   /**Everything after this is protected route**/
-  /* start of TOKEN COMPROVATION */
+  /** start of TOKEN COMPROVATION **/
   apiRoutes.use(function (req, res, next) {
       var token = req.body.token || req.query.token || req.headers['x-access-token'];
       if (token) {
@@ -142,33 +121,29 @@ apiRoutes.route('/trainers')
               message: 'No token provided.'
           });
       }
-  });/* end of TOKEN COMPROVATION */
+  });
+/** end of TOKEN COMPROVATION **/
 
+apiRoutes.route('/users')
+    .get(userCtrl.getUsers);
 apiRoutes.route('/users/:id')
   .get(userCtrl.getUserById)
   .put(userCtrl.updateUserById)
   .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/publications/:userid')
-    .get(userCtrl.getUserPublicationsByUserId)
-    .post(userCtrl.postUserPublicationsByUserId)
-    .put(userCtrl.putUserPublicationsByUserId);
-apiRoutes.route('/users/publications/:userid/:publicationid')//aquesta potser al tenir les publicacions en un model a part, podem fer que no calgui la userid, simplement amb la publicationid anar i esborrar-la. I amb l'update de publication igual.
-    .get(userCtrl.deletePublicationById);
+    .get(publicationCtrl.getUserPublicationsByUserId)
+    .post(publicationCtrl.postUserPublicationsByUserId)
+    .put(publicationCtrl.putUserPublicationsByUserId)
+apiRoutes.route('/users/publications/:publicationid')
+    .delete(publicationCtrl.deletePublicationById);
 
-  /*aquestes entenc que les canviarem, ja q clients i trainers ja no estan al mateix controller,
-  sinó que cadascún és un model diferent amb un controller diferent*/
-apiRoutes.route('/users/clients')
-  .get(userCtrl.getAllClients);
-apiRoutes.route('/users/trainers')
-  .get(userCtrl.getAllTrainers);
-
-
-// end of API routes
 app.use('/api', apiRoutes);
-//app.use('/fbapi',fbapi);
 
+/**-------------------------------------------------------------**/
+/**--------------------END of API routes------------------------**/
+/**-------------------------------------------------------------**/
 
-/*Conexión a la base de datos de MongoDB que tenemos en local*/
+/**Conexión a la base de datos de MongoDB que tenemos en local**/
 mongoose.Promise = global.Promise;
 require('mongoose-middleware').initialize(mongoose);
 mongoose.connect(config.database, function (err, res) {
@@ -176,9 +151,7 @@ mongoose.connect(config.database, function (err, res) {
     console.log('Conectado con éxito a la Base de Datos');
 });
 
-
-
-// Start server
+/** Start server **/
 server.listen(config.port, function () {
     console.log("Servidor en http://localhost:" + config.port);
 });

@@ -19,25 +19,18 @@ The technologies used are part of the MEAN 2.0:
 
 > Make sure MongoDB service is running
 
- 1. inside    _/_          `sudo npm install`
- 2. inside _/public/_   `sudo npm install`
- 3. inside _/public/_   `sudo npm install --save @types/core-js @types/jasmine @types/node`
+Run:
 
-Then run app.js and the server will start, connect to the Database and display the index.html
+``npm start``
+
+The server will connect to the local DB and will be at ``http://localhost:3005``
+
 
 
 ##Style Guide
 https://github.com/felixge/node-style-guide
 
-
-
-
-##To locally import test data into MongoDB
-On folder /data
-
- - mongoimport --db foodsports --collection users --drop < users.json
- - mongoimport --db foodsports --collection users --drop < users2.json
-
 ##To start MongoDB locally:
- -Linux: mongod
- -Windows:  mongod --dbpath D:\Servers\data --port 27017
+ -Linux: `mongod`
+ 
+ -Windows:  ``mongod --dbpath D:\Servers\data --port 27017``

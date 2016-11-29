@@ -12,7 +12,6 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret); // secret variable
 
 /**POST add new user to DB - Register**/
-// /register
 exports.register = function (req, res) {
     console.log(req.body);
     var user = new userModel({
@@ -39,7 +38,6 @@ exports.register = function (req, res) {
 };
 
 /**POST user login - authentication**/
-// /login
 exports.login = function (req, res) {
     userModel.findOne({
         email: req.body.email
@@ -150,87 +148,10 @@ exports.deleteUserById = function (req, res) {
     });
 };
 
-
-/**GET User publications by User_ID**/
-//  get /users/publications/:userid
-exports.getUserPublicationsByUserId = function (req, res) {
-    userModel.findOne({userid: req.params.userid}, function (err, user) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(user.publications);
-    });
-};
-
-/**POST User publications by User_ID**/
-//  post /users/publications/:userid
-exports.postUserPublicationsByUserId = function (req, res) {
-    userModel.findOne({userid: req.params.userid}, function (err, user) {
-        user = user[0];
-        var publication = new publicationModel({
-            title: req.body.title,
-            content: req.body.content,
-            created: new Date()
-        });
-        user.publications.push(publication);
-        user.save(function (err) {
-            if (err) return res.send(500, err.message);
-            res.status(200).jsonp(user.publications);
-        });
-    }).populate('publications')
-        .exec(function (error, publication) {
-            console.log(JSON.stringify(publication, null, "\t"));
-            res.status(200).jsonp("What Happen?");
-        });
-};
-
-
-/**UPDATE User publications by User_ID**/
-//  put /users/publications/:userid
-exports.putUserPublicationsByUserId = function (req, res) {
-  /*
-  OJU AQUESTA ESTAVA AIXÍ AMB AQUESTA RUTA (/users/publications/:userid)
-  PERÒ CREC QUE S'HI HAURIA D'AFEGIR LA ID DE LA PUBLICATION, PQ SI NO NO SAPS
-  QUINA PUBLICACIÓ ESTÀS UPDATEJANT.
-  EL CODI QUE HI HA ESCRIT ÉS MÉS PER FER UPDATE DE L'USER, NO PAS DE LA PUBLICACIÓ EN CONCRET.
-  */
-    userModel.findIdAndUpdate({_id: req.params.user}, function (err, user) {
-        if (err) res.send(500, err.message);
-        user = user [0];
-        var publication = {
-            title: req.body.title,
-            content: req.body.content,
-            date: new Date()
-        };
-        user.publications.push(publication);
-        user.save(function (err) {
-            if (err) return res.send(500, err.message);
-            res.status(200).jsonp(user.publications);
-        });
-    });
-};
-
-/**DELETE User publications by User_ID**/
-exports.deletePublicationById = function (req, res) {
-    userModel.findByIdAndRemove({_id: req.params.userid}, function (err, user) {
-        User.publications.findByIdAndRemove({
-            _id: req.params.publicationid
-        });
-        res.status(200).jsonp(user.publications);
-    });
-};
-
 /**GET list of all users**/
 // get /users
 exports.getUsers = function (req, res) {
     userModel.find(function (err, users) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(users);
-    });
-};
-
-/**GET list of all users = CLIENTS**/
-// get /users/clients
-exports.getAllClients = function (req, res) {
-    userModel.find({role: req.params.role = 'client'}, function (err, users) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(users);
     });
@@ -245,22 +166,3 @@ exports.getUserById = function (req, res) {
         res.status(200).jsonp(user);
     });
 };
-
-/**GET list of all Trainers**/
-exports.getAllTrainers = function (req, res) {
-    trainerModel.find(function (err, trainers) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(trainers);
-    });
-};
-
-function isLoggedIn(req, res, next) {
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
-    // if they aren't redirect them to the home page
-    res.status(401).send();
-}
-
-/* ?
-module.exports = router;*/
