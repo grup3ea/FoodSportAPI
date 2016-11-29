@@ -215,7 +215,7 @@ router.put('/users/publications/:userid', function (req, res) {
 });
 
 /**DELETE User publications by User_ID**/
-router.put('/users/publications/:userid/:publicationid', function (req, res) {
+router.delete('/users/publications/:userid/:publicationid', function (req, res) {
     User.findByIdAndRemove({_id: req.params.userid}, function (err, user) {
         User.publications.findByIdAndRemove({
             _id: req.params.publicationid
