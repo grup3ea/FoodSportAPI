@@ -18,9 +18,8 @@ var userSchema = new Schema({
         age: {type: String}
     },
     publications: {
-        title: {type: String},
-        date: {type: Date},
-        content: {type: String}
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'publicationSchema'
     },
     facebook: {
         id: {type: String},

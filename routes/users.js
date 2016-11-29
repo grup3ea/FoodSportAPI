@@ -3,6 +3,7 @@ var app = express();
 var router = express.Router();
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var passport = require('passport');
+var Publication = require('../models/publication');
 var User = require('../models/user');
 var Trainer = require('../models/trainer');
 var config = require('../config/config'); // get our config file
@@ -209,6 +210,7 @@ router.put('/users/publications/:userid', function (req, res) {
 });
 
 /**DELETE User publications by User_ID**/
+
 
 
 /**GET list of all users**/
