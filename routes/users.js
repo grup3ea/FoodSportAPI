@@ -128,6 +128,43 @@ router.use(function (req, res, next) {
     }
 });
 
+/** UPDATE user by user._id**/
+router.put('/users/:id', function (req, res) {
+    User.findOneAndUpdate({id: req.params.id}, function (err) {
+        if (err) res.send(500, err.message);
+        var user = new User({
+            name: req.body.name,
+            role: req.body.role,
+            password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
+            email: req.body.email,
+            description: req.body.description,
+            avatar: req.body.avatar,
+            attributes: {
+                height: req.body.height,
+                weight: req.body.weight,
+                gender: req.body.gender,
+                age: req.body.age
+            }
+        });
+        user.save(function (err, user) {
+            if (err) {
+                console.log(err.message);
+                return res.status(500).send(err.message);
+            }
+            res.status(200).jsonp(user);
+        });
+    });
+});
+
+/** DELETE user by user._id**/
+router.delete('/users/:id', function (req, res) {
+    User.findByIdAndRemove({_id: req.params.id}, function (err) {
+        if (err) res.send(500, err.message);
+        res.status(200).send("Deleted");
+    });
+});
+
+
 /**GET User publications by User_ID**/
 router.get('/users/publications/:userid', function (req, res) {
     User.findOne({userid: req.params.userid}, function (err, users) {
@@ -138,8 +175,8 @@ router.get('/users/publications/:userid', function (req, res) {
 
 /**POST User publications by User_ID**/
 router.post('/users/publications/:userid', function (req, res) {
-    User.findOne({userid: req.params.userid}, function (err, users) {
-        user = users[0];
+    User.findOne({userid: req.params.userid}, function (err, user) {
+        user = user[0];
         var publication = {
             title: req.body.title,
             content: req.body.content,
@@ -148,13 +185,28 @@ router.post('/users/publications/:userid', function (req, res) {
         user.publications.push(publication);
         user.save(function (err) {
             if (err) return res.send(500, err.message);
-            res.status(200).jsonp(users);
+            res.status(200).jsonp(user.publications);
         });
     });
 });
 
 /**UPDATE User publications by User_ID**/
-
+router.put('/users/publications/:userid', function (req, res) {
+    User.findIdAndUpdate({_id: req.params.user}, function (err, user) {
+        if (err) res.send(500, err.message);
+        user = user [0];
+        var publication = {
+            title: req.body.title,
+            content: req.body.content,
+            date: new Date()
+        };
+        user.publications.push(publication);
+        user.save(function (err) {
+            if (err) return res.send(500, err.message);
+            res.status(200).jsonp(user.publications);
+        });
+    });
+});
 
 /**DELETE User publications by User_ID**/
 
