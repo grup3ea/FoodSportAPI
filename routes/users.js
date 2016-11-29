@@ -218,10 +218,9 @@ router.put('/users/publications/:userid', function (req, res) {
 router.put('/users/publications/:userid/:publicationid', function (req, res) {
     User.findByIdAndRemove({_id: req.params.userid}, function (err, user) {
         User.publications.findByIdAndRemove({
-            _id:req.params.publicationid
-            res.status(200).jsonp(user.publications);
-    })
-        ;
+            _id: req.params.publicationid
+        });
+        res.status(200).jsonp(user.publications);
     });
 });
 
