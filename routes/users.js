@@ -168,9 +168,9 @@ router.delete('/users/:id', function (req, res) {
 
 /**GET User publications by User_ID**/
 router.get('/users/publications/:userid', function (req, res) {
-    User.findOne({userid: req.params.userid}, function (err, users) {
+    User.findOne({userid: req.params.userid}, function (err, user) {
         if (err) res.send(500, err.message);
-        res.status(200).jsonp(users.publications);
+        res.status(200).jsonp(user.publications);
     });
 });
 
@@ -178,18 +178,23 @@ router.get('/users/publications/:userid', function (req, res) {
 router.post('/users/publications/:userid', function (req, res) {
     User.findOne({userid: req.params.userid}, function (err, user) {
         user = user[0];
-        var publication = {
+        var publication = new Publication({
             title: req.body.title,
             content: req.body.content,
-            date: new Date()
-        };
+            created: new Date()
+        });
         user.publications.push(publication);
         user.save(function (err) {
             if (err) return res.send(500, err.message);
             res.status(200).jsonp(user.publications);
         });
-    });
+    }).populate('publications')
+        .exec(function (error, publication) {
+            console.log(JSON.stringify(publication, null, "\t"));
+            res.status(200).jsonp("What Happen?");
+        });
 });
+
 
 /**UPDATE User publications by User_ID**/
 router.put('/users/publications/:userid', function (req, res) {
@@ -210,8 +215,15 @@ router.put('/users/publications/:userid', function (req, res) {
 });
 
 /**DELETE User publications by User_ID**/
-
-
+router.put('/users/publications/:userid/:publicationid', function (req, res) {
+    User.findByIdAndRemove({_id: req.params.userid}, function (err, user) {
+        User.publications.findByIdAndRemove({
+            _id:req.params.publicationid
+            res.status(200).jsonp(user.publications);
+    })
+        ;
+    });
+});
 
 /**GET list of all users**/
 router.get('/users', function (req, res) {
