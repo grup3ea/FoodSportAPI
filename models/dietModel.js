@@ -29,6 +29,6 @@ var dietSchema = new Schema({
     }]
 });
 
-userSchema.plugin(mongooseUniqueValidator);
+dietSchema.plugin(mongooseUniqueValidator);
 
-module.exports = mongoose.model('Diet', dietSchema);
+module.exports = mongoose.model('dietModel', dietSchema);

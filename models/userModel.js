@@ -58,7 +58,7 @@ var userSchema = new Schema({
         ref: 'routineSchema'
     }
 });
-
+/*
 module.exports.createUser = function (newUser, callback) {
     bcrypt.genSalt(10, function (err, salt) {
         if (err) throw err;
@@ -91,8 +91,8 @@ userSchema.methods.hashPassword = function (password) {
 // checking if password is valid using bcrypt
 userSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.local.password);
-};
+};*/
 
 userSchema.plugin(mongooseUniqueValidator);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('userModel', userSchema);

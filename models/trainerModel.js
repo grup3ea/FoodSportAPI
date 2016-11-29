@@ -20,4 +20,4 @@ var trainerSchema = new Schema({
 
 trainerSchema.plugin(mongooseUniqueValidator);
 
-module.exports = mongoose.model('Trainer', trainerSchema);
+module.exports = mongoose.model('trainerModel', trainerSchema);

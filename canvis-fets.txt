@@ -1,0 +1,23 @@
+canvis estructurals i de nomenclatura fets:
+-els models i controllers enlloc de dir-se 'User' i 'users',
+es diuen 'userModel' i 'userController', pq era un liu saber què
+era cada cosa i calia anar a mirar a dins de quina carpeta estava el fitxer
+per saber a quin fitxer estaves. I lu mateix per quan cridaves al model o al controlador. Ara
+amb el nom queda clar.
+També serveix a l'hora de buscar les variables o les crides entre el codi, que no es confon amb altres paraules.
+
+-la base de dades q teniu ara al ordinador, les collections tenen noms diferents de les que hi ha al codi
+per això quan feu peticions a la api us retorna q no hi ha users, o lu que sigui. De totes maneres funciona, lu que la base de dades
+enlloc de la collection dir-se 'users' es diu 'usermodels'. També podeu anar a la base de dades i canviar-li el nom a la collection i posar-li el nou.
+
+
+-la carpeta 'routes' ja no es fa servir, ara els controllers estan a la carpeta 'controllers'
+i les rutes estan escrites al app.js
+
+-he comentat tot lu que era relacionat amb el passport, que de moment no ho tenim implementat,
+i estava posat per tot arreu, amb línies idèntiques repetides que no fem servir.
+
+explicació de pq els canvis:
+els canvis d'estructura, són perquè ara, tots els codis són cridats des de l'app.js, que ho va executant
+però amb l'esquelet central, de manera que la comprovació de tokens, per exemple, es fa a l'esquelet central,
+i serveix per a tots els controllers (userController, trainerController, dietController, etc).

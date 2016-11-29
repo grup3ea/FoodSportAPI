@@ -20,6 +20,6 @@ var routineSchema = new Schema({
     }]
 });
 
-userSchema.plugin(mongooseUniqueValidator);
+routineSchema.plugin(mongooseUniqueValidator);
 
-module.exports = mongoose.model('Routine', routineSchema);
+module.exports = mongoose.model('routineModel', routineSchema);

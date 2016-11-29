@@ -14,5 +14,4 @@ var publicationSchema = new Schema({
 
 publicationSchema.plugin(mongooseUniqueValidator);
 
-module.exports = mongoose.model('Publication', publicationSchema);
-
+module.exports = mongoose.model('publicationModel', publicationSchema);
