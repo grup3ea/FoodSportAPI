@@ -12,6 +12,7 @@ var crypto = require('crypto');
 //  post /users/publications/:userid
 exports.postUserPublicationsByUserId = function (req, res) {
     userModel.findOne({userid: req.params.userid}, function (err, user) {
+        if (err !== null) res.send(500, err.message);
         user = user[0];
         var publication = new publicationModel({
             title: req.body.title,
@@ -25,6 +26,7 @@ exports.postUserPublicationsByUserId = function (req, res) {
         });
     }).populate('publications')
         .exec(function (error, publication) {
+            if (error !== null) res.send(500, error.message);
             console.log(JSON.stringify(publication, null, "\t"));
             res.status(200).jsonp("What Happen?");
         });
@@ -52,20 +54,21 @@ exports.putUserPublicationsByUserId = function (req, res) {
         };
         user.publications.push(publication);
         user.save(function (err) {
-            if (err != null) return res.send(500, err.message);
+            if (err !== null) return res.send(500, err.message);
             res.status(200).jsonp(user.publications);
         });
     }).populate('publications')
         .exec(function (error, publication) {
+            if (error !== null) res.send(500, error.message);
             console.log(JSON.stringify(publication, null, "\t"));
-            res.status(200).jsonp("What Happen?");
+            res.status(200).jsonp("Update happen?");
         });
 };
 
 /**DELETE User publications by publication ID**/
 exports.deletePublicationById = function (req, res) {
     publicationModel.findByIdAndRemove({_id: req.params.publicationid}, function (err) {
-        if (err != null) return res.send(500, err.message);
+        if (err !== null) return res.send(500, err.message);
         res.status(200).jsonp('Deleted');
     });
 };
