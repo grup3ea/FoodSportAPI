@@ -25,10 +25,10 @@ module.exports = function(passport){
 		User.findOne({provider_id: profile.id}, function(err, user) {
 			if(err) throw(err);
 			// Si existe en la Base de Datos, lo devuelve
-			if(!err && user!= null) return done(null, user);
+			if(!err && user!== null) return done(null, user);
 
 			// Si no existe crea un nuevo objecto usuario
-			var user = new User({
+			user = new User({
 				provider_id	: profile.id,
 				provider		 : profile.provider,
 				name				 : profile.displayName,
