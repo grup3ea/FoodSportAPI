@@ -133,7 +133,7 @@ apiRoutes.route('/users/:id')
 apiRoutes.route('/users/publications/:userid')
     .get(publicationCtrl.getUserPublicationsByUserId)
     .post(publicationCtrl.postUserPublicationsByUserId)
-    .put(publicationCtrl.putUserPublicationsByUserId)
+    .put(publicationCtrl.putUserPublicationsByUserId);
 apiRoutes.route('/users/publications/:publicationid')
     .delete(publicationCtrl.deletePublicationById);
 
