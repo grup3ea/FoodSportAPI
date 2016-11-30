@@ -11,7 +11,7 @@ var crypto = require('crypto');
 /**POST User publications by User_ID**/
 //  post /users/publications/:userid
 exports.postUserPublicationsByUserId = function (req, res) {
-    userModel.findOne({userid: req.params.userid}, function (err, user) {
+    userModel.findOne({_id: req.params.userid}, function (err, user) {
         if (err !== null) res.send(500, err.message);
         user = user[0];
         var publication = new publicationModel({

@@ -160,7 +160,7 @@ exports.getUsers = function (req, res) {
 /** GET user by user._id**/
 //  get /users/:id
 exports.getUserById = function (req, res) {
-    userModel.find({id: req.params.id}, function (err, user) {
+    userModel.find({_id: req.params.id}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
         res.status(200).jsonp(user);

@@ -26,7 +26,7 @@ app.use(session({
 /**Set Static Folder**/
 app.use(express.static(__dirname + '/public'));
 
-app.set('superSecret', config.secret);
+app.set('superSecret', secret);
 
 /** Express Validator **/
 app.use(expressValidator({
@@ -70,16 +70,16 @@ app.get('/', function (req, res) {
 /**------------------------------------------------------------------ **/
 /**--------------------IMPORT of Models & Controllers---------------- **/
 /**------------------------------------------------------------------ **/
-var userMdl     = require('./models/userModel')(app, mongoose);
+var userMdl = require('./models/userModel')(app, mongoose);
 var userCtrl = require('./controllers/userController');
-var dietMdl     = require('./models/dietModel')(app, mongoose);
+var dietMdl = require('./models/dietModel')(app, mongoose);
 var dietCtrl = require('./controllers/dietController');
-var routineMdl     = require('./models/routineModel')(app, mongoose);
+var routineMdl = require('./models/routineModel')(app, mongoose);
 var routineCtrl = require('./controllers/routineController');
-var trainerMdl     = require('./models/trainerModel')(app, mongoose);
+var trainerMdl = require('./models/trainerModel')(app, mongoose);
 var trainerCtrl = require('./controllers/trainerController');
-var publicationMdl      = require('./models/publicationModel')(app,mongoose);
-var publicationCtrl     = require('./controllers/publicationController');
+var publicationMdl = require('./models/publicationModel')(app, mongoose);
+var publicationCtrl = require('./controllers/publicationController');
 
 
 /**------------------------------------------------------------------ **/
@@ -88,54 +88,54 @@ var publicationCtrl     = require('./controllers/publicationController');
 var apiRoutes = express.Router();
 
 apiRoutes.route('/register')
-  .post(userCtrl.register);
+    .post(userCtrl.register);/**No coge todos los parametros attributes de manera correcta**/
 apiRoutes.route('/login')
-  .post(userCtrl.login);
+    .post(userCtrl.login);/**Parece devolver bien el token**/
 apiRoutes.route('/logout')
-  .post(userCtrl.logout);
+    .post(userCtrl.logout);
 
 apiRoutes.route('/diets')
-  .get(dietCtrl.getDiets);
+    .get(dietCtrl.getDiets);
 apiRoutes.route('/routines')
-  .get(routineCtrl.getRoutines);
+    .get(routineCtrl.getRoutines);
 apiRoutes.route('/trainers')
-  .get(trainerCtrl.getTrainers);
+    .get(trainerCtrl.getTrainers);
 
-  /**Used to check if the Token is valid**/
-  /**Everything after this is protected route**/
-  /** start of TOKEN COMPROVATION **/
-  apiRoutes.use(function (req, res, next) {
-      var token = req.body.token || req.query.token || req.headers['x-access-token'];
-      if (token) {
-          jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-              if (err) {
-                  return res.json({success: false, message: 'Failed to authenticate token.'});
-              } else {
-                  req.decoded = decoded;
-                  next();
-              }
-          });
-      } else {
-          return res.status(403).send({
-              success: false,
-              message: 'No token provided.'
-          });
-      }
-  });
+/**Used to check if the Token is valid**/
+/**Everything after this is protected route**/
+/** start of TOKEN COMPROVATION **/
+/*apiRoutes.use(function (req, res, next) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (token) {
+        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+            if (err) {
+                return res.json({success: false, message: 'Failed to authenticate token.'});
+            } else {
+                req.decoded = decoded;
+                next();
+            }
+        });
+    } else {
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided.'
+        });
+    }
+});*/
 /** end of TOKEN COMPROVATION **/
 
 apiRoutes.route('/users')
-    .get(userCtrl.getUsers);
+    .get(userCtrl.getUsers);//Works
 apiRoutes.route('/users/:id')
-  .get(userCtrl.getUserById)
-  .put(userCtrl.updateUserById)
-  .delete(userCtrl.deleteUserById);
+    .get(userCtrl.getUserById)//Works
+    .put(userCtrl.updateUserById)//No Works
+    .delete(userCtrl.deleteUserById);//Works
 apiRoutes.route('/users/publications/:userid')
-    .get(publicationCtrl.getUserPublicationsByUserId)
-    .post(publicationCtrl.postUserPublicationsByUserId)
-    .put(publicationCtrl.putUserPublicationsByUserId);
+    .get(publicationCtrl.getUserPublicationsByUserId)//No Works
+    .post(publicationCtrl.postUserPublicationsByUserId)//No Works
+    .put(publicationCtrl.putUserPublicationsByUserId);//No Works
 apiRoutes.route('/users/publications/:publicationid')
-    .delete(publicationCtrl.deletePublicationById);
+    .delete(publicationCtrl.deletePublicationById);//No Works
 
 app.use('/api', apiRoutes);
 
