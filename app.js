@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var jwt = require('jwt-simple');
+var jwt    = require('jsonwebtoken');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 
@@ -104,7 +104,7 @@ apiRoutes.route('/trainers')
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
 /** start of TOKEN COMPROVATION **/
-/*apiRoutes.use(function (req, res, next) {
+apiRoutes.use(function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
         jwt.verify(token, app.get('superSecret'), function (err, decoded) {
@@ -121,7 +121,7 @@ apiRoutes.route('/trainers')
             message: 'No token provided.'
         });
     }
-});*/
+});
 /** end of TOKEN COMPROVATION **/
 
 apiRoutes.route('/users')
