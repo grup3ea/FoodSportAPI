@@ -10,26 +10,31 @@ var crypto = require('crypto');
 
 /**POST User publications by User_ID**/
 //  post /users/publications/:userid
-exports.postUserPublicationsByUserId = function (req, res) {
-    userModel.findOne({_id: req.params.userid}, function (err, user) {
-        if (err !== null) res.send(500, err.message);
-        user = user[0];
-        var publication = new publicationModel({
-            title: req.body.title,
-            content: req.body.content,
-            created: new Date()
-        });
-        user.publications.push(publication);
+exports.postPublication = function (req, res) {
+    var publication = new publicationModel({
+        title: req.body.title,
+        content: req.body.content,
+        created: new Date()
+    });
+    //fins aquí tenim la variable publication amb els continguts
+    //ara cal 1r guardar el model publication a la base de dades
+    publication.save(function(err, publication){
+      if (err) res.send(500, err.message);
+
+      //i 2n, afegir la id de la publicació generada al user.publications
+      userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        user.publications.push(publication._id);
         user.save(function (err) {
             if (err) return res.send(500, err.message);
-            res.status(200).jsonp(user.publications);
+            res.status(200).jsonp(publication);
         });
-    }).populate('publications')
-        .exec(function (error, publication) {
-            if (error !== null) res.send(500, error.message);
-            console.log(JSON.stringify(publication, null, "\t"));
-            res.status(200).jsonp("What Happen?");
-        });
+      });
+
+    });
+
+
+
 };
 
 /**GET User publications by User_ID**/

@@ -130,12 +130,13 @@ apiRoutes.route('/users/:id')
     .get(userCtrl.getUserById)//Works
     .put(userCtrl.updateUserById)//No Works
     .delete(userCtrl.deleteUserById);//Works
-apiRoutes.route('/users/publications/:userid')
-    .get(publicationCtrl.getUserPublicationsByUserId)//No Works
-    .post(publicationCtrl.postUserPublicationsByUserId)//No Works
-    .put(publicationCtrl.putUserPublicationsByUserId);//No Works
-apiRoutes.route('/users/publications/:publicationid')
-    .delete(publicationCtrl.deletePublicationById);//No Works
+apiRoutes.route('/publications')
+    .post(publicationCtrl.postPublication);//Works
+apiRoutes.route('/users/publications/byuser/:userid')
+    .get(publicationCtrl.getUserPublicationsByUserId);//No Works
+/*apiRoutes.route('/users/publications/:publicationid')
+    .put(publicationCtrl.putPublicationById)//No Works
+    .delete(publicationCtrl.deletePublicationById);//No Works*/
 
 app.use('/api', apiRoutes);
 

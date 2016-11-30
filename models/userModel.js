@@ -16,10 +16,10 @@ var userSchema = new Schema({
         gender: {type: String},
         age: {type: String}
     },
-    publications: {
+    publications: [{
         type:mongoose.Schema.Types.ObjectId,
         ref: 'publicationSchema'
-    },
+    }],
     facebook: {
         id: {type: String},
         token: {type: String},
