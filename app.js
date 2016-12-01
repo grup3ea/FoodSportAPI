@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var jwt    = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 
@@ -88,9 +88,11 @@ var publicationCtrl = require('./controllers/publicationController');
 var apiRoutes = express.Router();
 
 apiRoutes.route('/register')
-    .post(userCtrl.register);/**No coge todos los parametros attributes de manera correcta**/
+    .post(userCtrl.register);
+/**No coge todos los parametros attributes de manera correcta**/
 apiRoutes.route('/login')
-    .post(userCtrl.login);/**Parece devolver bien el token**/
+    .post(userCtrl.login);
+/**Parece devolver bien el token**/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
 
@@ -132,11 +134,11 @@ apiRoutes.route('/users/:id')
     .delete(userCtrl.deleteUserById);//Works
 apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);//Works
-apiRoutes.route('/users/publications/byuser/:userid')
+apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);//No Works
 /*apiRoutes.route('/users/publications/:publicationid')
-    .put(publicationCtrl.putPublicationById)//No Works
-    .delete(publicationCtrl.deletePublicationById);//No Works*/
+ .put(publicationCtrl.putPublicationById)//No Works
+ .delete(publicationCtrl.deletePublicationById);//No Works*/
 
 app.use('/api', apiRoutes);
 
