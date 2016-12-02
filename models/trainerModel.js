@@ -7,6 +7,7 @@ var trainerSchema = new Schema({
     password: {type: String, required: true},
     token: {type: String},
     email: {type: String, required: true, unique: true},
+    discipline : {type:String},
     routines: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineSchema'

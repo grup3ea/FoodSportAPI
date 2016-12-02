@@ -97,7 +97,13 @@ apiRoutes.route('/logout')
     .post(userCtrl.logout);
 
 apiRoutes.route('/diets')
-    .get(dietCtrl.getDiets);
+    .get(dietCtrl.getDiets)
+    .post(dietCtrl.addDiet);
+apiRoutes.route('/diets/:id')
+    .get(dietCtrl.getDietById)
+    .delete(dietCtrl.deleteDietById);
+
+
 apiRoutes.route('/routines')
     .get(routineCtrl.getRoutines);
 apiRoutes.route('/trainers')
