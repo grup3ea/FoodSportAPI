@@ -25,8 +25,11 @@
 ###*----------------------------User Related----------------------------------------------*
 
 - PUT 	`/users/:userid`				    Actualización del perfil
-- GET 	`/users/:userid/diets/:actualweek`	Lista de dietas del usuario
+- GET 	`/users/:userid/diets/day`	Lista de dietas del usuario
+- GET 	`/users/:userid/diets/week`	Lista de dietas del usuario
 - GET 	`/users/:userid/routines`			Lista de rutinas del usuario
+- GET 	`/users/:userid/routines/day`	Lista de routines del usuario
+- GET 	`/users/:userid/routines/week`	Lista de routines del usuario
 - GET 	`/users/:userid/trainers`			Lista de entrenadores del usuario
 ###*----------------------------Diet Related----------------------------------------------*
 
