@@ -18,7 +18,7 @@ var userSchema = new Schema({
     },
     publications: [{
         type:mongoose.Schema.Types.ObjectId,
-        ref: 'publicationSchema'
+        ref: 'publicationModel'
     }],
     facebook: {
         id: {type: String},
@@ -46,15 +46,15 @@ var userSchema = new Schema({
     },
     diets: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'dietSchema'
+        ref: 'dietModel'
     },
     coaching: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'trainerSchema'
+        ref: 'trainerModel'
     },
     routines: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'routineSchema'
+        ref: 'routineModel'
     }
 });
 

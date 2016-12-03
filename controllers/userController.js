@@ -6,6 +6,8 @@ var passport = require('passport');
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
 var trainerModel = require('../models/trainerModel');
+var dietModel = require('../models/dietModel');
+var routineModel = require('../models/routineModel');
 var config = require('../config/config'); // get our config file
 var crypto = require('crypto');
 
@@ -121,7 +123,7 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
 /** UPDATE user by user._id**/
 //  put /users/:id
 exports.updateUserById = function (req, res) {
-    userModel.findOneAndUpdate({id: req.params.id}, function (err) {
+    userModel.findOneAndUpdate({id: req.params.userid}, function (err) {
         if (err) res.send(500, err.message);
         var user = new userModel({
             name: req.body.name,
@@ -150,7 +152,7 @@ exports.updateUserById = function (req, res) {
 /** DELETE user by user._id**/
 //  /users/:id
 exports.deleteUserById = function (req, res) {
-    userModel.findByIdAndRemove({_id: req.params.id}, function (err) {
+    userModel.findByIdAndRemove({_id: req.params.userid}, function (err) {
         if (err) res.send(500, err.message);
         res.status(200).send("Deleted");
     });
@@ -168,9 +170,32 @@ exports.getUsers = function (req, res) {
 /** GET user by user._id**/
 //  get /users/:id
 exports.getUserById = function (req, res) {
-    userModel.find({_id: req.params.id}, function (err, user) {
+    userModel.find({_id: req.params.userid}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
         res.status(200).jsonp(user);
+    });
+};
+
+
+
+///users/:userid/diets
+exports.getDietsFromUserId = function (req, res) {
+    userModel.findOne({_id: req.params.userid})
+    .populate('diets')
+    .exec(function(err, user) {
+        if (err) res.send(500, err.message);
+
+        res.status(200).jsonp(user.diets);
+    });
+};
+///users/:userid/routines
+exports.getRoutinesFromUserId = function (req, res) {
+    userModel.findOne({_id: req.params.userid})
+    .populate('routines')
+    .exec(function(err, user) {
+        if (err) res.send(500, err.message);
+
+        res.status(200).jsonp(user.routines);
     });
 };

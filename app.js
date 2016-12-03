@@ -97,8 +97,7 @@ apiRoutes.route('/logout')
     .post(userCtrl.logout);
 
 apiRoutes.route('/diets')
-    .get(dietCtrl.getDiets)
-    .post(dietCtrl.addDiet);
+    .get(dietCtrl.getDiets);
 apiRoutes.route('/diets/:id')
     .get(dietCtrl.getDietById)
     .delete(dietCtrl.deleteDietById);
@@ -134,10 +133,16 @@ apiRoutes.use(function (req, res, next) {
 
 apiRoutes.route('/users')
     .get(userCtrl.getUsers);//Works
-apiRoutes.route('/users/:id')
+apiRoutes.route('/users/:userid')
     .get(userCtrl.getUserById)//Works
     .put(userCtrl.updateUserById)//No Works
     .delete(userCtrl.deleteUserById);//Works
+
+apiRoutes.route('/users/:userid/diets')
+    .get(userCtrl.getDietsFromUserId);
+apiRoutes.route('/users/:userid/routines')
+    .get(userCtrl.getRoutinesFromUserId);
+
 apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);//Works
 apiRoutes.route('/users/:userid/publications')
@@ -146,6 +151,10 @@ apiRoutes.route('/users/:userid/publications')
  .put(publicationCtrl.putPublicationById)//No Works
  .delete(publicationCtrl.deletePublicationById);//No Works*/
 
+ apiRoutes.route('/diets')
+     .post(dietCtrl.addDiet);
+ apiRoutes.route('/routines')
+     .post(routineCtrl.addRoutine);
 app.use('/api', apiRoutes);
 
 /**-------------------------------------------------------------**/

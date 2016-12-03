@@ -25,15 +25,16 @@
 ###*----------------------------User Related----------------------------------------------*
 
 - PUT 	`/users/:userid`				    Actualización del perfil
-- GET 	`/users/:userid/diets/day`	Lista de dietas del usuario
-- GET 	`/users/:userid/diets/week`	Lista de dietas del usuario
-- GET 	`/users/:userid/routines`			Lista de rutinas del usuario
-- GET 	`/users/:userid/routines/day`	Lista de routines del usuario
-- GET 	`/users/:userid/routines/week`	Lista de routines del usuario
+- GET 	`/users/:userid/diets`	Lista de dietas del usuario   --> works
+- GET 	`/users/:userid/diets/day`	Lista de dietas del usuario del dia actual
+- GET 	`/users/:userid/diets/week`	Lista de dietas del usuario de la setmana actual
+- GET 	`/users/:userid/routines`			Lista de rutinas del usuario   --> works
+- GET 	`/users/:userid/routines/day`	Lista de routines del usuario del día actual
+- GET 	`/users/:userid/routines/week`	Lista de routines del usuario de la setmana actual
 - GET 	`/users/:userid/trainers`			Lista de entrenadores del usuario
 ###*----------------------------Diet Related----------------------------------------------*
 
-- POST 	`/diets/:dietid/:userid`			Añadir dieta a usuario
+- POST 	`/users/:userid/adddiet/:dietid`			Añadir dieta a usuario
 - GET 	`/diets/:dietid/:week/`				Ver el detalle de una dieta y filtrar por semana
 - PUT 	`/diets/:dietid	`				    Actualizar una dieta
 ###*------------------------------Trainer Related------------------------------------------*
@@ -46,8 +47,8 @@
 - DELETE `/trainers/:trainer	`			Eliminar un entrenador
 ###*-------------------------------Routine Related----------------------------------------*
 
-- POST 	`/routines/:routineid/:userid	`		Añadir rutina a usuario
-- POST	`/routines	`						Crear una rutina
+- POST 	`/users/:userid/addroutine/:routineid	`		Añadir rutina a usuario
+- POST	`/routines	`						Crear una rutina   --> a mig fer, però hem de definir com es creen noves rutines i dietes, si amb totes les dades de cop, o dia a dia, o setmana a setmana
 - GET 	`/routines/:routineid	`				Ver el detalle de una rutina
 - GET 	`/routines/:routineid/:discipline	`	Ver el detalle de una rutina segun la modalidad
 - PUT 	`/routines/:routineid	`				Actualizar una rutina
