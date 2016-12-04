@@ -7,14 +7,11 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var expressValidator = require('express-validator');
 var session = require('express-session');
-
 var app = express();
 var config = require('./config/config');
-
 /**Inicio Express**/
 var app = express();
 var server = require('http').Server(app);
-
 var secret = config.secret;
 /** Express Session **/
 app.use(session({
@@ -22,17 +19,13 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-
 /**Set Static Folder**/
 app.use(express.static(__dirname + '/public'));
-
 app.set('superSecret', secret);
-
 /** Express Validator **/
 app.use(expressValidator({
     errorFormatter: function (param, msg, value) {
         var namespace = param.split('.'), root = namespace.shift(), formParam = root;
-
         while (namespace.length) {
             formParam += '[' + namespace.shift() + ']';
         }
@@ -43,17 +36,14 @@ app.use(expressValidator({
         };
     }
 }));
-
 /**Middlewares express**/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-
 /** developing mode **/
 /** use morgan to log requests to the console**/
 var morgan = require('morgan');
 app.use(morgan('dev'));
-
 /**CORS Filter**/
 app.use(cors());
 app.use(function (req, res, next) {
@@ -62,11 +52,9 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Access-Token");
     next();
 });
-
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + config.port + '/api');
 });
-
 /**------------------------------------------------------------------ **/
 /**--------------------IMPORT of Models & Controllers---------------- **/
 /**------------------------------------------------------------------ **/
@@ -80,13 +68,10 @@ var trainerMdl = require('./models/trainerModel')(app, mongoose);
 var trainerCtrl = require('./controllers/trainerController');
 var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
-
-
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
 /**------------------------------------------------------------------ **/
 var apiRoutes = express.Router();
-
 apiRoutes.route('/register')
     .post(userCtrl.register);
 /**No coge todos los parametros attributes de manera correcta**/
@@ -95,18 +80,14 @@ apiRoutes.route('/login')
 /**Parece devolver bien el token**/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
-
 apiRoutes.route('/diets')
     .get(dietCtrl.getDiets);
 apiRoutes.route('/diets/:dietid')
     .get(dietCtrl.getDietById);
-
-
 apiRoutes.route('/routines')
     .get(routineCtrl.getRoutines);
 apiRoutes.route('/trainers')
     .get(trainerCtrl.getTrainers);
-
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
 /** start of TOKEN COMPROVATION **/
@@ -136,12 +117,10 @@ apiRoutes.route('/users/:userid')
     .get(userCtrl.getUserById)//Works
     .put(userCtrl.updateUserById)//No Works
     .delete(userCtrl.deleteUserById);//Works
-
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
-
 apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);//Works
 apiRoutes.route('/users/:userid/publications')
@@ -149,24 +128,20 @@ apiRoutes.route('/users/:userid/publications')
 /*apiRoutes.route('/users/publications/:publicationid')
  .put(publicationCtrl.putPublicationById)//No Works
  .delete(publicationCtrl.deletePublicationById);//No Works*/
-
- apiRoutes.route('/diets')
-     .post(dietCtrl.addDiet);//works
- apiRoutes.route('/diets/:dietid/addday')
-     .post(dietCtrl.addDayToDiet);//works
- apiRoutes.route('/diets/:dietid')
-     .delete(dietCtrl.deleteDietById);//works
- apiRoutes.route('/users/:userid/adddiet')
-     .post(userCtrl.addDietToUser);//works
-
- apiRoutes.route('/routines')
-     .post(routineCtrl.addRoutine);
+apiRoutes.route('/diets')
+    .post(dietCtrl.addDiet);//works
+apiRoutes.route('/diets/:dietid/day')
+    .post(dietCtrl.addDayToDiet);//works
+apiRoutes.route('/diets/:dietid')
+    .delete(dietCtrl.deleteDietById);//works
+apiRoutes.route('/users/:userid/:diet')
+    .post(userCtrl.addDietToUser);//works
+apiRoutes.route('/routines')
+    .post(routineCtrl.addRoutine);
 app.use('/api', apiRoutes);
-
 /**-------------------------------------------------------------**/
 /**--------------------END of API routes------------------------**/
 /**-------------------------------------------------------------**/
-
 /**Conexión a la base de datos de MongoDB que tenemos en local**/
 mongoose.Promise = global.Promise;
 require('mongoose-middleware').initialize(mongoose);
@@ -174,7 +149,6 @@ mongoose.connect(config.database, function (err, res) {
     if (err) throw err;
     console.log('Conectado con éxito a la Base de Datos');
 });
-
 /** Start server **/
 server.listen(config.port, function () {
     console.log("Servidor en http://localhost:" + config.port);

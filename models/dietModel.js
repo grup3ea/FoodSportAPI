@@ -8,6 +8,14 @@ var dietSchema = new Schema({
     initiationdate: {type: Date},
     price: { type: String },
     image: { type: String },
+    client: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel'
+    }],
+    trainer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'trainerModel'
+    },
     days: [{
         title: {type: String},
         description: {type: String},
