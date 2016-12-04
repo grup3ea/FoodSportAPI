@@ -20,25 +20,6 @@ exports.addDiet = function (req, res) {
     var diet = new dietModel({
         title: req.body.title,
         description: req.body.description,
-        days: {
-            title: req.body.daytitle,
-            meals: {
-                title: req.body.mealtitle,
-                submeal: req.body.submealtitle,
-                description: req.body.submealdescription,
-                amount: {
-                    quantity: req.body.quantity,
-                    unit: req.body.unit
-                },
-                nutritional: {
-                    kcal: req.body.kcal,
-                    proteins: req.body.proteins,
-                    carbohidrates: req.body.carbohidrates,
-                    fats: req.body.fats,
-                    vitamins: req.body.vitamins
-                }
-            }
-        }
     });
     diet.save(function (err, diet) {
         if (err) {
@@ -49,10 +30,26 @@ exports.addDiet = function (req, res) {
     });
 };
 
+// add day
+exports.addDayToDiet = function (req, res) {
+    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
+        if (err) res.send(500, err.message);
+        diet.days.push(req.body.day);
+        console.log(req.body);
+        diet.save(function (err, diet) {
+            if (err) {
+                return res.status(500).send(err.message);
+            }
+            res.status(200).jsonp(diet);
+        });
+    });
+};
+
+
 /** DELETE diet by diet._id**/
 //  /diets/:id
 exports.deleteDietById = function (req, res) {
-    dietModel.findByIdAndRemove({_id: req.params.id}, function (err) {
+    dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
         if (err) res.send(500, err.message);
         res.status(200).send("Deleted");
     });
@@ -61,10 +58,8 @@ exports.deleteDietById = function (req, res) {
 /** GET Diet by diet._id**/
 //  get /diets/:id
 exports.getDietById = function (req, res) {
-    dietModel.find({_id: req.params.id}, function (err, diet) {
+    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
         if (err) res.send(500, err.message);
-        console.log(diet);
         res.status(200).jsonp(diet);
     });
 };
-

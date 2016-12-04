@@ -170,9 +170,10 @@ exports.getUsers = function (req, res) {
 /** GET user by user._id**/
 //  get /users/:id
 exports.getUserById = function (req, res) {
-    userModel.find({_id: req.params.userid}, function (err, user) {
+    userModel.findOne({_id: req.params.userid})
+    .populate('diets')
+    .exec(function (err, user) {
         if (err) res.send(500, err.message);
-        console.log(user);
         res.status(200).jsonp(user);
     });
 };
@@ -197,5 +198,19 @@ exports.getRoutinesFromUserId = function (req, res) {
         if (err) res.send(500, err.message);
 
         res.status(200).jsonp(user.routines);
+    });
+};
+
+
+exports.addDietToUser = function (req, res) {
+    userModel.findOne({_id: req.params.userid}, function (err, user) {
+        if (err) res.send(500, err.message);
+        console.log(user);
+        user.diets.push(req.body.dietid);
+        user.save(function (err){
+          if (err) res.send(500, err.message);
+
+          res.status(200).jsonp(user);
+        })
     });
 };

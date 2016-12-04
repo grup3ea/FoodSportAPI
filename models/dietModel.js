@@ -6,28 +6,27 @@ var dietSchema = new Schema({
     title: {type: String},
     description: {type: String},
     initiationdate: {type: Date},
-    week: [{
+    price: { type: String },
+    image: { type: String },
+    days: [{
         title: {type: String},
         description: {type: String},
-        days: [{
+        meals: [{
             title: {type: String},
-            meals: [{
+            submeals: [{
                 title: {type: String},
-                submeal: [{
-                    title: {type: String},
-                    description: {type: String},
-                    amount: {
-                        unit: {type: String},
-                        quantity: {type: String}
-                    },
-                    nutritional: {
-                        kcal: {type: String},
-                        proteins: {type: String},
-                        carbohidrates: {type: String},
-                        fats: {type: String},
-                        vitamins: {type: String}
-                    }
-                }]
+                description: {type: String},
+                amount: {
+                    unit: {type: String},
+                    quantity: {type: String}
+                },
+                nutritional: {
+                    kcal: {type: String},
+                    proteins: {type: String},
+                    carbohidrates: {type: String},
+                    fats: {type: String},
+                    vitamins: {type: String}
+                }
             }]
         }]
     }]

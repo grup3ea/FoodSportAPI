@@ -5,7 +5,6 @@
 - POST `/register`		Registro de Usuario (Se añade a la BBDD)
 - POST `/login	`		Logueo de Usuario (Se le da un token)
 - POST `/logout`		Destrucción del token
-- GET `/diets	`		Lista de dietas
 - GET `/routines`		Lista de rutinas
 - GET `/trainers`		Lista de entrenadores
 
@@ -15,10 +14,6 @@
 - GET 		`/users/:userid	`				Detalle de un usuario
 - DELETE 	`/users/:userid`			    Eliminación de usuario de la BBDD
 
-
-- DELETE 	`/diets/:dietid`				Eliminar una dieta
-- POST	    `/diets	`						Crear una dieta
-- GET 	    `/diets/:dietid`				Ver el detalle de una dieta segun la modalidad
 
 >##Not Working:
 
@@ -34,9 +29,79 @@
 - GET 	`/users/:userid/trainers`			Lista de entrenadores del usuario
 ###*----------------------------Diet Related----------------------------------------------*
 
-- POST 	`/users/:userid/adddiet/:dietid`			Añadir dieta a usuario
-- GET 	`/diets/:dietid/:week/`				Ver el detalle de una dieta y filtrar por semana
+- GET `/diets	`		Lista de dietas      --> works
+- POST 	`/users/:userid/adddiet/:dietid`			Añadir dieta a usuario     --> works
+```json
+{
+  "dietid": "584447fff293433560872f74"
+}
+```
+
+
+- GET 	    `/diets/:dietid`				Ver el detalle de una dieta by id      --> works
+```json
+{
+  "title": "dieta Marató",
+  "description": "Amb aquesta dieta et prepares per fer una marató"
+}
+```
+- POST 	`/diets	`				    crear nova dieta buida       --> works
+```json
+{
+  "title": "dieta Marató",
+  "description": "Amb aquesta dieta et prepares per fer una marató"
+}
+```
+- POST 	`/diets/:dietid/addday	`				    añadir dia a la dieta     --> works
+```json
+{
+  "day": {
+    "title": "day name",
+    "description": "descripció del dia",
+    "meals": [
+      {
+        "title": "esmorzar",
+        "submeals": [
+          {
+            "title": "primer plat",
+            "description": "description",
+            "amount": {
+              "unit": "Kg",
+              "quantity": "3"
+            }// potser també posar el parametre nutritional
+          },
+          {
+            "title": "segon plat",
+            "description": "description",
+            "amount": {
+              "unit": "Kg",
+              "quantity": "3"
+            }
+          }
+        ]
+      },
+      {
+        "title": "dinar",
+        "submeals": [
+          {
+            "title": "plat únic",
+            "description": "description",
+            "amount": {
+              "unit": "Kg",
+              "quantity": "3"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+
 - PUT 	`/diets/:dietid	`				    Actualizar una dieta
+
+- DELETE 	`/diets/:dietid`				Eliminar una dieta
 ###*------------------------------Trainer Related------------------------------------------*
 
 - POST 	`/trainers/:trainerid/:userid`		Añadir entrenador a usuario

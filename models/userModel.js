@@ -44,10 +44,10 @@ var userSchema = new Schema({
         email: {type: String},
         name: {type: String}
     },
-    diets: {
+    diets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'dietModel'
-    },
+    }],
     coaching: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'trainerModel'

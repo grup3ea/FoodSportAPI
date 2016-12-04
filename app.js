@@ -98,9 +98,8 @@ apiRoutes.route('/logout')
 
 apiRoutes.route('/diets')
     .get(dietCtrl.getDiets);
-apiRoutes.route('/diets/:id')
-    .get(dietCtrl.getDietById)
-    .delete(dietCtrl.deleteDietById);
+apiRoutes.route('/diets/:dietid')
+    .get(dietCtrl.getDietById);
 
 
 apiRoutes.route('/routines')
@@ -152,7 +151,14 @@ apiRoutes.route('/users/:userid/publications')
  .delete(publicationCtrl.deletePublicationById);//No Works*/
 
  apiRoutes.route('/diets')
-     .post(dietCtrl.addDiet);
+     .post(dietCtrl.addDiet);//works
+ apiRoutes.route('/diets/:dietid/addday')
+     .post(dietCtrl.addDayToDiet);//works
+ apiRoutes.route('/diets/:dietid')
+     .delete(dietCtrl.deleteDietById);//works
+ apiRoutes.route('/users/:userid/adddiet')
+     .post(userCtrl.addDietToUser);//works
+
  apiRoutes.route('/routines')
      .post(routineCtrl.addRoutine);
 app.use('/api', apiRoutes);
