@@ -14,9 +14,18 @@ exports.getDiets = function (req, res) {
         res.status(200).jsonp(diets);
     });
 };
+/** GET Diet by diet._id**/
+//  get /diets/:id
+exports.getDietById = function (req, res) {
+    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(diet);
+    });
+};
+
+
 /**POST add new diet to DB - Register**/
 exports.addDiet = function (req, res) {
-    console.log(req.body);
     var diet = new dietModel({
         title: req.body.title,
         description: req.body.description,
@@ -35,7 +44,6 @@ exports.addDayToDiet = function (req, res) {
     dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
         if (err) res.send(500, err.message);
         diet.days.push(req.body.day);
-        console.log(req.body);
         diet.save(function (err, diet) {
             if (err) {
                 return res.status(500).send(err.message);
@@ -52,14 +60,5 @@ exports.deleteDietById = function (req, res) {
     dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
         if (err) res.send(500, err.message);
         res.status(200).send("Deleted");
-    });
-};
-
-/** GET Diet by diet._id**/
-//  get /diets/:id
-exports.getDietById = function (req, res) {
-    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(diet);
     });
 };

@@ -52,10 +52,10 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'trainerModel'
     },
-    routines: {
+    routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
-    }
+    }]
 });
 
 userSchema.plugin(mongooseUniqueValidator);

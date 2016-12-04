@@ -172,6 +172,7 @@ exports.getUsers = function (req, res) {
 exports.getUserById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
     .populate('diets')
+    .populate('routines')
     .exec(function (err, user) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(user);
@@ -207,6 +208,18 @@ exports.addDietToUser = function (req, res) {
         if (err) res.send(500, err.message);
         console.log(user);
         user.diets.push(req.body.dietid);
+        user.save(function (err){
+          if (err) res.send(500, err.message);
+
+          res.status(200).jsonp(user);
+        })
+    });
+};
+exports.addRoutineToUser = function (req, res) {
+    userModel.findOne({_id: req.params.userid}, function (err, user) {
+        if (err) res.send(500, err.message);
+        console.log(user);
+        user.routines.push(req.body.routineid);
         user.save(function (err){
           if (err) res.send(500, err.message);
 

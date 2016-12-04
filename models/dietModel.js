@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var dietSchema = new Schema({
     title: {type: String},
     description: {type: String},
+    startingDay: {type: Date},
     initiationdate: {type: Date},
     price: { type: String },
     image: { type: String },
