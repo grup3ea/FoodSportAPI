@@ -133,43 +133,46 @@ apiRoutes.use(function (req, res, next) {
     }
 });
 /** end of TOKEN COMPROVATION **/
-
+/** ********** **/
+/******USERS*****/
+/** ********** **/
 apiRoutes.route('/users')
-    .get(userCtrl.getUsers);//Works
+    .get(userCtrl.getUsers);
 apiRoutes.route('/users/:userid')
-    .get(userCtrl.getUserById)//Works
+    .get(userCtrl.getUserById)
     .put(userCtrl.updateUserById)//No Works
-    .delete(userCtrl.deleteUserById);//Works
-
+    .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
-
-apiRoutes.route('/publications')
-    .post(publicationCtrl.postPublication);//Works
-apiRoutes.route('/users/:userid/publications')
-    .get(publicationCtrl.getUserPublicationsByUserId);//No Works
-/*apiRoutes.route('/users/publications/:publicationid')
- .put(publicationCtrl.putPublicationById)//No Works
- .delete(publicationCtrl.deletePublicationById);//No Works*/
-
+/** ********** **/
+/******DIETS*****/
+/** ********** **/
  apiRoutes.route('/diets')
-     .post(dietCtrl.addDiet);//works
+     .post(dietCtrl.addDiet);
  apiRoutes.route('/diets/:dietid/days')
-     .post(dietCtrl.addDayToDiet);//works
+     .post(dietCtrl.addDayToDiet);
  apiRoutes.route('/diets/:dietid')
-     .delete(dietCtrl.deleteDietById);//works
+     .delete(dietCtrl.deleteDietById);
  apiRoutes.route('/users/:userid/diets')
-     .post(userCtrl.addDietToUser);//works
-
-
+     .post(userCtrl.addDietToUser);
+/** ********** **/
+/****ROUTINES****/
+/** ********** **/
  apiRoutes.route('/routines')
-     .post(routineCtrl.addRoutine);//works
+     .post(routineCtrl.addRoutine);
  apiRoutes.route('/routines/:routineid/days')
-     .post(routineCtrl.addDayToRoutine);//works
+     .post(routineCtrl.addDayToRoutine);
  apiRoutes.route('/users/:userid/routines')
-     .post(userCtrl.addRoutineToUser);//works
+     .post(userCtrl.addRoutineToUser);
+/** ********** **/
+/**PUBLICATIONS**/
+/** ********** **/
+apiRoutes.route('/publications')
+    .post(publicationCtrl.postPublication);
+apiRoutes.route('/users/:userid/publications')
+    .get(publicationCtrl.getUserPublicationsByUserId);
 
 
 app.use('/api', apiRoutes);

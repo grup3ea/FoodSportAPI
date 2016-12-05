@@ -65,8 +65,7 @@ exports.login = function (req, res) {
                   res.json({
                       user: user,
                       success: true,
-                      message: 'Enjoy your token!',
-                      token: token
+                      message: 'Enjoy your token!'
                   });
         				});
             }

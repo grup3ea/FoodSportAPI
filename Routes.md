@@ -12,11 +12,11 @@
 - PUT 	`/users/:userid`				    Actualización del perfil
 - DELETE 	`/users/:userid`			    Eliminación de usuario de la BBDD
 - GET 	`/users/:userid/diets`	Lista de dietas del usuario   --> works
-- GET 	`/users/:userid/diets/day`	Lista de dietas del usuario del dia actual
-- GET 	`/users/:userid/diets/week`	Lista de dietas del usuario de la setmana actual
+- GET 	`/users/:userid/diets/:day`	Lista de dietas del usuario del dia actual
+- GET 	`/users/:userid/diets/:week`	Lista de dietas del usuario de la setmana actual
 - GET 	`/users/:userid/routines`			Lista de rutinas del usuario   --> works
-- GET 	`/users/:userid/routines/day`	Lista de routines del usuario del día actual
-- GET 	`/users/:userid/routines/week`	Lista de routines del usuario de la setmana actual
+- GET 	`/users/:userid/routines/:day`	Lista de routines del usuario del día actual
+- GET 	`/users/:userid/routines/:week`	Lista de routines del usuario de la setmana actual
 - GET 	`/users/:userid/trainers`			Lista de entrenadores del usuario
 
 ###*------------------------------Trainer Related------------------------------------------*
