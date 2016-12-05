@@ -109,7 +109,12 @@ apiRoutes.route('/routines/:routineid')
 
 
 apiRoutes.route('/trainers')
-    .get(trainerCtrl.getTrainers);
+    .get(trainerCtrl.getTrainers)
+    .post(trainerCtrl.addTrainer);
+
+apiRoutes.route('/trainers/:id')
+    .put(trainerCtrl.updateTrainer)
+    .delete(trainerCtrl.removeTrainer);
 
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
