@@ -15,6 +15,8 @@ exports.getTrainers = function (req, res) {
     });
 };
 
+/*** OK  ***/
+
 exports.addTrainer = function (req, res) {
     var trainer = new trainerModel({
         name: req.body.name,
@@ -28,8 +30,10 @@ exports.addTrainer = function (req, res) {
     });
 };
 
+/*** OK ***/
+
 exports.updateTrainer = function (req, res) {
-    trainerModel.update({id: req.params.id},
+    trainerModel.update({_id: req.params.id},
         {
             $set: {
                 name: req.body.name,
@@ -49,14 +53,94 @@ exports.updateTrainer = function (req, res) {
         });
 }
 
+/*** OK ***/
+
 exports.removeTrainer = function (req, res) {
-    trainerModel.remove({id: req.params.id}, function (err, trainers) {
+    trainerModel.remove({_id: req.params.id}, function (err) {
         if (err)
             res.send(err);
-        trainerModel.find(function (err, trainers) {
+        trainerModel.find(function (err, trainer) {
             if (err)
                 res.send(err)
-            res.json(trainers);
+            res.json(trainer);
         });
+    });
+}
+
+/*** TEST ***/
+
+exports.TrainerNewClient = function (req, res) {
+
+    var query = {_id: req.params.id};
+    var update = {$addToSet : {"clients" : req.body.client_id}};
+    var options = {};
+    trainerModel.findOneAndUpdate(query, update, options, function(err, trainer) {
+        if (err) {
+            res.send(err);
+        }
+        if(trainer){
+            trainerModel.findById(trainer._id).populate('clients').exec().then(function(err, trainer) {
+                if (err)
+                    res.send(err)
+                res.send(trainer);
+            });
+        }
+    });
+};
+
+exports.TrainerRemoveClient = function (req, res) {
+    var query = {_id: req.params.id};
+    var update = {$pull: {"clients": req.params.client_id}};
+    var options = {};
+    trainerModel.findOneAndUpdate(query, update, options, function (err, trainer) {
+        if (err) {
+            res.send(err);
+        }
+        if (trainer) {
+            trainerModel.findById(trainer._id).populate('clients').exec().then(function (err, trainer) {
+                if (err)
+                    res.send(err)
+                res.send(trainer);
+            });
+        }
+    });
+}
+
+/*** TEST ***/
+
+exports.TrainerNewRoutine = function (req, res) {
+
+    var query = {_id: req.params.id};
+    var update = {$addToSet : {"routines" : req.body.routine_id}};
+    var options = {};
+    trainerModel.findOneAndUpdate(query, update, options, function(err, trainer) {
+        if (err) {
+            res.send(err);
+        }
+        if(trainer){
+            trainerModel.findById(trainer._id).populate('routines').exec().then(function(err, trainer) {
+                if (err)
+                    res.send(err)
+                res.send(trainer);
+            });
+        }
+    });
+};
+
+exports.TrainerRemoveRoutine = function (req, res) {
+    var query = {_id: req.params.id};
+    var update = {$pull: {"routines": req.params.routine_id}};
+    var options = {};
+    trainerModel.findOneAndUpdate(query, update, options, function (err, trainer) {
+        if (err) {
+            res.send(err);
+        }
+        if (trainer) {
+            trainerModel.findById(trainer._id).populate('routines').exec().then(function (err, trainer) {
+                if (err)
+                    res.send(err)
+                res.send(trainer);
+            });
+        }
     });
 }

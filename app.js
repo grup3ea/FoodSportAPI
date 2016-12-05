@@ -89,10 +89,10 @@ var apiRoutes = express.Router();
 
 apiRoutes.route('/register')
     .post(userCtrl.register);
-/**No coge todos los parametros attributes de manera correcta**/
+/** Coge todos los parametros attributes de manera correcta **/
 apiRoutes.route('/login')
     .post(userCtrl.login);
-/**Parece devolver bien el token**/
+/** Parece devolver bien el token **/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
 
@@ -118,7 +118,7 @@ apiRoutes.route('/trainers/:id')
 
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
-/** start of TOKEN COMPROVATION **/
+/** start of TOKEN MATCHING **/
 apiRoutes.use(function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
@@ -137,10 +137,12 @@ apiRoutes.use(function (req, res, next) {
         });
     }
 });
-/** end of TOKEN COMPROVATION **/
+/** end of TOKEN MATCHING **/
+
 /** ********** **/
 /******USERS*****/
 /** ********** **/
+
 apiRoutes.route('/users')
     .get(userCtrl.getUsers);
 apiRoutes.route('/users/:userid')
@@ -148,36 +150,56 @@ apiRoutes.route('/users/:userid')
     .put(userCtrl.updateUserById)
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
-    .get(userCtrl.getDietsFromUserId);
+    .get(userCtrl.getDietsFromUserId)
+    .post(userCtrl.addDietToUser);
 apiRoutes.route('/users/:userid/routines')
-    .get(userCtrl.getRoutinesFromUserId);
+    .get(userCtrl.getRoutinesFromUserId)
+    .post(userCtrl.addRoutineToUser);
+apiRoutes.route('/users/:userid/publications')
+    .get(publicationCtrl.getUserPublicationsByUserId);
+
+/*****************/
+/*** TRAINERS ****/
+/*****************/
+
+apiRoutes.route('/trainers/:id/client')
+    .post(trainerCtrl.TrainerNewClient)
+
+apiRoutes.route('/trainers/:id/client/:client_id')
+    .delete(trainerCtrl.TrainerRemoveClient);
+
+apiRoutes.route('/trainers/:id/routine')
+    .post(trainerCtrl.TrainerNewRoutine);
+
+apiRoutes.route('/trainers/:id/routine/:routine_id')
+    .delete(trainerCtrl.TrainerRemoveRoutine);
+
 /** ********** **/
 /******DIETS*****/
 /** ********** **/
+
  apiRoutes.route('/diets')
      .post(dietCtrl.addDiet);
  apiRoutes.route('/diets/:dietid/days')
      .post(dietCtrl.addDayToDiet);
  apiRoutes.route('/diets/:dietid')
      .delete(dietCtrl.deleteDietById);
- apiRoutes.route('/users/:userid/diets')
-     .post(userCtrl.addDietToUser);
+
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
+
  apiRoutes.route('/routines')
      .post(routineCtrl.addRoutine);
  apiRoutes.route('/routines/:routineid/days')
      .post(routineCtrl.addDayToRoutine);
- apiRoutes.route('/users/:userid/routines')
-     .post(userCtrl.addRoutineToUser);
+
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/
+
 apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);
-apiRoutes.route('/users/:userid/publications')
-    .get(publicationCtrl.getUserPublicationsByUserId);
 
 
 app.use('/api', apiRoutes);

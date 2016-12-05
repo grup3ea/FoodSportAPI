@@ -14,6 +14,9 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret); // secret variable
 
 /**POST add new user to DB - Register**/
+
+/*** OK ***/
+
 exports.register = function (req, res) {
     console.log(req.body);
     var user = new userModel({
@@ -40,6 +43,9 @@ exports.register = function (req, res) {
 };
 
 /**POST user login - authentication**/
+
+/*** OK ***/
+
 exports.login = function (req, res) {
     userModel.findOne({
         email: req.body.email

@@ -11,10 +11,10 @@ var userSchema = new Schema({
     description: {type: String},
     avatar: {type: String},
     attributes: {
-        height: {type: String},
-        weight: {type: String},
-        gender: {type: String},
-        age: {type: String}
+        height: {type: Number},
+        weight: {type: Number},
+        gender: {type: Boolean},
+        age: {type: Number}
     },
     publications: [{
         type:mongoose.Schema.Types.ObjectId,
