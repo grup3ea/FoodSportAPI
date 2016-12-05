@@ -140,7 +140,7 @@ apiRoutes.route('/users')
     .get(userCtrl.getUsers);
 apiRoutes.route('/users/:userid')
     .get(userCtrl.getUserById)
-    .put(userCtrl.updateUserById)//No Works
+    .put(userCtrl.updateUserById)
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);

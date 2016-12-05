@@ -53,28 +53,29 @@ exports.login = function (req, res) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
                 var token = jwt.sign(user, app.get('superSecret'), {
-                  //  expiresIn: 86400 // expires in 24 hours
+                    //  expiresIn: 86400 // expires in 24 hours
                 });
                 user.token = token;
 
-                user.save(function(err, user) {
-        					if(err) res.send(500, err.message);
+                user.save(function (err, user) {
+                    if (err) res.send(500, err.message);
 
-        	        // return the information including token as JSON
-        					user.password="";
-                  res.json({
-                      user: user,
-                      success: true,
-                      message: 'Enjoy your token!'
-                  });
-        				});
+                    // return the information including token as JSON
+                    user.password = "";
+                    res.json({
+                        user: user,
+                        success: true,
+                        message: 'Enjoy your token!',
+                        token: token
+                    });
+                });
             }
         }
     });
 };
 
 /**Logout & Invalidate Token so the user is really out**/
-exports.logout = function(req, res, callback) {
+exports.logout = function (req, res, callback) {
     var token = req.headers.authorization;
     var decoded = verify(token);
     if (decoded) {
@@ -118,33 +119,27 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
 /* fin de rutas de passport */
 
 
-
 /** UPDATE user by user._id**/
 //  put /users/:id
+
 exports.updateUserById = function (req, res) {
-    userModel.findOneAndUpdate({id: req.params.userid}, function (err) {
+    var userupdated = new userModel({
+        name: req.body.name,
+        role: req.body.role,
+        password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
+        email: req.body.email,
+        description: req.body.description,
+        avatar: req.body.avatar,
+        attributes: {
+            height: req.body.height,
+            weight: req.body.weight,
+            gender: req.body.gender,
+            age: req.body.age
+        }
+    });
+    userModel.findOneAndUpdate({_id: req.params.id}, userupdated, function (err) {
         if (err) res.send(500, err.message);
-        var user = new userModel({
-            name: req.body.name,
-            role: req.body.role,
-            password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
-            email: req.body.email,
-            description: req.body.description,
-            avatar: req.body.avatar,
-            attributes: {
-                height: req.body.height,
-                weight: req.body.weight,
-                gender: req.body.gender,
-                age: req.body.age
-            }
-        });
-        user.save(function (err, user) {
-            if (err) {
-                console.log(err.message);
-                return res.status(500).send(err.message);
-            }
-            res.status(200).jsonp(user);
-        });
+        res.status(204).jsonp(user);
     });
 };
 
@@ -170,35 +165,34 @@ exports.getUsers = function (req, res) {
 //  get /users/:id
 exports.getUserById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
-    .populate('diets')
-    .populate('routines')
-    .exec(function (err, user) {
-        if (err) res.send(500, err.message);
-        res.status(200).jsonp(user);
-    });
+        .populate('diets')
+        .populate('routines')
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
+            res.status(200).jsonp(user);
+        });
 };
-
 
 
 ///users/:userid/diets
 exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
-    .populate('diets')
-    .exec(function(err, user) {
-        if (err) res.send(500, err.message);
+        .populate('diets')
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
 
-        res.status(200).jsonp(user.diets);
-    });
+            res.status(200).jsonp(user.diets);
+        });
 };
 ///users/:userid/routines
 exports.getRoutinesFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
-    .populate('routines')
-    .exec(function(err, user) {
-        if (err) res.send(500, err.message);
+        .populate('routines')
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
 
-        res.status(200).jsonp(user.routines);
-    });
+            res.status(200).jsonp(user.routines);
+        });
 };
 
 
@@ -207,10 +201,10 @@ exports.addDietToUser = function (req, res) {
         if (err) res.send(500, err.message);
         console.log(user);
         user.diets.push(req.body.dietid);
-        user.save(function (err){
-          if (err) res.send(500, err.message);
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
 
-          res.status(200).jsonp(user);
+            res.status(200).jsonp(user);
         })
     });
 };
@@ -219,10 +213,10 @@ exports.addRoutineToUser = function (req, res) {
         if (err) res.send(500, err.message);
         console.log(user);
         user.routines.push(req.body.routineid);
-        user.save(function (err){
-          if (err) res.send(500, err.message);
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
 
-          res.status(200).jsonp(user);
+            res.status(200).jsonp(user);
         })
     });
 };
