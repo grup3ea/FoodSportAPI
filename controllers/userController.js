@@ -203,27 +203,3 @@ exports.getRoutinesFromUserId = function (req, res) {
             res.status(200).jsonp(user.routines);
         });
 };
-
-
-
-exports.addRoutineToUser = function (req, res) {
-    userModel.findOne({_id: req.params.userid}, function (err, user) {
-        if (err) res.send(500, err.message);
-        console.log(user);
-        user.routines.push(req.body.routineid);
-        /* gamification */
-        var reward={
-          concept: "choosing routine",
-          date: Date(),
-          value: +5
-        };
-        user.points.history.push(reward);
-        user.points.total=user.points.total+5;
-        /* end of gamification */
-        user.save(function (err) {
-            if (err) res.send(500, err.message);
-
-            res.status(200).jsonp(user);
-        })
-    });
-};

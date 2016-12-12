@@ -152,8 +152,7 @@ apiRoutes.route('/users/:userid')
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
-    .get(userCtrl.getRoutinesFromUserId)
-    .post(userCtrl.addRoutineToUser);//hem de decidir qui posa routine al user: l'user o el trainer
+    .get(userCtrl.getRoutinesFromUserId);
 apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
 
@@ -162,7 +161,7 @@ apiRoutes.route('/users/:userid/publications')
 /*****************/
 
 apiRoutes.route('/trainers/:id/client')
-    .post(trainerCtrl.TrainerNewClient)
+    .post(trainerCtrl.TrainerNewClient);
 
 apiRoutes.route('/trainers/:id/client/:client_id')
     .delete(trainerCtrl.TrainerRemoveClient);
@@ -181,12 +180,13 @@ apiRoutes.route('/trainers/:id/routine/:routine_id')
      .post(dietCtrl.addDiet);
  apiRoutes.route('/diets/:dietid/days')
      .post(dietCtrl.addDayToDiet);
- apiRoutes.route('/diets/:dietid')
+ apiRoutes.route('/diets/deleteDiet/:dietid')//he canviat la ruta temporalment fins que la definim, pq colisionava amb la ruta de unchoose diet
      .delete(dietCtrl.deleteDietById);
 
 
-apiRoutes.route('/diets/choose')//no cal el userid, pq amb el token ja ho tenim
-    .post(dietCtrl.chooseDiet);//pq si no un altre user li podria posar diets a l'user
+apiRoutes.route('/diets/choose')
+    .post(dietCtrl.chooseDiet)
+    .delete(dietCtrl.unchooseDiet);
 
 apiRoutes.route('/diets/completeDay')
     .post(dietCtrl.completeDay);
@@ -200,6 +200,9 @@ apiRoutes.route('/diets/completeDay')
  apiRoutes.route('/routines/:routineid/days')
      .post(routineCtrl.addDayToRoutine);
 
+apiRoutes.route('/routines/choose')
+   .post(routineCtrl.chooseRoutine)
+   .delete(routineCtrl.unchooseRoutine);
 apiRoutes.route('/routines/completeDay')
    .post(routineCtrl.completeDay);
 /** ********** **/

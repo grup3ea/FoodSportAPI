@@ -37,6 +37,8 @@
   "dietid": "584447fff293433560872f74"
 }
 ```
+- DELETE 	`/diets/choose`			Quitar dieta a usuario     --> works
+
 - POST 	`/diets/completeDay`			Un user completa un dia de dieta     --> only works gamification
 
 - GET 	    `/diets/:dietid`				Ver el detalle de una dieta by id      --> works
@@ -108,12 +110,14 @@
 
 
 - GET `/routines	`		Lista de routines
-- POST 	`/users/:userid/routines`			Añadir rutina a usuario
+- POST 	`/routines/choose`			Añadir rutina a usuario      --> works
 ```json
 {
   "routineid": "584447fff293433560872f74"
 }
 ```
+- DELETE 	`/routines/choose`			Quitar rutina a usuario    --> works
+
 - POST 	`/routines/completeDay`			Un user completa un dia de routine     --> only works gamification
 
 - GET 	    `/routines/:routineid`				Ver el detalle de una routine by id
