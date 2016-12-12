@@ -150,8 +150,9 @@ apiRoutes.route('/users/:userid')
     .put(userCtrl.updateUserById)
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
-    .get(userCtrl.getDietsFromUserId)
-    .post(userCtrl.addDietToUser);
+    .get(userCtrl.getDietsFromUserId);
+apiRoutes.route('/diets/choose')//no cal el userid, pq amb el token ja ho tenim
+    .post(userCtrl.chooseDiet);//pq si no un altre user li podria posar diets a l'user
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId)
     .post(userCtrl.addRoutineToUser);

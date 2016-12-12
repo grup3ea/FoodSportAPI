@@ -37,7 +37,8 @@ var dietSchema = new Schema({
                     vitamins: {type: String}
                 }
             }]
-        }]
+        }],
+        done: {type: String}//si ha complert el dia
     }]
 });
 dietSchema.plugin(mongooseUniqueValidator);

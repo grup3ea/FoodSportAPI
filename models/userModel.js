@@ -55,7 +55,15 @@ var userSchema = new Schema({
     routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
-    }]
+    }],
+    points: {
+      total: {type: Number},
+      history: [{
+        concept: {type: String},
+        date: {type: Date},
+        value: {type: Number}
+      }]
+    }
 });
 
 userSchema.plugin(mongooseUniqueValidator);

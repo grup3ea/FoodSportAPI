@@ -31,6 +31,9 @@ exports.register = function (req, res) {
             weight: req.body.weight,
             gender: req.body.gender,
             age: req.body.age
+        },
+        points:{
+          total: 0
         }
     });
     user.save(function (err, user) {
@@ -202,11 +205,20 @@ exports.getRoutinesFromUserId = function (req, res) {
 };
 
 
-exports.addDietToUser = function (req, res) {
-    userModel.findOne({_id: req.params.userid}, function (err, user) {
+exports.chooseDiet = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         console.log(user);
         user.diets.push(req.body.dietid);
+        /* gamification */
+        var reward={
+          concept: "choosing diet",
+          date: Date(),
+          value: +5
+        };
+        user.points.history.push(reward);
+        user.points.total=user.points.total+5;
+        /* end of gamification */
         user.save(function (err) {
             if (err) res.send(500, err.message);
 
