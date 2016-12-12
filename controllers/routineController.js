@@ -5,7 +5,7 @@ var crypto = require('crypto');
 
 app.set('superSecret', config.secret); // secret variable
 
-
+var userModel = require('../models/userModel');
 var routineModel = require('../models/routineModel');
 
 exports.getRoutines = function (req, res) {
@@ -51,5 +51,27 @@ exports.addDayToRoutine = function (req, res) {
             }
             res.status(200).jsonp(routine);
         });
+    });
+};
+
+
+
+exports.completeDay = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        /* gamification */
+        var reward={
+          concept: "routine day complete",
+          date: Date(),
+          value: +1
+        };
+        user.points.history.push(reward);
+        user.points.total=user.points.total+1;
+        /* end of gamification */
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
+
+            res.status(200).jsonp(user);
+        })
     });
 };

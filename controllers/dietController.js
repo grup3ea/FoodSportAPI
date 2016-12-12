@@ -6,6 +6,7 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret); // secret variable
 
 
+var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
 
 exports.getDiets = function (req, res) {
@@ -60,5 +61,52 @@ exports.deleteDietById = function (req, res) {
     dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
         if (err) res.send(500, err.message);
         res.status(200).send("Deleted");
+    });
+};
+
+
+
+
+
+
+exports.chooseDiet = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        console.log(user);
+        user.diets.push(req.body.dietid);
+        /* gamification */
+        var reward={
+          concept: "choosing diet",
+          date: Date(),
+          value: +5
+        };
+        user.points.history.push(reward);
+        user.points.total=user.points.total+5;
+        /* end of gamification */
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
+
+            res.status(200).jsonp(user);
+        })
+    });
+};
+
+exports.completeDay = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        /* gamification */
+        var reward={
+          concept: "diet day complete",
+          date: Date(),
+          value: +1
+        };
+        user.points.history.push(reward);
+        user.points.total=user.points.total+1;
+        /* end of gamification */
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
+
+            res.status(200).jsonp(user);
+        })
     });
 };

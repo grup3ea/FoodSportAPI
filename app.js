@@ -151,11 +151,9 @@ apiRoutes.route('/users/:userid')
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
-apiRoutes.route('/diets/choose')//no cal el userid, pq amb el token ja ho tenim
-    .post(userCtrl.chooseDiet);//pq si no un altre user li podria posar diets a l'user
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId)
-    .post(userCtrl.addRoutineToUser);
+    .post(userCtrl.addRoutineToUser);//hem de decidir qui posa routine al user: l'user o el trainer
 apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
 
@@ -186,6 +184,13 @@ apiRoutes.route('/trainers/:id/routine/:routine_id')
  apiRoutes.route('/diets/:dietid')
      .delete(dietCtrl.deleteDietById);
 
+
+apiRoutes.route('/diets/choose')//no cal el userid, pq amb el token ja ho tenim
+    .post(dietCtrl.chooseDiet);//pq si no un altre user li podria posar diets a l'user
+
+apiRoutes.route('/diets/completeDay')
+    .post(dietCtrl.completeDay);
+
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
@@ -195,6 +200,8 @@ apiRoutes.route('/trainers/:id/routine/:routine_id')
  apiRoutes.route('/routines/:routineid/days')
      .post(routineCtrl.addDayToRoutine);
 
+apiRoutes.route('/routines/completeDay')
+   .post(routineCtrl.completeDay);
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/

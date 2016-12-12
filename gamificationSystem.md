@@ -18,8 +18,8 @@ escollir una ROUTINE                                        +5    --> hem de dec
 escollir una DIET                                           +5    --> works
 deixar ROUTINE                                              -7
 deixar DIET                                                 -7
-fer un dia de ROUTINE                                       +1
-fer un dia de DIET                                          +1
+fer un dia de ROUTINE                                       +1    --> works
+fer un dia de DIET                                          +1    --> works
 si no fas un dia de DIET                                    -1
 si no fas un dia de ROUTINE                                 -1
 per cada 10km de RUNNING                                    +1

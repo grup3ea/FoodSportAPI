@@ -31,13 +31,13 @@
 ###*----------------------------Diet Related----------------------------------------------*
 
 - GET `/diets	`		Lista de dietas      --> works
-- POST 	`/users/:userid/diets`			Añadir dieta a usuario     --> works
+- POST 	`/diets/choose`			Añadir dieta a usuario     --> works
 ```json
 {
   "dietid": "584447fff293433560872f74"
 }
 ```
-
+- POST 	`/diets/completeDay`			Un user completa un dia de dieta     --> only works gamification
 
 - GET 	    `/diets/:dietid`				Ver el detalle de una dieta by id      --> works
 ```json
@@ -114,7 +114,7 @@
   "routineid": "584447fff293433560872f74"
 }
 ```
-
+- POST 	`/routines/completeDay`			Un user completa un dia de routine     --> only works gamification
 
 - GET 	    `/routines/:routineid`				Ver el detalle de una routine by id
 ```json
