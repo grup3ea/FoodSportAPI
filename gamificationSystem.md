@@ -29,3 +29,9 @@ publicar una foto de tu fent exercici/dieta                 +1
 valorar TRAINER                                             +1
 valorar DIET                                                +1
 ```
+
+
+
+------------------
+#sistema de negoci
+- podem fer que un Trainer pot tenir 5 routines, a partir de la 6ena, ha de pagar. Així al principi entra, fa clients i va fent negoci, a la que vegi que funciona estarà més disposat a pagar un petit % per cada nou client.

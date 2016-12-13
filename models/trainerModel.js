@@ -8,14 +8,14 @@ var trainerSchema = new Schema({
     token: {type: String},
     email: {type: String, required: true, unique: true},
     discipline : {type:String},
-    routines: {
+    routines: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'routineSchema'
-    },
-    clients: {
+        ref: 'routineModel'
+    }],
+    clients: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userSchema'
-    }
+        ref: 'userModel'
+    }]
 });
 
 

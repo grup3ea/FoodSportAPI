@@ -9,10 +9,10 @@ var routineSchema = new Schema({
     discipline: {type: String},
     price: { type: String },//si és gratis, es posa q val 0, així els users ho veuen amb bons ulls
     image: { type: String },
-    client: [{
+    client: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userModel'
-    }],
+    },
     trainer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'trainerModel'

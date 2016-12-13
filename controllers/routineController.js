@@ -7,6 +7,7 @@ app.set('superSecret', config.secret); // secret variable
 
 var userModel = require('../models/userModel');
 var routineModel = require('../models/routineModel');
+var trainerModel = require('../models/trainerModel');
 
 exports.getRoutines = function (req, res) {
     routineModel.find(function (err, routines) {
@@ -26,18 +27,31 @@ exports.getRoutineById = function (req, res) {
 
 
 exports.addRoutine = function (req, res) {
-    var routine = new routineModel({
-        title: req.body.title,
-        description: req.body.description
-
-    });
-    routine.save(function (err, routine) {
-        if (err) {
-            console.log(err.message);
-            return res.status(500).send(err.message);
-        }
-        res.status(200).jsonp(routine);
-    });
+  trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+    if (err) res.send(500, err.message);
+    if (!trainer) {
+        res.json({success: false, message: 'Routine creation failed. Trainer not found.'});
+    } else if (trainer) {
+      var routine = new routineModel({
+          title: req.body.title,
+          description: req.body.description,
+          trainer: trainer.id//a partir del token, pillem la ide
+      });
+      routine.save(function (err, routine) {
+          if (err) {
+              console.log(err.message);
+              return res.status(500).send(err.message);
+          }
+          //ara guardem la routineid al trainer
+          trainer.routines.push(routine._id);
+          trainer.save(function(err, trainer){
+            if (err) res.send(500, err.message);
+            
+          });
+          res.status(200).jsonp(routine);
+      });
+    }//else
+  });
 };
 
 // add day

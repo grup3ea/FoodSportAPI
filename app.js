@@ -89,9 +89,13 @@ var apiRoutes = express.Router();
 
 apiRoutes.route('/register')
     .post(userCtrl.register);
+apiRoutes.route('/trainers/register')
+    .post(trainerCtrl.register);
 /** Coge todos los parametros attributes de manera correcta **/
 apiRoutes.route('/login')
     .post(userCtrl.login);
+apiRoutes.route('/trainers/login')
+    .post(trainerCtrl.login);
 /** Parece devolver bien el token **/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
@@ -110,9 +114,10 @@ apiRoutes.route('/routines/:routineid')
 
 apiRoutes.route('/trainers')
     .get(trainerCtrl.getTrainers)
-    .post(trainerCtrl.addTrainer);
+    /*.post(trainerCtrl.addTrainer)*/;
 
-apiRoutes.route('/trainers/:id')
+apiRoutes.route('/trainers/:trainerid')
+    .get(trainerCtrl.getTrainerById)
     .put(trainerCtrl.updateTrainer)
     .delete(trainerCtrl.removeTrainer);
 
