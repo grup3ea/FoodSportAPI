@@ -12,6 +12,7 @@ var crypto = require('crypto');
 //  post /users/publications/:userid
 exports.postPublication = function (req, res) {
     userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
         //aquí ja hem agafat el user a partir del seu token
         var publication = new publicationModel({
             title: req.body.title,

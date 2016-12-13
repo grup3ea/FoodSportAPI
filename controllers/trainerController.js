@@ -93,11 +93,11 @@ exports.updateTrainer = function (req, res) {
             // Obtiene y devuelve todos los students tras crear uno de ellos
             trainerModel.find(function (err, trainer) {
                 if (err)
-                    res.send(err)
+                    res.send(err);
                 res.json(trainer);
             });
         });
-}
+};
 
 /*** OK ***/
 
@@ -107,27 +107,27 @@ exports.removeTrainer = function (req, res) {
             res.send(err);
         trainerModel.find(function (err, trainer) {
             if (err)
-                res.send(err)
+                res.send(err);
             res.json(trainer);
         });
     });
-}
+};
 
 /*** TEST ***/
 
 exports.TrainerNewClient = function (req, res) {
 
     var query = {_id: req.params.id};
-    var update = {$addToSet : {"clients" : req.body.client_id}};
+    var update = {$addToSet: {"clients": req.body.client_id}};
     var options = {};
-    trainerModel.findOneAndUpdate(query, update, options, function(err, trainer) {
+    trainerModel.findOneAndUpdate(query, update, options, function (err, trainer) {
         if (err) {
             res.send(err);
         }
-        if(trainer){
-            trainerModel.findById(trainer._id).populate('clients').exec().then(function(err, trainer) {
+        if (trainer) {
+            trainerModel.findById(trainer._id).populate('clients').exec().then(function (err, trainer) {
                 if (err)
-                    res.send(err)
+                    res.send(err);
                 res.send(trainer);
             });
         }
@@ -145,28 +145,28 @@ exports.TrainerRemoveClient = function (req, res) {
         if (trainer) {
             trainerModel.findById(trainer._id).populate('clients').exec().then(function (err, trainer) {
                 if (err)
-                    res.send(err)
+                    res.send(err);
                 res.send(trainer);
             });
         }
     });
-}
+};
 
 /*** TEST ***/
 
 exports.TrainerNewRoutine = function (req, res) {
 
     var query = {_id: req.params.id};
-    var update = {$addToSet : {"routines" : req.body.routine_id}};
+    var update = {$addToSet: {"routines": req.body.routine_id}};
     var options = {};
-    trainerModel.findOneAndUpdate(query, update, options, function(err, trainer) {
+    trainerModel.findOneAndUpdate(query, update, options, function (err, trainer) {
         if (err) {
             res.send(err);
         }
-        if(trainer){
-            trainerModel.findById(trainer._id).populate('routines').exec().then(function(err, trainer) {
+        if (trainer) {
+            trainerModel.findById(trainer._id).populate('routines').exec().then(function (err, trainer) {
                 if (err)
-                    res.send(err)
+                    res.send(err);
                 res.send(trainer);
             });
         }
@@ -184,9 +184,9 @@ exports.TrainerRemoveRoutine = function (req, res) {
         if (trainer) {
             trainerModel.findById(trainer._id).populate('routines').exec().then(function (err, trainer) {
                 if (err)
-                    res.send(err)
+                    res.send(err);
                 res.send(trainer);
             });
         }
     });
-}
+};
