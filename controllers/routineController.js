@@ -19,7 +19,9 @@ exports.getRoutines = function (req, res) {
 
 //  get /routines/:id
 exports.getRoutineById = function (req, res) {
-    routineModel.findOne({_id: req.params.routineid}, function (err, routine) {
+    routineModel.findOne({_id: req.params.routineid})
+    .populate('trainer')
+    .exec(function (err, routine) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(routine);
     });
@@ -31,11 +33,11 @@ exports.addRoutine = function (req, res) {
     if (err) res.send(500, err.message);
     if (!trainer) {
         res.json({success: false, message: 'Routine creation failed. Trainer not found.'});
-    } else if (trainer) {
+    }else if(trainer){
       var routine = new routineModel({
           title: req.body.title,
           description: req.body.description,
-          trainer: trainer.id//a partir del token, pillem la ide
+          trainer: trainer._id//a partir del token, pillem la id
       });
       routine.save(function (err, routine) {
           if (err) {
@@ -46,7 +48,7 @@ exports.addRoutine = function (req, res) {
           trainer.routines.push(routine._id);
           trainer.save(function(err, trainer){
             if (err) res.send(500, err.message);
-            
+
           });
           res.status(200).jsonp(routine);
       });
@@ -56,83 +58,106 @@ exports.addRoutine = function (req, res) {
 
 // add day
 exports.addDayToRoutine = function (req, res) {
-    routineModel.findOne({_id: req.params.routineid}, function (err, routine) {
-        if (err) res.send(500, err.message);
-        routine.days.push(req.body.day);
-        routine.save(function (err, routine) {
-            if (err) {
-                return res.status(500).send(err.message);
-            }
-            res.status(200).jsonp(routine);
-        });
-    });
+  trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+    if (err) res.send(500, err.message);
+    if(!trainer) {
+        res.json({success: false, message: 'Routine day addition failed. Trainer not found.'});
+    }else if(trainer){
+      routineModel.findOne({_id: req.params.routineid}, function (err, routine) {
+          if (err) res.send(500, err.message);
+
+          if(trainer._id==routine.trainer)
+          {// si el trainer que fa el post realment és el trainer creator de la routine
+            routine.days.push(req.body.day);
+            routine.save(function (err, routine) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                res.status(200).jsonp(routine);
+            });
+          }
+      });
+    }// end else if
+  });
 };
 
 
 exports.chooseRoutine = function (req, res) {
     userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
-        console.log(user);
-        user.routines.push(req.body.routineid);
-        /* gamification */
-        var reward={
-          concept: "choosing routine",
-          date: Date(),
-          value: +5
-        };
-        user.points.history.push(reward);
-        user.points.total=user.points.total+5;
-        /* end of gamification */
-        user.save(function (err) {
-            if (err) res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'choosing routine failed. user not found.'});
+        }else if(user){
+          console.log(user);//aquí potser caldria comprovar que la routine és la que han creat per l'user
+          user.routines.push(req.body.routineid);
+          /* gamification */
+          var reward={
+            concept: "choosing routine",
+            date: Date(),
+            value: +5
+          };
+          user.points.history.push(reward);
+          user.points.total=user.points.total+5;
+          /* end of gamification */
+          user.save(function (err) {
+              if (err) res.send(500, err.message);
 
-            res.status(200).jsonp(user);
-        })
+              res.status(200).jsonp(user);
+          });
+        }//end else if
     });
 };
 exports.unchooseRoutine = function (req, res) {
     userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
-        for(var i=0; i<user.routines.length; i++)
-        {
-          if(user.routines[i]==req.body.routineid)
-          {//deletes the diets of the user with the dietid
-            user.routines.splice(i, 1);
+        if(!user) {
+            res.json({success: false, message: 'choosing routine failed. user not found.'});
+        }else if(user){
+          for(var i=0; i<user.routines.length; i++)
+          {
+            if(user.routines[i]==req.body.routineid)
+            {//deletes the diets of the user with the dietid
+              user.routines.splice(i, 1);
+            }
           }
-        }
-        /* gamification */
-        var reward={
-          concept: "unchoosing routine",
-          date: Date(),
-          value: -7
-        };
-        user.points.history.push(reward);
-        user.points.total=user.points.total-7;
-        /* end of gamification */
-        user.save(function (err) {
-            if (err) res.send(500, err.message);
+          /* gamification */
+          var reward={
+            concept: "unchoosing routine",
+            date: Date(),
+            value: -7
+          };
+          user.points.history.push(reward);
+          user.points.total=user.points.total-7;
+          /* end of gamification */
+          user.save(function (err) {
+              if (err) res.send(500, err.message);
 
-            res.status(200).jsonp(user);
-        })
+              res.status(200).jsonp(user);
+          });
+        }//end else if
     });
 };
 
 exports.completeDay = function (req, res) {
     userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
-        /* gamification */
-        var reward={
-          concept: "routine day complete",
-          date: Date(),
-          value: +1
-        };
-        user.points.history.push(reward);
-        user.points.total=user.points.total+1;
-        /* end of gamification */
-        user.save(function (err) {
-            if (err) res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'choosing routine failed. user not found.'});
+        }else if(user){
+          /* gamification */
+          var reward={
+            concept: "routine day complete",
+            date: Date(),
+            value: +1
+          };
+          user.points.history.push(reward);
+          user.points.total=user.points.total+1;
+          /* end of gamification */
+          user.save(function (err) {
+              if (err) res.send(500, err.message);
 
-            res.status(200).jsonp(user);
-        })
+              res.status(200).jsonp(user);
+          });
+        }//end else if
     });
 };

@@ -78,6 +78,8 @@ var routineMdl = require('./models/routineModel')(app, mongoose);
 var routineCtrl = require('./controllers/routineController');
 var trainerMdl = require('./models/trainerModel')(app, mongoose);
 var trainerCtrl = require('./controllers/trainerController');
+var chefMdl = require('./models/chefModel')(app, mongoose);
+var chefCtrl = require('./controllers/chefController');
 var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
 
@@ -91,11 +93,15 @@ apiRoutes.route('/register')
     .post(userCtrl.register);
 apiRoutes.route('/trainers/register')
     .post(trainerCtrl.register);
+apiRoutes.route('/chefs/register')
+    .post(chefCtrl.register);
 /** Coge todos los parametros attributes de manera correcta **/
 apiRoutes.route('/login')
     .post(userCtrl.login);
 apiRoutes.route('/trainers/login')
     .post(trainerCtrl.login);
+apiRoutes.route('/chefs/login')
+    .post(chefCtrl.login);
 /** Parece devolver bien el token **/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
@@ -113,13 +119,13 @@ apiRoutes.route('/routines/:routineid')
 
 
 apiRoutes.route('/trainers')
-    .get(trainerCtrl.getTrainers)
-    /*.post(trainerCtrl.addTrainer)*/;
-
+    .get(trainerCtrl.getTrainers);
 apiRoutes.route('/trainers/:trainerid')
-    .get(trainerCtrl.getTrainerById)
-    .put(trainerCtrl.updateTrainer)
-    .delete(trainerCtrl.removeTrainer);
+    .get(trainerCtrl.getTrainerById);
+apiRoutes.route('/chefs')
+    .get(chefCtrl.getChefs);
+apiRoutes.route('/chefs/:chefid')
+    .get(chefCtrl.getChefById);
 
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
@@ -164,6 +170,10 @@ apiRoutes.route('/users/:userid/publications')
 /*****************/
 /*** TRAINERS ****/
 /*****************/
+
+apiRoutes.route('/trainers/:trainerid')
+    .put(trainerCtrl.updateTrainer)
+    .delete(trainerCtrl.removeTrainer);
 
 apiRoutes.route('/trainers/:id/client')
     .post(trainerCtrl.TrainerNewClient);

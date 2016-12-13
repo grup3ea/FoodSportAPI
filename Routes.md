@@ -22,11 +22,33 @@
 ###*------------------------------Trainer Related------------------------------------------*
 - GET `/trainers`		Lista de entrenadores
 - POST 	`/trainers/:trainerid/:userid`		Añadir entrenador a usuario
-- POST	`/trainers		`					Registrar un entrenador
-- GET 	`/trainers/:trainer	`				Ver el detalle de un entrenador
+- POST	`/trainers/register		`					Registrar un entrenador    --> works
+```json
+{
+    "name": "trainer1",
+    "password": "trainer1",
+    "email": "trainer1@web.com",
+    "discipline": "running"
+}
+```
+- POST	`/trainers/login		`					Login un entrenador    --> works
+- GET 	`/trainers/:trainerid	`				Ver el detalle de un entrenador    --> works
 - GET 	`/trainers/:trainer/:discipline	`	Ver el detalle de un entrenador segun la modalidad
 - PUT 	`/trainers/:trainer	`				Actualizar un entrenador
 - DELETE `/trainers/:trainer	`			Eliminar un entrenador
+
+###*------------------------------Chef Related------------------------------------------*
+- GET `/chefs`		Lista de chefs     --> works
+- GET 	`/chefs/:chefid	`				Ver el detalle de un chef    --> works
+- POST	`/chefs/register		`					Registrar un chef    --> works
+```json
+{
+    "name": "chef1",
+    "password": "chef1",
+    "email": "chef1@web.com"
+}
+```
+- POST	`/chefs/login		`					Login un chef    --> works
 
 ###*----------------------------Diet Related----------------------------------------------*
 

@@ -9,6 +9,8 @@ var userSchema = new Schema({
     token: {type: String},
     email: {type: String, required: true, unique: true},
     description: {type: String},
+    direction: {type: String},
+    city: {type: String},
     avatar: {type: String},
     attributes: {
         height: {type: Number},
