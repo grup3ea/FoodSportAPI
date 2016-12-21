@@ -35,6 +35,7 @@ exports.register = function (req, res) {
         name: req.body.name,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
+        role: req.body.role,
         discipline: req.body.discipline
     });
     trainer.save(function (err, trainer) {
@@ -76,7 +77,24 @@ exports.login = function (req, res) {
     });
 };
 
-/*** OK ***/
+
+exports.addClientToTrainer = function (req, res) {
+    trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+        if (err) res.send(500, err.message);
+        if(!trainer) {
+            res.json({success: false, message: 'adding client to trainer failed. trainer not found.'});
+        }else if(trainer){
+          console.log(trainer);//aquí potser caldria comprovar que la routine és la que han creat per l'trainer
+          trainer.clients.push(req.body.clientid);
+          trainer.save(function (err) {
+              if (err) res.send(500, err.message);
+
+              res.status(200).jsonp(trainer);
+          });
+        }//end else if
+    });
+};
+/*** OK 3 paràmetres***/
 
 exports.updateTrainer = function (req, res) {
     trainerModel.update({_id: req.params.trainerid},
@@ -114,7 +132,7 @@ exports.removeTrainer = function (req, res) {
 };
 
 /*** TEST ***/
-
+/* tot això que hi ha a partir de aquí què és, no funciona? */
 exports.TrainerNewClient = function (req, res) {
 
     var query = {_id: req.params.id};

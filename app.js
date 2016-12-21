@@ -187,6 +187,10 @@ apiRoutes.route('/trainers/:id/routine')
 apiRoutes.route('/trainers/:id/routine/:routine_id')
     .delete(trainerCtrl.TrainerRemoveRoutine);
 
+apiRoutes.route('/trainers/addClient')
+    .post(trainerCtrl.addClientToTrainer);
+
+
 /** ********** **/
 /******DIETS*****/
 /** ********** **/

@@ -1,6 +1,6 @@
 #Routes ``http://localhost:3005/api``
 
-
+#Al postman estan les rutes i jsons actualitzats bé, que és lu que fem servir
 
 ###*----------------------------User Related----------------------------------------------*
 - POST `/register`		Registro de Usuario (Se añade a la BBDD)
