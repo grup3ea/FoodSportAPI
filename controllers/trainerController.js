@@ -65,7 +65,7 @@ exports.login = function (req, res) {
                     // return the information including token as JSON
                     trainer.password = "";
                     res.json({
-                        trainer: trainer,
+                        user: trainer,
                         success: true,
                         message: 'Enjoy your token!',
                         token: token

@@ -89,14 +89,14 @@ var publicationCtrl = require('./controllers/publicationController');
 /**------------------------------------------------------------------ **/
 var apiRoutes = express.Router();
 
-apiRoutes.route('/register')
+apiRoutes.route('/users/register')
     .post(userCtrl.register);
 apiRoutes.route('/trainers/register')
     .post(trainerCtrl.register);
 apiRoutes.route('/chefs/register')
     .post(chefCtrl.register);
 /** Coge todos los parametros attributes de manera correcta **/
-apiRoutes.route('/login')
+apiRoutes.route('/users/login')
     .post(userCtrl.login);
 apiRoutes.route('/trainers/login')
     .post(trainerCtrl.login);

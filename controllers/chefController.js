@@ -59,7 +59,7 @@ exports.login = function (req, res) {
                     // return the information including token as JSON
                     chef.password = "";
                     res.json({
-                        chef: chef,
+                        user: chef,
                         success: true,
                         message: 'Enjoy your token!',
                         token: token
