@@ -66,7 +66,7 @@ exports.addDayToRoutine = function (req, res) {
       routineModel.findOne({_id: req.params.routineid}, function (err, routine) {
           if (err) res.send(500, err.message);
 
-          if(trainer._id==routine.trainer)
+          if(trainer._id.equals(routine.trainer))
           {// si el trainer que fa el post realment és el trainer creator de la routine
             routine.days.push(req.body.day);
             routine.save(function (err, routine) {
