@@ -21,7 +21,7 @@ var routineSchema = new Schema({
         title: {type: String},
         description: {type: String},
         exercises: [{
-            name: {type: String},
+            title: {type: String},
             description: {type: String},
             img: {type: String},
             weight: {type: String},
