@@ -30,7 +30,8 @@
 		"bf3f305b-a8fd-f533-faed-bde7d1ff09a0",
 		"728d9135-efb5-30de-5eef-0844421b53df",
 		"dced7c55-627e-2af5-9966-dc18bbc02960",
-		"add94bfb-ad84-23fe-d5fd-f5f366111afc"
+		"add94bfb-ad84-23fe-d5fd-f5f366111afc",
+		"920d6005-4b3d-6975-3229-99ddc9e7377d"
 	],
 	"folders": [],
 	"timestamp": 1480434097427,
@@ -106,7 +107,7 @@
 		{
 			"id": "1b15e81f-f2e6-a5ff-a664-1afc67fa3628",
 			"headers": "Content-Type: application/x-www-form-urlencoded\nx-access-token: {{x-access-token}}\n",
-			"url": "http://localhost:3005/api/trainers/584fb97c46fbdb0dd64ab041",
+			"url": "http://localhost:3005/api/trainers/585aa0e6a355091b23166613",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -129,7 +130,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1481639872520,
+			"time": 1482538004904,
 			"name": "get trainer by trainerid",
 			"description": "",
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
@@ -170,7 +171,7 @@
 		{
 			"id": "2acb8a34-1d1d-1d3a-9c17-5dcb75a59a4e",
 			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
-			"url": "http://localhost:3005/api/routines/choose",
+			"url": "http://localhost:3005/api/routines/addToClient/585db7f0f67d0218f82b1b41",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -180,12 +181,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1481639882807,
-			"name": "add routine to user",
+			"time": 1482538839770,
+			"name": "create routine and add to user",
 			"description": "",
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
 			"responses": [],
-			"rawModeData": "{\n  \"routineid\": \"5844886bcb24534c185fcabe\"\n}"
+			"rawModeData": "{\n  \"title\": \"Rutina creada amb sistema de peticions\",\n  \"description\": \"asdf asdf asdf\"\n}"
 		},
 		{
 			"id": "2cb5e897-deb7-70e7-3ce0-83a8fc7dc3fb",
@@ -306,21 +307,21 @@
 		{
 			"id": "44c9641e-f074-0d9e-2b7c-282dbd528960",
 			"headers": "Content-Type: application/x-www-form-urlencoded\n",
-			"url": "http://localhost:3005/api/login",
+			"url": "http://localhost:3005/api/users/login",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
 			"data": [
 				{
 					"key": "email",
-					"value": "{{email}}",
+					"value": "client1@web.com",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
 				},
 				{
 					"key": "password",
-					"value": "{{password}}",
+					"value": "client1",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
@@ -331,7 +332,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1481640270382,
+			"time": 1482537022340,
 			"name": "login",
 			"description": "",
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
@@ -340,35 +341,35 @@
 		{
 			"id": "458a7423-e8ac-373f-fd5f-f3316334554d",
 			"headers": "Content-Type: application/x-www-form-urlencoded\n",
-			"url": "http://localhost:3005/api/register",
+			"url": "http://localhost:3005/api/users/register",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
 			"data": [
 				{
 					"key": "name",
-					"value": "{{name}}",
+					"value": "client1",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
 				},
 				{
 					"key": "password",
-					"value": "{{password}}",
+					"value": "client1",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
 				},
 				{
 					"key": "role",
-					"value": "client",
+					"value": "user",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
 				},
 				{
 					"key": "email",
-					"value": "{{email}}",
+					"value": "client1@web.com",
 					"type": "text",
 					"enabled": true,
 					"warning": ""
@@ -379,7 +380,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1481640267332,
+			"time": 1482536949083,
 			"name": "register(signup)",
 			"description": "",
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
@@ -407,7 +408,7 @@
 		{
 			"id": "6fe641c6-0d63-0a4d-0452-9befffa58718",
 			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
-			"url": "http://localhost:3005/api/routines/5844886bcb24534c185fcabe/days",
+			"url": "http://localhost:3005/api/routines/585cf268bf3c0909b8bc55ac/days",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -417,7 +418,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1481639884488,
+			"time": 1482486513636,
 			"name": "add day to routine",
 			"description": "",
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
@@ -541,6 +542,27 @@
 			"rawModeData": "{\n  \"title\": \"Rutina preparació Marató\",\n  \"description\": \"Amb aquesta rutina et prepararàs per fer una marató en 2 mesos!\"\n}"
 		},
 		{
+			"id": "920d6005-4b3d-6975-3229-99ddc9e7377d",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/users/sendPetitionToTrainer/585aa0e6a355091b23166613",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
+			"data": [],
+			"dataMode": "raw",
+			"name": "client send petition to trainer",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1482536791737,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"message\": \"hola, petició 1\"\n}"
+		},
+		{
 			"id": "944d0d21-091f-88ff-5f6b-eb7ca87aebc6",
 			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
 			"url": "http://localhost:3005/api/diets",
@@ -595,23 +617,22 @@
 		{
 			"id": "add94bfb-ad84-23fe-d5fd-f5f366111afc",
 			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
-			"url": "http://localhost:3005/api/trainers/addClient",
-			"pathVariables": {},
+			"url": "http://localhost:3005/api/trainers/acceptClientPetition",
 			"preRequestScript": null,
+			"pathVariables": {},
 			"method": "POST",
-			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
 			"data": [],
 			"dataMode": "raw",
-			"name": "addClientToTrainer",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1482338040035,
 			"version": 2,
-			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n  \"clientid\": \"584e8037cdc28614de8dc0b0\"\n}"
+			"time": 1482538119211,
+			"name": "trainer accepts client petition",
+			"description": "",
+			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
+			"responses": [],
+			"rawModeData": "{\n  \"petitionid\": \"585db8906b828d197b147e52\"\n}"
 		},
 		{
 			"id": "b1ffde90-fa0e-2f95-9200-f793d3996336",

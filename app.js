@@ -216,8 +216,8 @@ apiRoutes.route('/diets/completeDay')
 /****ROUTINES****/
 /** ********** **/
 
- apiRoutes.route('/routines')
-     .post(routineCtrl.addRoutine);
+ apiRoutes.route('/routines/addToClient/:clientid')
+     .post(routineCtrl.addRoutineToClient);
  apiRoutes.route('/routines/:routineid/days')
      .post(routineCtrl.addDayToRoutine);
 

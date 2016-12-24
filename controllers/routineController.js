@@ -28,8 +28,8 @@ exports.getRoutineById = function (req, res) {
 };
 
 
-exports.addRoutine = function (req, res) {
-  trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+exports.addRoutineToClient = function (req, res) {
+  trainerModel.findOne({'token': req.headers['x-access-token'], 'clients.client': req.params.clientid}, function (err, trainer) {
     if (err) res.send(500, err.message);
     if (!trainer) {
         res.json({success: false, message: 'Routine creation failed. Trainer not found.'});
@@ -39,6 +39,7 @@ exports.addRoutine = function (req, res) {
           description: req.body.description,
           trainer: trainer._id//a partir del token, pillem la id
       });
+      //guardem la routine
       routine.save(function (err, routine) {
           if (err) {
               console.log(err.message);
@@ -50,7 +51,30 @@ exports.addRoutine = function (req, res) {
             if (err) res.send(500, err.message);
 
           });
-          res.status(200).jsonp(routine);
+          //res.status(200).jsonp(routine);
+          //ara afegim la routine al client
+          userModel.findOne({'_id': req.params.clientid}, function (err, user) {
+              if (err) res.send(500, err.message);
+              if(!user) {
+                  res.json({success: false, message: 'adding routine to client failed. user not found.'});
+              }else if(user){
+                user.routines.push(routine._id);
+                /* gamification */
+                var reward={
+                  concept: "new routine",
+                  date: Date(),
+                  value: +5
+                };
+                user.points.history.push(reward);
+                user.points.total=user.points.total+5;
+                /* end of gamification */
+                user.save(function (err) {
+                    if (err) res.send(500, err.message);
+
+                    res.status(200).jsonp(routine);
+                });
+              }//end else if
+          });
       });
     }//else
   });
