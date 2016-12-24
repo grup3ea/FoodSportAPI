@@ -22,6 +22,7 @@ exports.getTrainerById = function (req, res) {
     trainerModel.findOne({_id: req.params.trainerid})
         .populate('routines')
         .populate('clients.client')
+        .populate('clientsPetitions.clientid')
         .exec(function (err, trainer) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(trainer);
@@ -102,7 +103,14 @@ exports.acceptClientPetition = function (req, res) {
               trainer.save(function (err) {
                   if (err) res.send(500, err.message);
 
-                  res.status(200).jsonp(trainer);
+                  trainerModel.findOne({_id: trainer._id})
+                      .populate('routines')
+                      .populate('clients.client')
+                      .populate('clientsPetitions.clientid')
+                      .exec(function (err, trainer) {
+                          if (err) res.send(500, err.message);
+                          res.status(200).jsonp(trainer);
+                      });
               });
             }
           }
