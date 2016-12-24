@@ -21,7 +21,7 @@ exports.getTrainers = function (req, res) {
 exports.getTrainerById = function (req, res) {
     trainerModel.findOne({_id: req.params.trainerid})
         .populate('routines')
-        .populate('clients')
+        .populate('clients.client')
         .exec(function (err, trainer) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(trainer);
@@ -78,19 +78,35 @@ exports.login = function (req, res) {
 };
 
 
-exports.addClientToTrainer = function (req, res) {
+exports.acceptClientPetition = function (req, res) {
     trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
         if (err) res.send(500, err.message);
         if(!trainer) {
             res.json({success: false, message: 'adding client to trainer failed. trainer not found.'});
         }else if(trainer){
           console.log(trainer);//aquí potser caldria comprovar que la routine és la que han creat per l'trainer
-          trainer.clients.push(req.body.clientid);
-          trainer.save(function (err) {
-              if (err) res.send(500, err.message);
+          //busquem la petition que estem processant
+          for(var i=0; i<trainer.clientsPetitions.length; i++)
+          {
+            if(trainer.clientsPetitions[i]._id.equals(req.body.petitionid))
+            {
+              var newClient={
+                client: trainer.clientsPetitions[i].clientid,
+                petitionMessage: trainer.clientsPetitions[i].message,
+                date: new Date()
+              };
+              trainer.clients.push(newClient);
 
-              res.status(200).jsonp(trainer);
-          });
+              //la petició la marco com a accepted
+              trainer.clientsPetitions[i].state="accepted";
+              trainer.save(function (err) {
+                  if (err) res.send(500, err.message);
+
+                  res.status(200).jsonp(trainer);
+              });
+            }
+          }
+
         }//end else if
     });
 };

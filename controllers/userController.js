@@ -203,3 +203,35 @@ exports.getRoutinesFromUserId = function (req, res) {
             res.status(200).jsonp(user.routines);
         });
 };
+
+
+
+exports.sendPetitionToTrainer = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'sending petition failed. user not found.'});
+        }else if(user){
+          console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
+          //ara busquem el trainer
+          trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
+              if (err) res.send(500, err.message);
+              if(!trainer) {
+                  res.json({success: false, message: 'sending petition failed. trainer not found.'});
+              }else if(trainer){
+                var newPetition={
+                  clientid: user._id,
+                  message: req.body.message,
+                  state: "pendent"
+                };
+                trainer.clientsPetitions.push(newPetition);
+                trainer.save(function (err) {
+                    if (err) res.send(500, err.message);
+
+                    res.status(200).jsonp(trainer);
+                });
+              }//end else if
+          });
+        }//end else if
+    });
+};

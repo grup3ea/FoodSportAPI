@@ -166,6 +166,8 @@ apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
 apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
+apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
+    .post(userCtrl.sendPetitionToTrainer);
 
 /*****************/
 /*** TRAINERS ****/
@@ -187,8 +189,8 @@ apiRoutes.route('/trainers/:id/routine')
 apiRoutes.route('/trainers/:id/routine/:routine_id')
     .delete(trainerCtrl.TrainerRemoveRoutine);
 
-apiRoutes.route('/trainers/addClient')
-    .post(trainerCtrl.addClientToTrainer);
+apiRoutes.route('/trainers/acceptClientPetition')
+    .post(trainerCtrl.acceptClientPetition);
 
 
 /** ********** **/
