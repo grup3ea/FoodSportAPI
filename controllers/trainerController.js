@@ -59,7 +59,6 @@ exports.login = function (req, res) {
                 var token = jwt.sign(trainer, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
-                trainer.token = token;
 
                 trainer.save(function (err, trainer) {
                     if (err) res.send(500, err.message);
