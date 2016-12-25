@@ -13,9 +13,9 @@ var userSchema = new Schema({
     city: {type: String},
     avatar: {type: String},
     attributes: {
-        height: {type: Number},
-        weight: {type: Number},
-        gender: {type: Boolean},
+        height: {type: String},
+        weight: {type: String},
+        gender: {type: String},
         age: {type: Number}
     },
     publications: [{
