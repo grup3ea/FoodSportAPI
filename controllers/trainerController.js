@@ -56,9 +56,11 @@ exports.login = function (req, res) {
             if (trainer.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
+              trainer.token="";
                 var token = jwt.sign(trainer, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
+                trainer.token = token;
 
                 trainer.save(function (err, trainer) {
                     if (err) res.send(500, err.message);
@@ -69,7 +71,7 @@ exports.login = function (req, res) {
                         user: trainer,
                         success: true,
                         message: 'Enjoy your token!',
-                        token:token
+                        token: token
                     });
                 });
             }

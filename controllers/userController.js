@@ -61,10 +61,12 @@ exports.login = function (req, res) {
             if (user.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
+                user.token="";
                 var token = jwt.sign(user, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
 
+                user.token=token;
                 user.save(function (err, user) {
                     if (err) res.send(500, err.message);
 
