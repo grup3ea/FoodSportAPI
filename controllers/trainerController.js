@@ -70,7 +70,7 @@ exports.login = function (req, res) {
                         user: trainer,
                         success: true,
                         message: 'Enjoy your token!',
-                        token: token
+                        token:token
                     });
                 });
             }
