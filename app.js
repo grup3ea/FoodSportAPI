@@ -10,7 +10,6 @@ var session = require('express-session');
 
 var app = express();
 var config = require('./config/config');
-var cloudinary = require('./config/cloudinary');
 
 /**Inicio Express**/
 var app = express();

@@ -1,10 +1,8 @@
 var express = require('express');
 var app = express();
 var config = require('../config/config'); // get our config file
-var cloudinary = require('../config/cloudinary');
 var crypto = require('crypto');
 
-var cloudinary = require('cloudinary');//això és del cdn de pujar imatges
 
 app.set('superSecret', config.secret); // secret variable
 
