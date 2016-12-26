@@ -7,7 +7,7 @@ var routineSchema = new Schema({
     description: {type: String},
     startingDay: {type: Date},
     discipline: {type: String},
-    price: { type: String },//si és gratis, es posa q val 0, així els users ho veuen amb bons ulls
+    price: { type: Number },//si és gratis, es posa q val 0, així els users ho veuen amb bons ulls
     image: { type: String },
     client: {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,9 +24,9 @@ var routineSchema = new Schema({
             title: {type: String},
             description: {type: String},
             img: {type: String},
-            weight: {type: String},
-            distance: {type: String},
-            reps: {type: String},
+            weight: {type: Number},
+            distance: {type: Number},
+            reps: {type: Number},
             series: {type: String}
         }],
         done: {type: String}//si ha complert el dia

@@ -10,6 +10,8 @@ var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
 var config = require('../config/config'); // get our config file
 var crypto = require('crypto');
+var formidable = require('formidable');
+var fs = require('fs');
 
 app.set('superSecret', config.secret); // secret variable
 
@@ -127,6 +129,40 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
     {successRedirect: '/', failureRedirect: '/login'}
 ));
 /* fin de rutas de passport */
+
+/*** Building a File Uploader with NodeJs
+ * https://coligo.io/building-ajax-file-uploader-with-node/
+ */
+
+exports.avatarUpload = function (req, res){
+    // create an incoming form object
+    var form = new formidable.IncomingForm();
+
+    // specify that we want to allow the user to upload multiple files in a single request
+    form.multiples = true;
+
+    // store all uploads in the /uploads directory
+    form.uploadDir = path.join(__dirname, '/uploads');
+
+    // every time a file has been uploaded successfully,
+    // rename it to it's orignal name
+    form.on('file', function(field, file) {
+        fs.rename(file.path, path.join(form.uploadDir, file.name));
+    });
+
+    // log any errors that occur
+    form.on('error', function(err) {
+        console.log('An error has occured: \n' + err);
+    });
+
+    // once all the files have been uploaded, send a response to the client
+    form.on('end', function() {
+        res.end('success');
+    });
+
+    // parse the incoming request containing the form data
+    form.parse(req);
+}
 
 
 /** UPDATE user by user._id**/

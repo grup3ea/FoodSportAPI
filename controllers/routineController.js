@@ -28,6 +28,10 @@ exports.getRoutineById = function (req, res) {
     });
 };
 
+exports.acceptRoutine = function (req, res) {
+
+}
+
 
 exports.addRoutineToClient = function (req, res) {
   trainerModel.findOne({'token': req.headers['x-access-token'], 'clients.client': req.params.clientid}, function (err, trainer) {
@@ -38,7 +42,7 @@ exports.addRoutineToClient = function (req, res) {
       var routine = new routineModel({
           title: req.body.title,
           description: req.body.description,
-          trainer: trainer._id//a partir del token, pillem la id
+          trainer: trainer._id,//a partir del token, pillem la id
       });
       //guardem la routine
       routine.save(function (err, routine) {
