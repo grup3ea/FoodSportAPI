@@ -22,6 +22,7 @@ exports.getRoutines = function (req, res) {
 exports.getRoutineById = function (req, res) {
     routineModel.findOne({_id: req.params.routineid})
     .populate('trainer')
+    .populate('client')
     .exec(function (err, routine) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(routine);
@@ -43,6 +44,7 @@ exports.addRoutineToClient = function (req, res) {
           title: req.body.title,
           description: req.body.description,
           trainer: trainer._id,//a partir del token, pillem la id
+          client: req.params.clientid//es guarda de quin user és la routine
       });
       //guardem la routine
       routine.save(function (err, routine) {
