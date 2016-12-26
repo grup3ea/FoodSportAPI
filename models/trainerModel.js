@@ -9,6 +9,7 @@ var trainerSchema = new Schema({
     email: {type: String, required: true, unique: true},
     description: {type: String},
     discipline : {type:String},
+    description: {type:String},
     routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
