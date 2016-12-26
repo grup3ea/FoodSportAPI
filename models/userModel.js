@@ -15,7 +15,7 @@ var userSchema = new Schema({
     attributes: {
         height: {type: Number},
         weight: {type: Number},
-        gender: {type: Boolean},
+        gender: {type: String},//Home, Dona, Altres -->com a mínim aquestes 3 opcions, més endavant tenim el debat de com s'enfoca
         age: {type: Number}
     },
     publications: [{
