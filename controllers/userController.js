@@ -164,32 +164,22 @@ exports.avatarUpload = function (req, res){
     form.parse(req);
 }
 
-
 /** UPDATE user by user._id**/
 //  put /users/:id
+exports.updateUser = function (req, res) {
+    var id = req.params.userid;
+    var updates = req.body;
 
-exports.updateUserById = function (req, res) {
-    var userupdated = new userModel({
-        name: req.body.name,
-        role: req.body.role,
-        password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
-        email: req.body.email,
-        description: req.body.description,
-        avatar: req.body.avatar,
-        attributes: {
-            height: req.body.height,
-            weight: req.body.weight,
-            gender: req.body.gender,
-            age: req.body.age
-        }
-    });
-    userModel.findOneAndUpdate({_id: req.params.id}, userupdated, function (err) {
-        if (err) res.send(500, err.message);
-        res.status(204).jsonp(user);
-    });
-};
 
-/** DELETE user by user._id**/
+    userModel.update({"_id": id}, updates,
+        function (err) {
+            if (err) return console.log(err);
+            console.log( updates);
+            return res.sendStatus(202);
+        });
+}
+
+    /** DELETE user by user._id**/
 //  /users/:id
 exports.deleteUserById = function (req, res) {
     userModel.findByIdAndRemove({_id: req.params.userid}, function (err) {
