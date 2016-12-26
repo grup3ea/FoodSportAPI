@@ -140,7 +140,8 @@ exports.updateTrainer = function (req, res) {
             $set: {
                 name: req.body.name,
                 email: req.body.email,
-                discipline: req.body.discipline
+                discipline: req.body.discipline,
+                description : req.body.description
             }
         },
         function (err) {
