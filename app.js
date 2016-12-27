@@ -98,6 +98,8 @@ apiRoutes.route('/chefs/register')
 /** Coge todos los parametros attributes de manera correcta **/
 apiRoutes.route('/users/login')
     .post(userCtrl.login);
+apiRoutes.route('/users/upload')
+    .post(userCtrl.avatarUpload);
 apiRoutes.route('/trainers/login')
     .post(trainerCtrl.login);
 apiRoutes.route('/chefs/login')
@@ -130,6 +132,7 @@ apiRoutes.route('/chefs/:chefid')
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
 /** start of TOKEN MATCHING **/
+
 apiRoutes.use(function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
@@ -158,7 +161,7 @@ apiRoutes.route('/users')
     .get(userCtrl.getUsers);
 apiRoutes.route('/users/:userid')
     .get(userCtrl.getUserById)
-    .put(userCtrl.updateUser)
+    .put(userCtrl.updateUserById)
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
