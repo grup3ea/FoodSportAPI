@@ -132,28 +132,15 @@ exports.acceptClientPetition = function (req, res) {
         }//end else if
     });
 };
-/*** OK 3 paràmetres***/
 
 exports.updateTrainer = function (req, res) {
-    trainerModel.update({_id: req.params.trainerid},
-        {
-            $set: {
-                name: req.body.name,
-                email: req.body.email,
-                discipline: req.body.discipline,
-                description : req.body.description
-            }
-        },
-        function (err) {
-            if (err)
-                res.send(err);
-            // Obtiene y devuelve todos los students tras crear uno de ellos
-            trainerModel.find(function (err, trainer) {
-                if (err)
-                    res.send(err);
-                res.json(trainer);
-            });
-        });
+  var trainer= req.body;
+  trainerModel.update({"_id": req.params.trainerid}, trainer,
+      function (err) {
+          if (err) return console.log(err);
+          console.log( trainer);
+          res.status(200).jsonp(trainer);
+      });
 };
 
 /*** OK ***/
