@@ -168,14 +168,14 @@ exports.avatarUpload = function (req, res){
 //  put /users/:id
 exports.updateUser = function (req, res) {
     var id = req.params.userid;
-    var updates = req.body;
+    var user = req.body;
 
 
-    userModel.update({"_id": id}, updates,
+    userModel.update({"_id": id}, user,
         function (err) {
             if (err) return console.log(err);
-            console.log( updates);
-            return res.sendStatus(202);
+            console.log( user);
+            res.status(200).jsonp(user);
         });
 }
 
