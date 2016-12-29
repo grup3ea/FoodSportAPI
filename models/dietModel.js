@@ -13,9 +13,9 @@ var dietSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userModel'
     }],
-    trainer: {
+    chef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'trainerModel'
+        ref: 'chefModel'
     },
     days: [{
         title: {type: String},

@@ -201,7 +201,7 @@ apiRoutes.route('/trainers/acceptClientPetition')
 /** ********** **/
 
  apiRoutes.route('/diets')
-     .post(dietCtrl.addDiet);
+     .post(dietCtrl.createDiet);
  apiRoutes.route('/diets/:dietid/days')
      .post(dietCtrl.addDayToDiet);
  apiRoutes.route('/diets/deleteDiet/:dietid')//he canviat la ruta temporalment fins que la definim, pq colisionava amb la ruta de unchoose diet

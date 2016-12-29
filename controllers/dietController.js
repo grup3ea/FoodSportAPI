@@ -8,6 +8,7 @@ app.set('superSecret', config.secret); // secret variable
 
 var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
+var chefModel = require('../models/chefModel');
 
 exports.getDiets = function (req, res) {
     dietModel.find(function (err, diets) {
@@ -25,33 +26,61 @@ exports.getDietById = function (req, res) {
 };
 
 
-/**POST add new diet to DB - Register**/
-exports.addDiet = function (req, res) {
-    var diet = new dietModel({
-        title: req.body.title,
-        description: req.body.description,
-    });
-    diet.save(function (err, diet) {
-        if (err) {
-            console.log(err.message);
-            return res.status(500).send(err.message);
-        }
-        res.status(200).jsonp(diet);
-    });
+/**POST add new diet to DB**/
+
+exports.createDiet = function (req, res) {
+  chefModel.findOne({'token': req.headers['x-access-token']}, function (err, chef) {
+    if (err) res.send(500, err.message);
+    if (!chef) {
+        res.json({success: false, message: 'Diet creation failed. Chef not found.'});
+    }else if(chef){
+      var diet = new dietModel({
+          title: req.body.title,
+          description: req.body.description,
+          chef: chef._id,//a partir del token, pillem la id
+          client: req.params.clientid//es guarda de quin user és la diet
+      });
+      //guardem la diet
+      diet.save(function (err, diet) {
+          if (err) {
+              console.log(err.message);
+              return res.status(500).send(err.message);
+          }
+          //ara guardem la dietid al chef
+          chef.diets.push(diet._id);
+          chef.save(function(err, chef){
+            if (err) res.send(500, err.message);
+
+          });
+          res.status(200).jsonp(diet);
+      });
+    }//else
+  });
 };
 
 // add day
 exports.addDayToDiet = function (req, res) {
-    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
-        if (err) res.send(500, err.message);
-        diet.days.push(req.body.day);
-        diet.save(function (err, diet) {
-            if (err) {
-                return res.status(500).send(err.message);
-            }
-            res.status(200).jsonp(diet);
-        });
-    });
+  chefModel.findOne({'token': req.headers['x-access-token']}, function (err, chef) {
+    if (err) res.send(500, err.message);
+    if(!chef) {
+        res.json({success: false, message: 'Diet day addition failed. Trainer not found.'});
+    }else if(chef){
+      dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
+          if (err) res.send(500, err.message);
+
+          if(chef._id.equals(diet.chef))
+          {// si el chef que fa el post realment és el chef creator de la diet
+            diet.days.push(req.body.day);
+            diet.save(function (err, diet) {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                res.status(200).jsonp(diet);
+            });
+          }
+      });
+    }// end else if
+  });
 };
 
 
