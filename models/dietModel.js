@@ -9,7 +9,7 @@ var dietSchema = new Schema({
     initiationdate: {type: Date},
     price: { type: String },
     image: { type: String },
-    client: [{
+    clients: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userModel'
     }],
