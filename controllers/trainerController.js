@@ -114,10 +114,10 @@ exports.acceptClientPetition = function (req, res) {
                       });
               });
               //ara afegim el trainer al user.trainer
-              userModel.findOne({'_id': trainer.clientsPetitions[i]._id}, function (err, user) {
+              userModel.findOne({'_id': trainer.clientsPetitions[i].clientid}, function (err, user) {
                     if (err) console.log(err.message);
                   if(!user) {
-                      console.log('adding client to trainer failed. trainer not found.');
+                      console.log('adding client to trainer failed. user not found.');
                   }else if(user){
                     user.trainers.push(trainer._id);
                     user.save(function (err) {
