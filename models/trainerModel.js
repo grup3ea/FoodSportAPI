@@ -8,7 +8,7 @@ var trainerSchema = new Schema({
     token: {type: String},
     email: {type: String, required: true, unique: true},
     description: {type: String},
-    discipline : {type:String},
+    disciplines : [{type:String}],
     avatar: {type: String},
     routines: [{
         type: mongoose.Schema.Types.ObjectId,

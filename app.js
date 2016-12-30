@@ -124,6 +124,8 @@ apiRoutes.route('/trainers')
     .get(trainerCtrl.getTrainers);
 apiRoutes.route('/trainers/:trainerid')
     .get(trainerCtrl.getTrainerById);
+apiRoutes.route('/trainers/searchByDiscipline')
+    .post(trainerCtrl.searchByDiscipline);
 apiRoutes.route('/chefs')
     .get(chefCtrl.getChefs);
 apiRoutes.route('/chefs/:chefid')

@@ -28,6 +28,16 @@ exports.getTrainerById = function (req, res) {
             res.status(200).jsonp(trainer);
         });
 };
+exports.searchByDiscipline = function (req, res) {
+    trainerModel.find({disciplines: req.body.discipline})
+        .populate('routines')
+        .populate('clients.client')
+        .populate('clientsPetitions.clientid')
+        .exec(function (err, trainers) {
+            if (err) res.send(500, err.message);
+            res.status(200).jsonp(trainers);
+        });
+};
 
 /*** OK  ***/
 
