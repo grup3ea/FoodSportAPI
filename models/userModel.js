@@ -50,10 +50,10 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'dietModel'
     }],
-    trainers: {
+    trainers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'trainerModel'
-    },
+    }],
     routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
