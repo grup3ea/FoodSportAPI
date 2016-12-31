@@ -271,3 +271,23 @@ exports.sendPetitionToTrainer = function (req, res) {
         }//end else if
     });
 };
+
+exports.getNotifications = function (req, res) {
+    userModel.findOne({_id: req.params.userid})
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
+            for(var i=0; i<user.notifications.length; i++)
+            {
+              if(user.notifications[i].state=="pendent")
+              {
+                user.notifications[i].state="viewed";
+                user.notifications[i].dateviewed=Date();
+              }
+            }
+            user.save(function (err) {
+                if (err) res.send(500, err.message);
+
+                res.status(200).jsonp(user.notifications);
+            });
+        });
+};

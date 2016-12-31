@@ -225,6 +225,25 @@ exports.valorateTrainer = function (req, res) {
 };
 
 
+exports.getNotifications = function (req, res) {
+    trainerModel.findOne({_id: req.params.trainerid})
+        .exec(function (err, trainer) {
+            if (err) res.send(500, err.message);
+            for(var i=0; i<trainer.notifications.length; i++)
+            {
+              if(trainer.notifications[i].state=="pendent")
+              {
+                trainer.notifications[i].state="viewed";
+                trainer.notifications[i].dateviewed=Date();
+              }
+            }
+            trainer.save(function (err) {
+                if (err) res.send(500, err.message);
+
+                res.status(200).jsonp(trainer.notifications);
+            });
+        });
+};
 /*** OK ***/
 
 exports.removeTrainer = function (req, res) {

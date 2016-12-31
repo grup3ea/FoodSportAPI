@@ -174,6 +174,8 @@ apiRoutes.route('/users/:userid/publications')
 apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
     .post(userCtrl.sendPetitionToTrainer);
 
+apiRoutes.route('/users/:userid/getNotifications')
+  .get(userCtrl.getNotifications);
 /*****************/
 /*** TRAINERS ****/
 /*****************/
@@ -199,6 +201,9 @@ apiRoutes.route('/trainers/acceptClientPetition')
 
 apiRoutes.route('/trainers/valorateTrainer/:trainerid')
     .post(trainerCtrl.valorateTrainer);
+
+apiRoutes.route('/trainers/:trainerid/getNotifications')
+  .get(trainerCtrl.getNotifications);
 /** ********** **/
 /******DIETS*****/
 /** ********** **/
