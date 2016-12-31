@@ -134,7 +134,7 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
  * https://coligo.io/building-ajax-file-uploader-with-node/
  */
 
-exports.avatarUpload = function (req, res){
+exports.avatarUpload = function (req, res){/* no sé si s'ha provat si funciona, per ara almenys no està linkat ni es fa servir */
     // create an incoming form object
     var form = new formidable.IncomingForm();
 
@@ -166,7 +166,7 @@ exports.avatarUpload = function (req, res){
 
 /** UPDATE user by user._id**/
 //  put /users/:id
-exports.updateUser = function (req, res) {
+exports.updateUser = function (req, res) {//funciona
     var id = req.params.userid;
     var user = req.body;
 
@@ -253,6 +253,14 @@ exports.sendPetitionToTrainer = function (req, res) {
                   state: "pendent"
                 };
                 trainer.clientsPetitions.push(newPetition);
+                var notification={
+                  state: "pendent",
+                  message: "client has sent a petition to you",
+                  link: "dashboard",
+                  icon: "newpetition.png",
+                  date: new Date()
+                };
+                trainer.notifications.push(notification);
                 trainer.save(function (err) {
                     if (err) res.send(500, err.message);
 

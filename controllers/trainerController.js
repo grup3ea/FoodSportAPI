@@ -130,6 +130,25 @@ exports.acceptClientPetition = function (req, res) {
                       console.log('adding client to trainer failed. user not found.');
                   }else if(user){
                     user.trainers.push(trainer._id);
+
+                    /* gamification */
+                    var reward={
+                      concept: "new trainer",
+                      date: Date(),
+                      value: +5
+                    };
+                    user.points.history.push(reward);
+                    user.points.total=user.points.total+5;
+                    /* end of gamification */
+
+                    var notification={
+                      state: "pendent",
+                      message: "trainer has accepted to train you",
+                      link: "training",
+                      icon: "newtrainer.png",
+                      date: new Date()
+                    };
+                    user.notifications.push(notification);
                     user.save(function (err) {
                         if (err) console.log(err.message);
                         console.log("trainer added to user");

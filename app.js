@@ -183,16 +183,16 @@ apiRoutes.route('/trainers/:trainerid')
     .delete(trainerCtrl.removeTrainer);
 
 apiRoutes.route('/trainers/:id/client')
-    .post(trainerCtrl.TrainerNewClient);
+    .post(trainerCtrl.TrainerNewClient);//això es fa servir? funciona?
 
 apiRoutes.route('/trainers/:id/client/:client_id')
-    .delete(trainerCtrl.TrainerRemoveClient);
+    .delete(trainerCtrl.TrainerRemoveClient);//això es fa servir? funciona?
 
 apiRoutes.route('/trainers/:id/routine')
-    .post(trainerCtrl.TrainerNewRoutine);
+    .post(trainerCtrl.TrainerNewRoutine);//això es fa servir? funciona?
 
 apiRoutes.route('/trainers/:id/routine/:routine_id')
-    .delete(trainerCtrl.TrainerRemoveRoutine);
+    .delete(trainerCtrl.TrainerRemoveRoutine);//això es fa servir? funciona?
 
 apiRoutes.route('/trainers/acceptClientPetition')
     .post(trainerCtrl.acceptClientPetition);

@@ -75,6 +75,15 @@ exports.addRoutineToClient = function (req, res) {
                 user.points.history.push(reward);
                 user.points.total=user.points.total+5;
                 /* end of gamification */
+
+                var notification={
+                  state: "pendent",
+                  message: "trainer has added a routine to you",
+                  link: "training",
+                  icon: "newroutine.png",
+                  date: new Date()
+                };
+                user.notifications.push(notification);
                 user.save(function (err) {
                     if (err) res.send(500, err.message);
 

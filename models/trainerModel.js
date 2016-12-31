@@ -21,7 +21,7 @@ var trainerSchema = new Schema({
       },
       petitionMessage: {type: String},
       date: {type: Date}
-  }],
+    }],
     clientsPetitions: [{
       clientid: {
           type: mongoose.Schema.Types.ObjectId,
@@ -29,6 +29,14 @@ var trainerSchema = new Schema({
       },
       message: {type: String},
       state: {type: String}//pendent, accepted, declined
+    }],
+    notifications: [{
+      state: {type: String},//viewed, pendent
+      message: {type: String},
+      link: {type: String},
+      icon: {type: String},
+      date: {type: Date},
+      dateviewed: {type: Date}
     }]
 });
 

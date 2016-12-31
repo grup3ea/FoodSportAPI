@@ -12,6 +12,14 @@ var chefSchema = new Schema({
     diets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'dietModel'
+    }],
+    notifications: [{
+      state: {type: String},//viewed, pendent
+      message: {type: String},
+      link: {type: String},
+      icon: {type: String},
+      date: {type: Date},
+      dateviewed: {type: Date}
     }]
 });
 
