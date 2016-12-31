@@ -37,6 +37,15 @@ var trainerSchema = new Schema({
       icon: {type: String},
       date: {type: Date},
       dateviewed: {type: Date}
+    }],
+    valorations: [{
+      clientid: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'userModel'
+      },
+      date: {type: Date},
+      message: {type: String},//missatge de valoració
+      value: {type: Number}//per exemple sistema d'estrelles sobre 5
     }]
 });
 

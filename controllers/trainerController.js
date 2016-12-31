@@ -105,7 +105,7 @@ exports.acceptClientPetition = function (req, res) {
               var newClient={
                 client: trainer.clientsPetitions[i].clientid,
                 petitionMessage: trainer.clientsPetitions[i].message,
-                date: new Date()
+                date: Date()
               };
               trainer.clients.push(newClient);
 
@@ -146,7 +146,7 @@ exports.acceptClientPetition = function (req, res) {
                       message: "trainer has accepted to train you",
                       link: "training",
                       icon: "newtrainer.png",
-                      date: new Date()
+                      date: Date()
                     };
                     user.notifications.push(notification);
                     user.save(function (err) {
@@ -171,6 +171,59 @@ exports.updateTrainer = function (req, res) {
           res.status(200).jsonp(trainer);
       });
 };
+exports.valorateTrainer = function (req, res) {
+    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'sending valoration failed. user not found.'});
+        }else if(user){
+          //ara busquem el trainer
+          trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
+              if (err) res.send(500, err.message);
+              if(!trainer) {
+                  res.json({success: false, message: 'sending valoration failed. trainer not found.'});
+              }else if(trainer){
+                //comprovem que el client no hagi valorat ja el trainer
+                var javalorat=false;
+                for(var i=0; i<trainer.valorations.length; i++)
+                {
+                  if(trainer.valorations[i].clientid.equals(user._id))
+                  {
+                    javalorat=true;
+                  }
+                }
+                if(javalorat==false)
+                {
+                  var valoration={
+                    clientid: user._id,
+                    date: Date(),
+                    message: req.body.message,
+                    value: req.body.value
+                  };
+                  trainer.valorations.push(valoration);
+                  var notification={
+                    state: "pendent",
+                    message: "client has valorated you",
+                    link: "dashboard",
+                    icon: "newvaloration.png",
+                    date: Date()
+                  };
+                  trainer.notifications.push(notification);
+
+                  trainer.save(function (err) {
+                      if (err) res.send(500, err.message);
+
+                      res.status(200).jsonp(trainer);
+                  });
+                }else{//end if javalorat==false
+                    res.json({success: false, message: 'sending valoration failed. user has already valorated this trainer.'});
+                }
+              }//end else if
+          });
+        }//end else if
+    });
+};
+
 
 /*** OK ***/
 

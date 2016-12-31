@@ -197,7 +197,8 @@ apiRoutes.route('/trainers/:id/routine/:routine_id')
 apiRoutes.route('/trainers/acceptClientPetition')
     .post(trainerCtrl.acceptClientPetition);
 
-
+apiRoutes.route('/trainers/valorateTrainer/:trainerid')
+    .post(trainerCtrl.valorateTrainer);
 /** ********** **/
 /******DIETS*****/
 /** ********** **/

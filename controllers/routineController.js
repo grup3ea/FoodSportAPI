@@ -81,7 +81,7 @@ exports.addRoutineToClient = function (req, res) {
                   message: "trainer has added a routine to you",
                   link: "training",
                   icon: "newroutine.png",
-                  date: new Date()
+                  date: Date()
                 };
                 user.notifications.push(notification);
                 user.save(function (err) {

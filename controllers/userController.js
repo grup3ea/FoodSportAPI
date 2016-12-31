@@ -258,7 +258,7 @@ exports.sendPetitionToTrainer = function (req, res) {
                   message: "client has sent a petition to you",
                   link: "dashboard",
                   icon: "newpetition.png",
-                  date: new Date()
+                  date: Date()
                 };
                 trainer.notifications.push(notification);
                 trainer.save(function (err) {
