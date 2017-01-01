@@ -6,7 +6,11 @@ var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
     password: {type: String, required: true},
-    token: {type: String},
+    token: {type: String},//el mantenim temporalment per permetre el funcionament de la resta
+    tokens: [{
+      deviceid: {type: String},
+      token: {type: String}
+    }],
     email: {type: String, required: true, unique: true},
     description: {type: String},
     direction: {type: String},
