@@ -8,7 +8,13 @@ var trainerSchema = new Schema({
     //token: {type: String},
     tokens: [{
       userAgent: {type: String},
-      token: {type: String}
+      token: {type: String},
+      os: {type: String},
+      browser: {type: String},
+      device: {type: String},
+      os_version: {type: String},
+      browser_version: {type: String},
+      ip: {type: String}
     }],
     email: {type: String, required: true, unique: true},
     description: {type: String},

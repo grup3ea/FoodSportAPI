@@ -83,7 +83,13 @@ exports.login = function (req, res) {
                 });
                 var newToken={
                   userAgent:req.body.userAgent,
-                  token: tokenGenerated
+                  token: tokenGenerated,
+                  os: req.body.os,
+                  browser: req.body.browser,
+                  device: req.body.device,
+                  os_version: req.body.os_version,
+                  browser_version: req.body.browser_version,
+                  ip: req.body.ip
                 };
                 trainer.tokens.push(newToken);
               }else{//userAgent already exist
@@ -93,6 +99,7 @@ exports.login = function (req, res) {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
                 trainer.tokens[indexToken].token=tokenGenerated;
+                trainer.tokens[indexToken].ip=req.body.ip;
               }
               trainer.save(function (err, trainer) {
                   if (err) res.send(500, err.message);
