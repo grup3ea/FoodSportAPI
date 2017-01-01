@@ -29,7 +29,7 @@ exports.getDietById = function (req, res) {
 /**POST add new diet to DB**/
 
 exports.createDiet = function (req, res) {
-  chefModel.findOne({'token': req.headers['x-access-token']}, function (err, chef) {
+  chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
     if (err) res.send(500, err.message);
     if (!chef) {
         res.json({success: false, message: 'Diet creation failed. Chef not found.'});
@@ -60,7 +60,7 @@ exports.createDiet = function (req, res) {
 
 // add day
 exports.addDayToDiet = function (req, res) {
-  chefModel.findOne({'token': req.headers['x-access-token']}, function (err, chef) {
+  chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
     if (err) res.send(500, err.message);
     if(!chef) {
         res.json({success: false, message: 'Diet day addition failed. Trainer not found.'});
@@ -99,7 +99,7 @@ exports.deleteDietById = function (req, res) {
 
 
 exports.chooseDiet = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing diet failed. user not found.'});
@@ -123,7 +123,7 @@ exports.chooseDiet = function (req, res) {
     });
 };
 exports.unchooseDiet = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'user not found.'});
@@ -154,7 +154,7 @@ exports.unchooseDiet = function (req, res) {
 };
 
 exports.completeDay = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'user not found.'});

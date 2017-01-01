@@ -5,7 +5,11 @@ var Schema = mongoose.Schema;
 var trainerSchema = new Schema({
     name: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    token: {type: String},
+    //token: {type: String},
+    tokens: [{
+      userAgent: {type: String},
+      token: {type: String}
+    }],
     email: {type: String, required: true, unique: true},
     description: {type: String},
     disciplines : [{type:String}],

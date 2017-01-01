@@ -63,24 +63,46 @@ exports.login = function (req, res) {
             if (user.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
-                user.token="";
-                var token = jwt.sign(user, app.get('superSecret'), {
+              var indexToken=-1;
+              for(var i=0; i<user.tokens.length; i++)
+              {
+                if(user.tokens[i].userAgent==req.body.userAgent)
+                {
+                  indexToken=JSON.parse(JSON.stringify(i));
+                }
+              }
+              console.log(indexToken);
+              if(indexToken==-1)
+              {//userAgent no exist
+
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
+                var newToken={
+                  userAgent:req.body.userAgent,
+                  token: tokenGenerated
+                };
+                user.tokens.push(newToken);
+              }else{//userAgent already exist
+                user.tokens[indexToken].token="";
 
-                user.token=token;
-                user.save(function (err, user) {
-                    if (err) res.send(500, err.message);
-
-                    // return the information including token as JSON
-                    user.password = "";
-                    res.json({
-                        user: user,
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token:  token
-                    });
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
+                    //  expiresIn: 86400 // expires in 24 hours
                 });
+                user.tokens[indexToken].token=tokenGenerated;
+              }
+              user.save(function (err, user) {
+                  if (err) res.send(500, err.message);
+
+                  // return the information including token as JSON
+                  user.password = "";
+                  res.json({
+                      user: user,
+                      success: true,
+                      message: 'Enjoy your token!',
+                      token:  tokenGenerated
+                  });
+              });
             }
         }
     });
@@ -235,7 +257,7 @@ exports.getRoutinesFromUserId = function (req, res) {
 
 
 exports.sendPetitionToTrainer = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'sending petition failed. user not found.'});

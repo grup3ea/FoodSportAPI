@@ -49,23 +49,46 @@ exports.login = function (req, res) {
             if (chef.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
-                var token = jwt.sign(chef, app.get('superSecret'), {
+              var indexToken=-1;
+              for(var i=0; i<chef.tokens.length; i++)
+              {
+                if(chef.tokens[i].userAgent==req.body.userAgent)
+                {
+                  indexToken=JSON.parse(JSON.stringify(i));
+                }
+              }
+              console.log(indexToken);
+              if(indexToken==-1)
+              {//userAgent no exist
+
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
-                chef.token = token;
+                var newToken={
+                  userAgent:req.body.userAgent,
+                  token: tokenGenerated
+                };
+                chef.tokens.push(newToken);
+              }else{//userAgent already exist
+                chef.tokens[indexToken].token="";
 
-                chef.save(function (err, chef) {
-                    if (err) res.send(500, err.message);
-
-                    // return the information including token as JSON
-                    chef.password = "";
-                    res.json({
-                        user: chef,
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: token
-                    });
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
+                    //  expiresIn: 86400 // expires in 24 hours
                 });
+                chef.tokens[indexToken].token=tokenGenerated;
+              }
+              chef.save(function (err, chef) {
+                  if (err) res.send(500, err.message);
+
+                  // return the information including token as JSON
+                  chef.password = "";
+                  res.json({
+                      user: chef,
+                      success: true,
+                      message: 'Enjoy your token!',
+                      token: tokenGenerated
+                  });
+              });
             }
         }
     });

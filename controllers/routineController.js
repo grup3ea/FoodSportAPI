@@ -35,7 +35,7 @@ exports.acceptRoutine = function (req, res) {
 
 
 exports.addRoutineToClient = function (req, res) {
-  trainerModel.findOne({'token': req.headers['x-access-token'], 'clients.client': req.params.clientid}, function (err, trainer) {
+  trainerModel.findOne({'tokens.token': req.headers['x-access-token'], 'clients.client': req.params.clientid}, function (err, trainer) {
     if (err) res.send(500, err.message);
     if (!trainer) {
         res.json({success: false, message: 'Routine creation failed. Trainer not found.'});
@@ -98,7 +98,7 @@ exports.addRoutineToClient = function (req, res) {
 
 // add day
 exports.addDayToRoutine = function (req, res) {
-  trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+  trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
     if (err) res.send(500, err.message);
     if(!trainer) {
         res.json({success: false, message: 'Routine day addition failed. Trainer not found.'});
@@ -123,7 +123,7 @@ exports.addDayToRoutine = function (req, res) {
 
 
 exports.chooseRoutine = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
@@ -148,7 +148,7 @@ exports.chooseRoutine = function (req, res) {
     });
 };
 exports.unchooseRoutine = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
@@ -179,7 +179,7 @@ exports.unchooseRoutine = function (req, res) {
 };
 
 exports.completeDay = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});

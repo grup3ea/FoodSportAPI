@@ -66,24 +66,46 @@ exports.login = function (req, res) {
             if (trainer.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
-              trainer.token="";
-                var token = jwt.sign(trainer, app.get('superSecret'), {
+              var indexToken=-1;
+              for(var i=0; i<trainer.tokens.length; i++)
+              {
+                if(trainer.tokens[i].userAgent==req.body.userAgent)
+                {
+                  indexToken=JSON.parse(JSON.stringify(i));
+                }
+              }
+              console.log(indexToken);
+              if(indexToken==-1)
+              {//userAgent no exist
+
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
                     //  expiresIn: 86400 // expires in 24 hours
                 });
-                trainer.token = token;
+                var newToken={
+                  userAgent:req.body.userAgent,
+                  token: tokenGenerated
+                };
+                trainer.tokens.push(newToken);
+              }else{//userAgent already exist
+                trainer.tokens[indexToken].token="";
 
-                trainer.save(function (err, trainer) {
-                    if (err) res.send(500, err.message);
-
-                    // return the information including token as JSON
-                    trainer.password = "";
-                    res.json({
-                        user: trainer,
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: token
-                    });
+                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
+                    //  expiresIn: 86400 // expires in 24 hours
                 });
+                trainer.tokens[indexToken].token=tokenGenerated;
+              }
+              trainer.save(function (err, trainer) {
+                  if (err) res.send(500, err.message);
+
+                  // return the information including token as JSON
+                  trainer.password = "";
+                  res.json({
+                      user: trainer,
+                      success: true,
+                      message: 'Enjoy your token!',
+                      token: tokenGenerated
+                  });
+              });
             }
         }
     });
@@ -91,7 +113,7 @@ exports.login = function (req, res) {
 
 
 exports.acceptClientPetition = function (req, res) {
-    trainerModel.findOne({'token': req.headers['x-access-token']}, function (err, trainer) {
+    trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
         if (err) res.send(500, err.message);
         if(!trainer) {
             res.json({success: false, message: 'adding client to trainer failed. trainer not found.'});
@@ -172,7 +194,7 @@ exports.updateTrainer = function (req, res) {
       });
 };
 exports.valorateTrainer = function (req, res) {
-    userModel.findOne({'token': req.headers['x-access-token']}, function (err, user) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'sending valoration failed. user not found.'});
