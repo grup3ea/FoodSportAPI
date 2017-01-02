@@ -329,9 +329,9 @@ exports.deleteSelectedTokens = function (req, res) {
           res.json({success: false, message: 'user not found.'});
       }else if(user){
         console.log(user);
-        for(var i=0, i<req.body.devicesToDelete.length; i++)
+        for(var i=0; i<req.body.devicesToDelete.length; i++)
         {
-          for(var j=0; j<user.tokens.length; ji++)
+          for(var j=0; j<user.tokens.length; j++)
           {
             if(user.tokens[j].userAgent==req.body.devicesToDelete[i].userAgent)
             {
