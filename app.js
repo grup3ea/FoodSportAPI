@@ -176,6 +176,8 @@ apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
 
 apiRoutes.route('/users/:userid/getNotifications')
   .get(userCtrl.getNotifications);
+apiRoutes.route('/users/:userid/deleteSelectedTokens')
+  .post(userCtrl.deleteSelectedTokens);
 /*****************/
 /*** TRAINERS ****/
 /*****************/

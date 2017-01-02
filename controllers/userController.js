@@ -68,7 +68,7 @@ exports.login = function (req, res) {
               {
                 if(user.tokens[i].userAgent==req.body.userAgent)
                 {
-                  indexToken=JSON.parse(JSON.stringify(i));
+                  indexToken=JSON.parse(JSON.stringify(i));//stringify i parse pq es faci una còpia de la variable i, enlloc de una referència
                 }
               }
               console.log(indexToken);
@@ -321,4 +321,29 @@ exports.getNotifications = function (req, res) {
                 res.status(200).jsonp(user.notifications);
             });
         });
+};
+exports.deleteSelectedTokens = function (req, res) {
+  userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+      if (err) res.send(500, err.message);
+      if(!user) {
+          res.json({success: false, message: 'user not found.'});
+      }else if(user){
+        console.log(user);
+        for(var i=0, i<req.body.devicesToDelete.length; i++)
+        {
+          for(var j=0; j<user.tokens.length; ji++)
+          {
+            if(user.tokens[j].userAgent==req.body.devicesToDelete[i].userAgent)
+            {
+              user.tokens.splice(j, 1);
+            }
+          }
+        }
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
+
+            res.status(200).jsonp(user);
+        });
+      }//end else if
+  });
 };
