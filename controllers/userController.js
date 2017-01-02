@@ -86,7 +86,8 @@ exports.login = function (req, res) {
                   device: req.body.device,
                   os_version: req.body.os_version,
                   browser_version: req.body.browser_version,
-                  ip: req.body.ip
+                  ip: req.body.ip,
+                  lastLogin: Date()
                 };
                 user.tokens.push(newToken);
               }else{//userAgent already exist
@@ -97,6 +98,7 @@ exports.login = function (req, res) {
                 });
                 user.tokens[indexToken].token=tokenGenerated;
                 user.tokens[indexToken].ip=req.body.ip;
+                user.tokens[indexToken].lastLogin=Date();
               }
               user.save(function (err, user) {
                   if (err) res.send(500, err.message);

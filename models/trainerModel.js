@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var trainerSchema = new Schema({
     name: {type: String, required: true, unique: true},
     password: {type: String, required: true},
+    role: {type: String, required: true},
     //token: {type: String},
     tokens: [{
       userAgent: {type: String},
@@ -14,7 +15,8 @@ var trainerSchema = new Schema({
       device: {type: String},
       os_version: {type: String},
       browser_version: {type: String},
-      ip: {type: String}
+      ip: {type: String},
+      lastLogin: {type: Date}
     }],
     email: {type: String, required: true, unique: true},
     description: {type: String},
