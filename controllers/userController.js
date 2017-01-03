@@ -347,3 +347,22 @@ exports.deleteSelectedTokens = function (req, res) {
       }//end else if
   });
 };
+
+exports.addPostToTimeline = function (req, res) {
+  userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+      if (err) res.send(500, err.message);
+      if(!user) {
+          res.json({success: false, message: 'user not found.'});
+      }else if(user){
+        var newHistory=req.body.newHistory;
+        newHistory.date=Date();
+        console.log(newHistory);
+        user.timeline.push(newHistory);
+        user.save(function (err) {
+            if (err) res.send(500, err.message);
+
+            res.status(200).jsonp(user);
+        });
+      }//end else if
+  });
+};

@@ -178,6 +178,8 @@ apiRoutes.route('/users/:userid/getNotifications')
   .get(userCtrl.getNotifications);
 apiRoutes.route('/users/:userid/deleteSelectedTokens')
   .post(userCtrl.deleteSelectedTokens);
+apiRoutes.route('/users/addPostToTimeline')
+  .post(userCtrl.addPostToTimeline);
 /*****************/
 /*** TRAINERS ****/
 /*****************/
