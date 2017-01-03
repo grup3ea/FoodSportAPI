@@ -358,6 +358,17 @@ exports.addPostToTimeline = function (req, res) {
         newHistory.date=Date();
         console.log(newHistory);
         user.timeline.push(newHistory);
+
+        /* gamification */
+        var reward={
+          concept: "added new post to Timeline",
+          date: Date(),
+          value: +1
+        };
+        user.points.history.push(reward);
+        user.points.total=user.points.total+1;
+        /* end of gamification */
+
         user.save(function (err) {
             if (err) res.send(500, err.message);
 

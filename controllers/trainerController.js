@@ -251,6 +251,21 @@ exports.valorateTrainer = function (req, res) {
                 }
               }//end else if
           });
+          /* gamification */
+          var reward={
+            concept: "valorating trainer",
+            date: Date(),
+            value: +1
+          };
+          user.points.history.push(reward);
+          user.points.total=user.points.total+1;
+          /* end of gamification */
+          user.save(function (err) {
+              /*if (err) res.send(500, err.message);
+
+              res.status(200).jsonp(routine);*/
+              console.log("points of gamification on trainer valorating added to user");
+          });
         }//end else if
     });
 };
@@ -275,6 +290,25 @@ exports.getNotifications = function (req, res) {
             });
         });
 };
+
+
+exports.searchByName = function (req, res) {
+  console.log("searchByName");
+    trainerModel.find({'name': req.params.trainername}, function (err, trainers) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(trainers);
+    });
+};
+exports.searchByDiscipline = function (req, res) {
+    trainerModel.find({'disciplines': req.params.discipline}, function (err, trainers) {
+        if (err) res.send(500, err.message);
+        res.status(200).jsonp(trainers);
+    });
+};
+
+
+
+
 /*** OK ***/
 
 exports.removeTrainer = function (req, res) {

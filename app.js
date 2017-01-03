@@ -208,6 +208,11 @@ apiRoutes.route('/trainers/valorateTrainer/:trainerid')
 
 apiRoutes.route('/trainers/:trainerid/getNotifications')
   .get(trainerCtrl.getNotifications);
+
+apiRoutes.route('/trainers/searchByName/:trainername')
+  .get(trainerCtrl.searchByName);
+apiRoutes.route('/trainers/searchByDiscipline/:discipline')
+  .get(trainerCtrl.searchByDiscipline);
 /** ********** **/
 /******DIETS*****/
 /** ********** **/

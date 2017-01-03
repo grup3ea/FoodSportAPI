@@ -27,7 +27,8 @@ si un contacte teu es fa una compta                         +5
 publicar una foto de tu fent exercici/dieta                 +1
 (com a molt es pot publicar 1 foto per dia)
 valorar TRAINER                                             +1
-valorar DIET                                                +1
+valorar DIET                                                +1    --> works
+fer un nou post al Timeline                                 +1    --> works
 ```
 
 
