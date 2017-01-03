@@ -22,6 +22,7 @@ var trainerSchema = new Schema({
     description: {type: String},
     disciplines : [{type:String}],
     avatar: {type: String},
+    background: {type: String},
     routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'

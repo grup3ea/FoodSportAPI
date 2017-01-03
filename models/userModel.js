@@ -23,6 +23,7 @@ var userSchema = new Schema({
     direction: {type: String},
     city: {type: String},
     avatar: {type: String},
+    background: {type: String},
     attributes: {
         height: {type: Number},
         weight: {type: Number},
