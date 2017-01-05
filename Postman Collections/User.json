@@ -1,0 +1,254 @@
+{
+  "variables": [],
+  "info": {
+    "name": "User",
+    "_postman_id": "4da22ceb-db9f-9d1d-e58c-c8921d38d828",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "d7b0a141-1d07-f683-5c69-e94a8ff781c9",
+      "name": "login",
+      "request": {
+        "url": "http://localhost:3005/api/users/login",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "{{email}}",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "userAgent",
+              "value": "mobil3",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "435201ba-f5ef-46ff-8b02-2f126411124f",
+      "name": "register(signup)",
+      "request": {
+        "url": "http://localhost:3005/api/users/register",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "name",
+              "value": "client1",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "password",
+              "value": "client1",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "role",
+              "value": "user",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "email",
+              "value": "client1@web.com",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "91bf6b96-b27a-e104-645a-17ed6bf07a6c",
+      "name": "delete user",
+      "request": {
+        "url": "http://localhost:3005/api/users/{{userid}}",
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "766bfee5-0575-4873-6db2-74683803cf78",
+      "name": "addPostToTimeline (No funciona)",
+      "request": {
+        "url": "http://localhost:3005/api/users/addPostToTimeline",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"newHistory\": {\n\t  \"title\": \"vinga una més\",\n\t  \"content\": \"entrenant dur\",\n\t  \"mark\": \"100kg al press banca\",\n\t  \"photo\": \"https://lh3.googleusercontent.com/DuX0SZDU0cDy1C5uwJ6-sYnx1clbdFvZlq_cOXlB1NASiM2vOWhB5H6jrztf8XBIOp0=h900\"\n\t}\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "4601a28c-df9f-56d7-2f90-e6d351e7a1b9",
+      "name": "get users",
+      "request": {
+        "url": "http://localhost:3005/api/users",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "a@a.com",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "password",
+              "value": "a",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "ca650024-bae8-210f-c750-53a101657219",
+      "name": "get user by userid",
+      "request": {
+        "url": "http://localhost:3005/api/users/{{userid}}",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "a@a.com",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "password",
+              "value": "a",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "518b691e-11a6-3dce-db18-f0b789cfc4fd",
+      "name": "client send petition to trainer",
+      "request": {
+        "url": "http://localhost:3005/api/users/sendPetitionToTrainer/585aa0e6a355091b23166613",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"hola, petició 1\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    }
+  ]
+}
