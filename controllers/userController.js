@@ -377,3 +377,41 @@ exports.addPostToTimeline = function (req, res) {
       }//end else if
   });
 };
+
+/*
+  userA: el que fa l'acció de seguir --> se li posa userB a following
+  userB: el que reb el seguiment  --> se li posa el userA al followers
+*/
+exports.followUser = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
+        if (err) res.send(500, err.message);
+        if(!userA) {
+            res.json({success: false, message: 'userA not found.'});
+        }else if(userA){
+          console.log(userA.name);
+          //ara busquem el userB
+          userModel.findOne({_id: req.body.userid}, function (err, userB) {
+              if (err) res.send(500, err.message);
+              if(!userB) {
+                  res.json({success: false, message: 'userB not found.'});
+              }else if(userB){
+
+                userB.followers.push(userA._id);
+                userB.save(function (err) {
+                    if (err) res.send(500, err.message);
+                    userA.following.push(userB._id);
+                    userA.save(function (err) {
+                        if (err) res.send(500, err.message);
+
+                        userModel.findOne(userA).lean().populate('following', 'name avatar')
+                        .exec(function(err, userA){
+                          if (err) res.send(500, err.message);
+                          res.status(200).jsonp(userA);
+                        });
+                    });
+                });
+              }//end else if
+          });
+        }//end else if
+    });
+};

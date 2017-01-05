@@ -33,7 +33,9 @@
 		"2acb8a34-1d1d-1d3a-9c17-5dcb75a59a4e",
 		"659c94e5-9040-a3f1-c8cd-b569f5bdf827",
 		"a715c0bf-58d5-8309-1791-ef2a70dee80f",
-		"a9628ddf-e500-1f00-9932-df81ccd43b0c"
+		"a9628ddf-e500-1f00-9932-df81ccd43b0c",
+		"5c8bd041-88db-6e08-3bb3-a3f60f73a6f6",
+		"8063c24d-a628-e15f-b5d6-a0e99cdfb51d"
 	],
 	"folders": [],
 	"timestamp": 1480434097427,
@@ -414,6 +416,27 @@
 			"responses": []
 		},
 		{
+			"id": "5c8bd041-88db-6e08-3bb3-a3f60f73a6f6",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/searchByName/trainer1",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
+			"data": [],
+			"dataMode": "raw",
+			"name": "search trainer by name",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1483479639964,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
+		},
+		{
 			"id": "659c94e5-9040-a3f1-c8cd-b569f5bdf827",
 			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
 			"url": "http://localhost:3005/api/diets/choose",
@@ -568,6 +591,27 @@
 			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
 			"responses": [],
 			"rawModeData": "{\n  \"title\": \"Rutina preparació Marató\",\n  \"description\": \"Amb aquesta rutina et prepararàs per fer una marató en 2 mesos!\"\n}"
+		},
+		{
+			"id": "8063c24d-a628-e15f-b5d6-a0e99cdfb51d",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/searchByDiscipline/running",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "64f428b2-8894-fb63-8d1f-514d5b042019",
+			"data": [],
+			"dataMode": "raw",
+			"name": "search trainer by discipline",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1483479718238,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
 		},
 		{
 			"id": "920d6005-4b3d-6975-3229-99ddc9e7377d",

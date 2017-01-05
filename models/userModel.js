@@ -92,6 +92,14 @@ var userSchema = new Schema({
       icon: {type: String},
       date: {type: Date},
       dateviewed: {type: Date}
+    }],
+    followers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'userModel'
+    }],
+    following: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'userModel'
     }]
 });
 

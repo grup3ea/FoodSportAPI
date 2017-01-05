@@ -180,6 +180,9 @@ apiRoutes.route('/users/:userid/deleteSelectedTokens')
   .post(userCtrl.deleteSelectedTokens);
 apiRoutes.route('/users/addPostToTimeline')
   .post(userCtrl.addPostToTimeline);
+
+apiRoutes.route('/users/followUser')
+    .post(userCtrl.followUser);
 /*****************/
 /*** TRAINERS ****/
 /*****************/
