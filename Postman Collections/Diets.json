@@ -183,7 +183,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"dietid\": \"{{584447fff293433560872f74}}\"\n}"
+          "raw": "{\n  \"dietid\": \"{{dietid}}\"\n}"
         },
         "description": ""
       },
