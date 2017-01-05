@@ -115,7 +115,7 @@
       "_postman_id": "89edc633-2f97-9463-8893-b6e97fba24e4",
       "name": "add day to routine",
       "request": {
-        "url": "http://localhost:3005/api/routines/585cf268bf3c0909b8bc55ac/days",
+        "url": "http://localhost:3005/api/routines/{{routineid}}/days",
         "method": "POST",
         "header": [
           {
