@@ -25,14 +25,14 @@
           "urlencoded": [
             {
               "key": "email",
-              "value": "trainer1@web.com",
+              "value": "{{traineremail}}",
               "type": "text",
               "enabled": true,
               "warning": ""
             },
             {
               "key": "password",
-              "value": "trainer1",
+              "value": "{{trainerpassword}}",
               "type": "text",
               "enabled": true,
               "warning": ""
@@ -40,6 +40,18 @@
             {
               "key": "userAgent",
               "value": "mobil4",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "name",
+              "value": "{{trainername}}",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "role",
+              "value": "trainer",
               "type": "text",
               "enabled": true
             }
