@@ -85,14 +85,14 @@
           "urlencoded": [
             {
               "key": "email",
-              "value": "chef1@web.com",
+              "value": "{{chefemail}}",
               "type": "text",
               "enabled": true,
               "warning": ""
             },
             {
               "key": "password",
-              "value": "chef1",
+              "value": "{{chefpassword}}",
               "type": "text",
               "enabled": true,
               "warning": ""
