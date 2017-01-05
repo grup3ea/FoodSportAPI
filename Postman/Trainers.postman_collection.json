@@ -1,0 +1,264 @@
+{
+	"id": "456ba577-626a-c088-8577-f03c099107c6",
+	"name": "Trainers",
+	"description": "",
+	"order": [
+		"f93fbfc1-09a6-8162-9b24-5a318edc4fc4",
+		"4d4dd10a-8391-6d9d-b5f8-a89220e95d35",
+		"6c85fc0f-f221-8de8-f3c0-439681bb8d16",
+		"a47f5309-bd63-21b6-5f7a-c362d0620145",
+		"5ad82abd-0715-d24e-d7b0-834745b90154",
+		"9211f4e8-79a6-53bb-d011-42e8d06225b8",
+		"06e281d0-585f-e89d-5990-9adac4f9ab9a",
+		"afdfc18d-72e2-9497-d824-c857714ddb61"
+	],
+	"folders": [],
+	"timestamp": 1483626300336,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "06e281d0-585f-e89d-5990-9adac4f9ab9a",
+			"headers": "Content-Type: application/x-www-form-urlencoded\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/{{trainerid}}",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [
+				{
+					"key": "email",
+					"value": "a@a.com",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "a",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1483627085496,
+			"name": "get trainer by trainerid",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"responses": []
+		},
+		{
+			"id": "4d4dd10a-8391-6d9d-b5f8-a89220e95d35",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "http://localhost:3005/api/trainers/register",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "name",
+					"value": "maxt",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "maxt@maxt.com",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "password",
+					"value": "maxt",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "userAgent",
+					"value": "mobil4",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "role",
+					"value": "trainer",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1483626820060,
+			"name": "trainer register(signup)",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6"
+		},
+		{
+			"id": "5ad82abd-0715-d24e-d7b0-834745b90154",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/searchByDiscipline/running",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"data": [],
+			"dataMode": "raw",
+			"name": "search trainer by discipline (No Funciona)",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1483479718238,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"rawModeData": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
+		},
+		{
+			"id": "6c85fc0f-f221-8de8-f3c0-439681bb8d16",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "http://localhost:3005/api/trainers",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"data": [
+				{
+					"key": "email",
+					"value": "{{traineremail}}",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "password",
+					"value": "{{trainerpassword}}",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "userAgent",
+					"value": "mobil4",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"name": "get trainers",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1483626920328,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "9211f4e8-79a6-53bb-d011-42e8d06225b8",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/searchByName/{{trainername}}",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1483627041716,
+			"name": "search trainer by name",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"responses": [],
+			"rawModeData": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
+		},
+		{
+			"id": "a47f5309-bd63-21b6-5f7a-c362d0620145",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/valorateTrainer/585aa0e6a355091b23166613",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"time": 1483179389263,
+			"name": "valorate Trainer",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"rawModeData": "{\n  \"message\": \"molt bo aquest trainer\",\n  \"value\": 5\n}"
+		},
+		{
+			"id": "afdfc18d-72e2-9497-d824-c857714ddb61",
+			"headers": "Content-Type: application/json\nx-access-token: {{x-access-token}}\n",
+			"url": "http://localhost:3005/api/trainers/acceptClientPetition",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"time": 1482538119211,
+			"name": "trainer accepts client petition",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"responses": [],
+			"rawModeData": "{\n  \"petitionid\": \"585db8906b828d197b147e52\"\n}"
+		},
+		{
+			"id": "f93fbfc1-09a6-8162-9b24-5a318edc4fc4",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "http://localhost:3005/api/trainers/login",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "email",
+					"value": "trainer1@web.com",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "password",
+					"value": "trainer1",
+					"type": "text",
+					"enabled": true,
+					"warning": ""
+				},
+				{
+					"key": "userAgent",
+					"value": "mobil4",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": "{}",
+			"time": 1483288451417,
+			"name": "trainers login",
+			"description": "",
+			"collectionId": "456ba577-626a-c088-8577-f03c099107c6",
+			"responses": []
+		}
+	]
+}
