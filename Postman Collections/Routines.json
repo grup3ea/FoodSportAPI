@@ -48,7 +48,7 @@
     },
     {
       "_postman_id": "9303e03c-7a88-596e-41b6-5f6918348fd4",
-      "name": "create routine (No funciona)",
+      "name": "create routine (No funciona) Es mas no esta en la API",
       "request": {
         "url": "http://localhost:3005/api/routines",
         "method": "POST",
