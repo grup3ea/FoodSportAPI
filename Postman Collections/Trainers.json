@@ -1,0 +1,292 @@
+{
+  "variables": [],
+  "info": {
+    "name": "Trainers",
+    "_postman_id": "456ba577-626a-c088-8577-f03c099107c6",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "f93fbfc1-09a6-8162-9b24-5a318edc4fc4",
+      "name": "trainers login",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/login",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "trainer1@web.com",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "password",
+              "value": "trainer1",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "userAgent",
+              "value": "mobil4",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "4d4dd10a-8391-6d9d-b5f8-a89220e95d35",
+      "name": "trainer register(signup)",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/register",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "name",
+              "value": "maxt",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "email",
+              "value": "maxt@maxt.com",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "password",
+              "value": "maxt",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "userAgent",
+              "value": "mobil4",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "role",
+              "value": "trainer",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "6c85fc0f-f221-8de8-f3c0-439681bb8d16",
+      "name": "get trainers",
+      "request": {
+        "url": "http://localhost:3005/api/trainers",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "{{traineremail}}",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "password",
+              "value": "{{trainerpassword}}",
+              "type": "text",
+              "enabled": true,
+              "warning": ""
+            },
+            {
+              "key": "userAgent",
+              "value": "mobil4",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "a47f5309-bd63-21b6-5f7a-c362d0620145",
+      "name": "valorate Trainer",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/valorateTrainer/{{trainerid}}",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"molt bo aquest trainer\",\n  \"value\": 5\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "5ad82abd-0715-d24e-d7b0-834745b90154",
+      "name": "search trainer by discipline (No Funciona)",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/searchByDiscipline/running",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "9211f4e8-79a6-53bb-d011-42e8d06225b8",
+      "name": "search trainer by name",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/searchByName/{{trainername}}",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dietid\": \"584447fff293433560872f74\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "06e281d0-585f-e89d-5990-9adac4f9ab9a",
+      "name": "get trainer by trainerid",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/{{trainerid}}",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "a@a.com",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "password",
+              "value": "a",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "afdfc18d-72e2-9497-d824-c857714ddb61",
+      "name": "trainer accepts client petition",
+      "request": {
+        "url": "http://localhost:3005/api/trainers/acceptClientPetition",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"petitionid\": \"585db8906b828d197b147e52\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    }
+  ]
+}
