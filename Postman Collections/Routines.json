@@ -1,0 +1,193 @@
+{
+  "variables": [],
+  "info": {
+    "name": "Routines",
+    "_postman_id": "c3afef3d-dc50-c831-d829-fa082e29443e",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "7a7d661e-e936-7765-3594-223d89a06267",
+      "name": "get routineById",
+      "request": {
+        "url": "http://localhost:3005/api/routines/584fc5d3f9e8ee127ac4719b",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "a@a.com",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "password",
+              "value": "a",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "9303e03c-7a88-596e-41b6-5f6918348fd4",
+      "name": "create routine (No funciona)",
+      "request": {
+        "url": "http://localhost:3005/api/routines",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Rutina preparació Marató\",\n  \"description\": \"Amb aquesta rutina et prepararàs per fer una marató en 2 mesos!\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "45ffa430-d561-8f8b-acd0-c4f0fe4622dd",
+      "name": "get routines",
+      "request": {
+        "url": "http://localhost:3005/api/routines",
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "email",
+              "value": "a@a.com",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "password",
+              "value": "a",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "89edc633-2f97-9463-8893-b6e97fba24e4",
+      "name": "add day to routine",
+      "request": {
+        "url": "http://localhost:3005/api/routines/585cf268bf3c0909b8bc55ac/days",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"day\": {\n    \"title\": \"day name\",\n    \"description\": \"descripció del dia\",\n    \"exercises\": [\n      {\n        \"name\": \"curl bíceps\",\n        \"description\": \"concentra't bé\",\n        \"img\": \"noimg.png\",\n        \"weight\": \"20kg\",\n        \"distance\": null,\n        \"reps\": \"10\",\n        \"series\": \"4\"\n      }\n    ]\n  }\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "fefabef1-f295-7273-8984-dcd938f80574",
+      "name": "complete routine day",
+      "request": {
+        "url": "http://localhost:3005/api/routines/completeDay",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": []
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "a62b8bad-ba0d-9210-a43a-0d9ae0f0747f",
+      "name": "create routine and add to user",
+      "request": {
+        "url": "http://localhost:3005/api/routines/addToClient/585db7f0f67d0218f82b1b41",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Rutina creada amb sistema de peticions\",\n  \"description\": \"asdf asdf asdf\"\n}"
+        },
+        "description": ""
+      },
+      "response": []
+    }
+  ]
+}
