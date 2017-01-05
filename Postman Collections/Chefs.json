@@ -107,7 +107,7 @@
       "_postman_id": "e5b48e6b-f3ff-2dc2-8945-0382da74c7bd",
       "name": "get chefById",
       "request": {
-        "url": "http://localhost:3005/api/chefs/584fc965e4f2c913686f8385",
+        "url": "http://localhost:3005/api/chefs/{{chefid}}",
         "method": "GET",
         "header": [
           {
