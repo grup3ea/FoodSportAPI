@@ -30,13 +30,6 @@ var userSchema = new Schema({
         gender: {type: String},//Home, Dona, Altres -->com a mínim aquestes 3 opcions, més endavant tenim el debat de com s'enfoca
         age: {type: Number}
     },
-    timeline: [{//historial de marques personals
-      title: {type: String},
-      content: {type: String},
-      mark: {type: String},
-      photo: {type: String},//link a la imatge, en plan, l'user corrent pel carrer tot feliç
-      date: {type: Date}
-    }],
     publications: [{
         type:mongoose.Schema.Types.ObjectId,
         ref: 'publicationModel'

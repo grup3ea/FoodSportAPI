@@ -178,8 +178,6 @@ apiRoutes.route('/users/:userid/getNotifications')
   .get(userCtrl.getNotifications);
 apiRoutes.route('/users/:userid/deleteSelectedTokens')
   .post(userCtrl.deleteSelectedTokens);
-apiRoutes.route('/users/addPostToTimeline')
-  .post(userCtrl.addPostToTimeline);
 
 apiRoutes.route('/users/followUser')
     .post(userCtrl.followUser);
@@ -255,7 +253,11 @@ apiRoutes.route('/routines/completeDay')
 
 apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);
+apiRoutes.route('/publications/:publicationid/like')
+    .post(publicationCtrl.likePublication);
 
+/*apiRoutes.route('/publications')
+  .post(publicationCtrl.addPublicationToTimeline);*/
 
 app.use('/api', apiRoutes);
 
