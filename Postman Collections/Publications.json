@@ -1,0 +1,109 @@
+{
+  "variables": [],
+  "info": {
+    "name": "Publications",
+    "_postman_id": "b832241a-7d4f-cfb2-e99a-0aa61a189b29",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "1745b3b0-dd2b-6503-1cd7-6cb3fc555d83",
+      "name": "post publication",
+      "request": {
+        "url": "http://localhost:3005/api/publications",
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "title",
+              "value": "titol de la publicació3",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "content",
+              "value": "aquí el contingut3",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    },
+    {
+      "_postman_id": "7d87293c-c105-4e54-6a03-a5843499470b",
+      "name": "get user publications",
+      "request": {
+        "url": {
+          "raw": "http://localhost:3005/api/users/:{{userid}}/publications",
+          "protocol": "http",
+          "auth": {},
+          "host": [
+            "localhost"
+          ],
+          "port": "3005",
+          "path": [
+            "api",
+            "users",
+            ":{{userid}}",
+            "publications"
+          ],
+          "variable": [
+            {
+              "value": "",
+              "id": ""
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded",
+            "description": ""
+          },
+          {
+            "key": "x-access-token",
+            "value": "{{x-access-token}}",
+            "description": ""
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "title",
+              "value": "titol de la publicació2",
+              "type": "text",
+              "enabled": true
+            },
+            {
+              "key": "content",
+              "value": "aquí el contingut2",
+              "type": "text",
+              "enabled": true
+            }
+          ]
+        },
+        "description": ""
+      },
+      "response": []
+    }
+  ]
+}
