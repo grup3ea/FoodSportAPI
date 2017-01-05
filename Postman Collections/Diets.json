@@ -102,7 +102,7 @@
       "_postman_id": "b81702a7-c928-3580-b9bb-26155f1deb20",
       "name": "add day to diet",
       "request": {
-        "url": "http://localhost:3005/api/diets/58653dd521f5840ce032633e/days",
+        "url": "http://localhost:3005/api/diets/{{dietid}}/days",
         "method": "POST",
         "header": [
           {
@@ -112,7 +112,7 @@
           },
           {
             "key": "x-access-token",
-            "value": "{{x-access-token}}",
+            "value": "{{x-access-token-trainer}}",
             "description": ""
           }
         ],
