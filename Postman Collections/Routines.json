@@ -167,7 +167,7 @@
       "_postman_id": "a62b8bad-ba0d-9210-a43a-0d9ae0f0747f",
       "name": "create routine and add to user",
       "request": {
-        "url": "http://localhost:3005/api/routines/addToClient/585db7f0f67d0218f82b1b41",
+        "url": "http://localhost:3005/api/routines/addToClient/{{userid}}",
         "method": "POST",
         "header": [
           {
@@ -177,7 +177,7 @@
           },
           {
             "key": "x-access-token",
-            "value": "{{x-access-token}}",
+            "value": "{{x-access-token-trainer}}",
             "description": ""
           }
         ],
