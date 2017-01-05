@@ -18,7 +18,8 @@ exports.getChefs = function (req, res) {
 };
 exports.getChefById = function (req, res) {
     chefModel.findOne({_id: req.params.chefid})
-        .populate('diets')
+        .lean()
+        .populate('diets', 'title description')
         .exec(function (err, chef) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(chef);

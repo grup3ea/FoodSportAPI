@@ -232,9 +232,10 @@ exports.getUsers = function (req, res) {
 //  get /users/:id
 exports.getUserById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
-        .populate('diets')
-        .populate('routines')
-        .populate('trainers')
+        .lean()
+        .populate('diets', 'title description')
+        .populate('routines', 'title description')
+        .populate('trainers', 'name description')
         .exec(function (err, user) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(user);

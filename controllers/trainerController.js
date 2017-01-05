@@ -20,9 +20,10 @@ exports.getTrainers = function (req, res) {
 };
 exports.getTrainerById = function (req, res) {
     trainerModel.findOne({_id: req.params.trainerid})
-        .populate('routines')
-        .populate('clients.client')
-        .populate('clientsPetitions.clientid')
+        .lean()
+        .populate('routines', 'title description')
+        .populate('clients.client', 'name avatar points')
+        .populate('clientsPetitions.clientid', 'name avatar')
         .exec(function (err, trainer) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(trainer);
@@ -30,9 +31,6 @@ exports.getTrainerById = function (req, res) {
 };
 exports.searchByDiscipline = function (req, res) {
     trainerModel.find({disciplines: req.body.discipline})
-        .populate('routines')
-        .populate('clients.client')
-        .populate('clientsPetitions.clientid')
         .exec(function (err, trainers) {
             if (err) res.send(500, err.message);
             res.status(200).jsonp(trainers);
@@ -146,9 +144,10 @@ exports.acceptClientPetition = function (req, res) {
                   if (err) res.send(500, err.message);
 
                   trainerModel.findOne({_id: trainer._id})
-                      .populate('routines')
-                      .populate('clients.client')
-                      .populate('clientsPetitions.clientid')
+                      .lean()
+                      .populate('routines', 'title description')
+                      .populate('clients.client', 'name avatar points')
+                      .populate('clientsPetitions.clientid', 'name avatar')
                       .exec(function (err, trainer) {
                           if (err) res.send(500, err.message);
                           res.status(200).jsonp(trainer);
