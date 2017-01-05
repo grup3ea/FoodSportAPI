@@ -139,7 +139,7 @@
     },
     {
       "_postman_id": "fefabef1-f295-7273-8984-dcd938f80574",
-      "name": "complete routine day",
+      "name": "complete routine day (Como sabe que dia?)",
       "request": {
         "url": "http://localhost:3005/api/routines/completeDay",
         "method": "POST",
