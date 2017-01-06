@@ -23,7 +23,7 @@ exports.getRoutineById = function (req, res) {
     routineModel.findOne({_id: req.params.routineid})
     .lean()
     .populate('trainer', 'name avatar')
-    .populate('client', 'name avatar points')
+    .populate('client', 'name avatar points.total')
     .exec(function (err, routine) {
         if (err) res.send(500, err.message);
         res.status(200).jsonp(routine);
