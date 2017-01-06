@@ -5,7 +5,17 @@ var Schema = mongoose.Schema;
 var chefSchema = new Schema({
     name: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    token: {type: String},
+    tokens: [{
+      userAgent: {type: String},
+      token: {type: String},
+      os: {type: String},
+      browser: {type: String},
+      device: {type: String},
+      os_version: {type: String},
+      browser_version: {type: String},
+      ip: {type: String},
+      lastLogin: {type: Date}
+    }],
     email: {type: String, required: true, unique: true},
     direction: {type: String},
     city: {type: String},
