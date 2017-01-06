@@ -24,9 +24,9 @@ var routineSchema = new Schema({
             title: {type: String},
             description: {type: String},
             img: {type: String},
-            weight: {type: Number},
-            distance: {type: Number},
-            reps: {type: Number},
+            weight: {type: String},
+            distance: {type: String},
+            reps: {type: String},
             series: {type: String}
         }],
         done: {type: String}//si ha complert el dia

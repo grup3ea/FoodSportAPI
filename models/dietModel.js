@@ -6,7 +6,6 @@ var dietSchema = new Schema({
     title: {type: String},
     description: {type: String},
     startingDay: {type: Date},
-    initiationdate: {type: Date},
     price: { type: String },
     image: { type: String },
     clients: [{
@@ -19,6 +18,7 @@ var dietSchema = new Schema({
     },
     days: [{
         title: {type: String},
+        name: {type:Date},
         description: {type: String},
         meals: [{
             title: {type: String},
