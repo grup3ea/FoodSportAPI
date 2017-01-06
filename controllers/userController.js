@@ -12,11 +12,8 @@ var config = require('../config/config'); // get our config file
 var crypto = require('crypto');
 var formidable = require('formidable');
 var fs = require('fs');
-
 app.set('superSecret', config.secret); // secret variable
-
 /**POST add new user to DB - Register**/
-
 /*** OK ***/
 
 exports.register = function (req, res) {
@@ -34,8 +31,8 @@ exports.register = function (req, res) {
             gender: req.body.gender,
             age: req.body.age
         },
-        points:{
-          total: 0
+        points: {
+            total: 0
         }
     });
     user.save(function (err, user) {
@@ -46,9 +43,7 @@ exports.register = function (req, res) {
         res.status(200).jsonp(user);
     });
 };
-
 /**POST user login - authentication**/
-
 /*** OK ***/
 
 exports.login = function (req, res) {
@@ -63,60 +58,53 @@ exports.login = function (req, res) {
             if (user.password != req.body.password) {
                 res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
-              var indexToken=-1;
-              for(var i=0; i<user.tokens.length; i++)
-              {
-                if(user.tokens[i].userAgent==req.body.userAgent)
-                {
-                  indexToken=JSON.parse(JSON.stringify(i));//stringify i parse pq es faci una còpia de la variable i, enlloc de una referència
+                var indexToken = -1;
+                for (var i = 0; i < user.tokens.length; i++) {
+                    if (user.tokens[i].userAgent == req.body.userAgent) {
+                        indexToken = JSON.parse(JSON.stringify(i));//stringify i parse pq es faci una còpia de la variable i, enlloc de una referència
+                    }
                 }
-              }
-              console.log(indexToken);
-              if(indexToken==-1)
-              {//userAgent no exist
-
-                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
-                    //  expiresIn: 86400 // expires in 24 hours
+                console.log(indexToken);
+                if (indexToken == -1) {//userAgent no exist
+                    var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
+                        //  expiresIn: 86400 // expires in 24 hours
+                    });
+                    var newToken = {
+                        userAgent: req.body.userAgent,
+                        token: tokenGenerated,
+                        os: req.body.os,
+                        browser: req.body.browser,
+                        device: req.body.device,
+                        os_version: req.body.os_version,
+                        browser_version: req.body.browser_version,
+                        ip: req.body.ip,
+                        lastLogin: Date()
+                    };
+                    user.tokens.push(newToken);
+                } else {//userAgent already exist
+                    user.tokens[indexToken].token = "";
+                    var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
+                        //  expiresIn: 86400 // expires in 24 hours
+                    });
+                    user.tokens[indexToken].token = tokenGenerated;
+                    user.tokens[indexToken].ip = req.body.ip;
+                    user.tokens[indexToken].lastLogin = Date();
+                }
+                user.save(function (err, user) {
+                    if (err) res.send(500, err.message);
+                    // return the information including token as JSON
+                    user.password = "";
+                    res.json({
+                        user: user,
+                        success: true,
+                        message: 'Enjoy your token!',
+                        token: tokenGenerated
+                    });
                 });
-                var newToken={
-                  userAgent:req.body.userAgent,
-                  token: tokenGenerated,
-                  os: req.body.os,
-                  browser: req.body.browser,
-                  device: req.body.device,
-                  os_version: req.body.os_version,
-                  browser_version: req.body.browser_version,
-                  ip: req.body.ip,
-                  lastLogin: Date()
-                };
-                user.tokens.push(newToken);
-              }else{//userAgent already exist
-                user.tokens[indexToken].token="";
-
-                var tokenGenerated = jwt.sign({foo:'bar'}, app.get('superSecret'), {
-                    //  expiresIn: 86400 // expires in 24 hours
-                });
-                user.tokens[indexToken].token=tokenGenerated;
-                user.tokens[indexToken].ip=req.body.ip;
-                user.tokens[indexToken].lastLogin=Date();
-              }
-              user.save(function (err, user) {
-                  if (err) res.send(500, err.message);
-
-                  // return the information including token as JSON
-                  user.password = "";
-                  res.json({
-                      user: user,
-                      success: true,
-                      message: 'Enjoy your token!',
-                      token:  tokenGenerated
-                  });
-              });
             }
         }
     });
 };
-
 /**Logout & Invalidate Token so the user is really out**/
 exports.logout = function (req, res, callback) {
     var token = req.headers.authorization;
@@ -138,7 +126,6 @@ exports.logout = function (req, res, callback) {
         return callback(res);
     }
 };
-
 /** Rutas de Passport **/
 // Ruta para desloguearse
 router.get('/logout', function (req, res) {
@@ -160,57 +147,46 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
     {successRedirect: '/', failureRedirect: '/login'}
 ));
 /* fin de rutas de passport */
-
 /*** Building a File Uploader with NodeJs
  * https://coligo.io/building-ajax-file-uploader-with-node/
  */
 
-exports.avatarUpload = function (req, res){/* no sé si s'ha provat si funciona, per ara almenys no està linkat ni es fa servir */
+exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona, per ara almenys no està linkat ni es fa servir */
     // create an incoming form object
     var form = new formidable.IncomingForm();
-
     // specify that we want to allow the user to upload multiple files in a single request
     form.multiples = true;
-
     // store all uploads in the /uploads directory
     form.uploadDir = path.join(__dirname, '/uploads');
-
     // every time a file has been uploaded successfully,
     // rename it to it's orignal name
-    form.on('file', function(field, file) {
+    form.on('file', function (field, file) {
         fs.rename(file.path, path.join(form.uploadDir, file.name));
     });
-
     // log any errors that occur
-    form.on('error', function(err) {
+    form.on('error', function (err) {
         console.log('An error has occured: \n' + err);
     });
-
     // once all the files have been uploaded, send a response to the client
-    form.on('end', function() {
+    form.on('end', function () {
         res.end('success');
     });
-
     // parse the incoming request containing the form data
     form.parse(req);
 }
-
 /** UPDATE user by user._id**/
 //  put /users/:id
 exports.updateUser = function (req, res) {//funciona
     var id = req.params.userid;
     var user = req.body;
-
-
     userModel.update({"_id": id}, user,
         function (err) {
             if (err) return console.log(err);
-            console.log( user);
+            console.log(user);
             res.status(200).jsonp(user);
         });
 }
-
-    /** DELETE user by user._id**/
+/** DELETE user by user._id**/
 //  /users/:id
 exports.deleteUserById = function (req, res) {
     userModel.findByIdAndRemove({_id: req.params.userid}, function (err) {
@@ -218,7 +194,6 @@ exports.deleteUserById = function (req, res) {
         res.status(200).send("Deleted");
     });
 };
-
 /**GET list of all users**/
 // get /users
 exports.getUsers = function (req, res) {
@@ -227,7 +202,6 @@ exports.getUsers = function (req, res) {
         res.status(200).jsonp(users);
     });
 };
-
 /** GET user by user._id**/
 //  get /users/:id
 exports.getUserById = function (req, res) {
@@ -242,15 +216,12 @@ exports.getUserById = function (req, res) {
             res.status(200).jsonp(user);
         });
 };
-
-
 ///users/:userid/diets
 exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .populate('diets')
         .exec(function (err, user) {
             if (err) res.send(500, err.message);
-
             res.status(200).jsonp(user.diets);
         });
 };
@@ -260,131 +231,114 @@ exports.getRoutinesFromUserId = function (req, res) {
         .populate('routines')
         .exec(function (err, user) {
             if (err) res.send(500, err.message);
-
             res.status(200).jsonp(user.routines);
         });
 };
-
-
-
 exports.sendPetitionToTrainer = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
-        if(!user) {
+        if (!user) {
             res.json({success: false, message: 'sending petition failed. user not found.'});
-        }else if(user){
-          console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
-          //ara busquem el trainer
-          trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
-              if (err) res.send(500, err.message);
-              if(!trainer) {
-                  res.json({success: false, message: 'sending petition failed. trainer not found.'});
-              }else if(trainer){
-                var newPetition={
-                  clientid: user._id,
-                  message: req.body.message,
-                  state: "pendent"
-                };
-                trainer.clientsPetitions.push(newPetition);
-                var notification={
-                  state: "pendent",
-                  message: "client has sent a petition to you",
-                  link: "dashboard",
-                  icon: "newpetition.png",
-                  date: Date()
-                };
-                trainer.notifications.push(notification);
-                trainer.save(function (err) {
-                    if (err) res.send(500, err.message);
-
-                    res.status(200).jsonp(trainer);
-                });
-              }//end else if
-          });
+        } else if (user) {
+            console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
+            //ara busquem el trainer
+            trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
+                if (err) res.send(500, err.message);
+                if (!trainer) {
+                    res.json({success: false, message: 'sending petition failed. trainer not found.'});
+                } else if (trainer) {
+                    var newPetition = {
+                        clientid: user._id,
+                        message: req.body.message,
+                        state: "pendent"
+                    };
+                    trainer.clientsPetitions.push(newPetition);
+                    var notification = {
+                        state: "pendent",
+                        message: "client has sent a petition to you",
+                        link: "dashboard",
+                        icon: "newpetition.png",
+                        date: Date()
+                    };
+                    trainer.notifications.push(notification);
+                    trainer.save(function (err) {
+                        if (err) res.send(500, err.message);
+                        res.status(200).jsonp(trainer);
+                    });
+                }//end else if
+            });
         }//end else if
     });
 };
-
 exports.getNotifications = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .exec(function (err, user) {
             if (err) res.send(500, err.message);
-            for(var i=0; i<user.notifications.length; i++)
-            {
-              if(user.notifications[i].state=="pendent")
-              {
-                user.notifications[i].state="viewed";
-                user.notifications[i].dateviewed=Date();
-              }
+            for (var i = 0; i < user.notifications.length; i++) {
+                if (user.notifications[i].state == "pendent") {
+                    user.notifications[i].state = "viewed";
+                    user.notifications[i].dateviewed = Date();
+                }
             }
             user.save(function (err) {
                 if (err) res.send(500, err.message);
-
                 res.status(200).jsonp(user.notifications);
             });
         });
 };
 exports.deleteSelectedTokens = function (req, res) {
-  userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-      if (err) res.send(500, err.message);
-      if(!user) {
-          res.json({success: false, message: 'user not found.'});
-      }else if(user){
-        console.log(user);
-        for(var i=0; i<req.body.devicesToDelete.length; i++)
-        {
-          for(var j=0; j<user.tokens.length; j++)
-          {
-            if(user.tokens[j].userAgent==req.body.devicesToDelete[i].userAgent)
-            {
-              user.tokens.splice(j, 1);
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        if (!user) {
+            res.json({success: false, message: 'user not found.'});
+        } else if (user) {
+            console.log(user);
+            for (var i = 0; i < req.body.devicesToDelete.length; i++) {
+                for (var j = 0; j < user.tokens.length; j++) {
+                    if (user.tokens[j].userAgent == req.body.devicesToDelete[i].userAgent) {
+                        user.tokens.splice(j, 1);
+                    }
+                }
             }
-          }
-        }
-        user.save(function (err) {
-            if (err) res.send(500, err.message);
-
-            res.status(200).jsonp(user);
-        });
-      }//end else if
-  });
+            user.save(function (err) {
+                if (err) res.send(500, err.message);
+                res.status(200).jsonp(user);
+            });
+        }//end else if
+    });
 };
-
-
 /*
-  userA: el que fa l'acció de seguir --> se li posa userB a following
-  userB: el que reb el seguiment  --> se li posa el userA al followers
-*/
+ userA: el que fa l'acció de seguir --> se li posa userB a following
+ userB: el que reb el seguiment  --> se li posa el userA al followers
+ */
 exports.followUser = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
         if (err) res.send(500, err.message);
-        if(!userA) {
+        if (!userA) {
             res.json({success: false, message: 'userA not found.'});
-        }else if(userA){
-          console.log(userA.name);
-          //ara busquem el userB
-          userModel.findOne({_id: req.body.userid}, function (err, userB) {
-              if (err) res.send(500, err.message);
-              if(!userB) {
-                  res.json({success: false, message: 'userB not found.'});
-              }else if(userB){
-
-                userB.followers.push(userA._id);
-                userB.save(function (err) {
-                    if (err) res.send(500, err.message);
-                    userA.following.push(userB._id);
-                    userA.save(function (err) {
+        } else if (userA) {
+            console.log(userA.name);
+            //ara busquem el userB
+            userModel.findOne({_id: req.body.userid}, function (err, userB) {
+                if (err) res.send(500, err.message);
+                if (!userB) {
+                    res.json({success: false, message: 'userB not found.'});
+                } else if (userB) {
+                    userB.followers.push(userA._id);
+                    userB.save(function (err) {
                         if (err) res.send(500, err.message);
-
-                        userModel.findOne(userA).lean().populate('following', 'name avatar')
-                        .exec(function(err, userA){
-                          if (err) res.send(500, err.message);
-                          res.status(200).jsonp(userA);
+                        userA.following.push(userB._id);
+                        userA.save(function (err) {
+                            if (err) res.send(500, err.message);
+                            userModel.findOne(userA).lean().populate('following', 'name avatar')
+                                .exec(function (err, userA) {
+                                    if (err) res.send(500, err.message);
+                                    res.status(200).jsonp(userA);
+                                });
                         });
                     });
-                });
-              }//end else if
-          });
+                }//end else if
+            });
         }//end else if
     });
 };

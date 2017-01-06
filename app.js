@@ -7,14 +7,11 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var expressValidator = require('express-validator');
 var session = require('express-session');
-
 var app = express();
 var config = require('./config/config');
-
 /**Inicio Express**/
 var app = express();
 var server = require('http').Server(app);
-
 var secret = config.secret;
 /** Express Session **/
 app.use(session({
@@ -22,17 +19,13 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-
 /**Set Static Folder**/
 app.use(express.static(__dirname + '/public'));
-
 app.set('superSecret', secret);
-
 /** Express Validator **/
 app.use(expressValidator({
     errorFormatter: function (param, msg, value) {
         var namespace = param.split('.'), root = namespace.shift(), formParam = root;
-
         while (namespace.length) {
             formParam += '[' + namespace.shift() + ']';
         }
@@ -43,17 +36,14 @@ app.use(expressValidator({
         };
     }
 }));
-
 /**Middlewares express**/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-
 /** developing mode **/
 /** use morgan to log requests to the console**/
 var morgan = require('morgan');
 app.use(morgan('dev'));
-
 /**CORS Filter**/
 app.use(cors());
 app.use(function (req, res, next) {
@@ -62,11 +52,9 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Access-Token");
     next();
 });
-
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + config.port + '/api');
 });
-
 /**------------------------------------------------------------------ **/
 /**--------------------IMPORT of Models & Controllers---------------- **/
 /**------------------------------------------------------------------ **/
@@ -82,55 +70,54 @@ var chefMdl = require('./models/chefModel')(app, mongoose);
 var chefCtrl = require('./controllers/chefController');
 var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
-
-
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
 /**------------------------------------------------------------------ **/
 var apiRoutes = express.Router();
-
+/**------------------------------------------------------------------ **/
+/**----------------------API routes UNprotected---------------------- **/
+/**------------------------------------------------------------------ **/
+/**Users**/
 apiRoutes.route('/users/register')
     .post(userCtrl.register);
-apiRoutes.route('/trainers/register')
-    .post(trainerCtrl.register);
-apiRoutes.route('/chefs/register')
-    .post(chefCtrl.register);
-/** Coge todos los parametros attributes de manera correcta **/
 apiRoutes.route('/users/login')
     .post(userCtrl.login);
-apiRoutes.route('/users/upload')
-    .post(userCtrl.avatarUpload);
-apiRoutes.route('/trainers/login')
-    .post(trainerCtrl.login);
-apiRoutes.route('/chefs/login')
-    .post(chefCtrl.login);
-/** Parece devolver bien el token **/
 apiRoutes.route('/logout')
     .post(userCtrl.logout);
-
-apiRoutes.route('/diets')
-    .get(dietCtrl.getDiets);
-apiRoutes.route('/diets/:dietid')
-    .get(dietCtrl.getDietById);
-
-
-apiRoutes.route('/routines')
-    .get(routineCtrl.getRoutines);
-apiRoutes.route('/routines/:routineid')
-    .get(routineCtrl.getRoutineById);
-
-
-apiRoutes.route('/trainers')
-    .get(trainerCtrl.getTrainers);
-apiRoutes.route('/trainers/:trainerid')
-    .get(trainerCtrl.getTrainerById);
-apiRoutes.route('/trainers/searchByDiscipline')
-    .post(trainerCtrl.searchByDiscipline);
+/**Chefs**/
+apiRoutes.route('/chefs/register')
+    .post(chefCtrl.register);
+/**NO funciona Chef Login**/
+apiRoutes.route('/chefs/login')
+    .post(chefCtrl.login);
 apiRoutes.route('/chefs')
     .get(chefCtrl.getChefs);
 apiRoutes.route('/chefs/:chefid')
     .get(chefCtrl.getChefById);
-
+/**Trainers**/
+apiRoutes.route('/trainers/register')
+    .post(trainerCtrl.register);
+apiRoutes.route('/trainers/login')
+    .post(trainerCtrl.login);
+apiRoutes.route('/trainers')
+    .get(trainerCtrl.getTrainers);
+apiRoutes.route('/trainers/:trainerid')
+    .get(trainerCtrl.getTrainerById);
+apiRoutes.route('/tr    ainers/searchByDiscipline')
+    .post(trainerCtrl.searchByDiscipline);
+/**Diets**/
+apiRoutes.route('/diets')
+    .get(dietCtrl.getDiets);
+apiRoutes.route('/diets/:dietid')
+    .get(dietCtrl.getDietById);
+/**Routines**/
+apiRoutes.route('/routines')
+    .get(routineCtrl.getRoutines);
+apiRoutes.route('/routines/:routineid')
+    .get(routineCtrl.getRoutineById);
+/**------------------------------------------------------------------ **/
+/**-----------------------API routes Protected----------------------- **/
+/**------------------------------------------------------------------ **/
 /**Used to check if the Token is valid**/
 /**Everything after this is protected route**/
 /** start of TOKEN MATCHING **/
@@ -165,6 +152,8 @@ apiRoutes.route('/users/:userid')
     .get(userCtrl.getUserById)
     .put(userCtrl.updateUser)
     .delete(userCtrl.deleteUserById);
+apiRoutes.route('/users/upload')
+    .post(userCtrl.avatarUpload);
 apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
@@ -173,80 +162,67 @@ apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
 apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
     .post(userCtrl.sendPetitionToTrainer);
-
 apiRoutes.route('/users/:userid/getNotifications')
-  .get(userCtrl.getNotifications);
+    .get(userCtrl.getNotifications);
 apiRoutes.route('/users/:userid/deleteSelectedTokens')
-  .post(userCtrl.deleteSelectedTokens);
-
+    .post(userCtrl.deleteSelectedTokens);
 apiRoutes.route('/users/followUser')
     .post(userCtrl.followUser);
 /*****************/
 /*** TRAINERS ****/
 /*****************/
-
 apiRoutes.route('/trainers/:trainerid')
     .put(trainerCtrl.updateTrainer)
     .delete(trainerCtrl.removeTrainer);
-
+//Jo aixo no en tinc ni idea d'on a surtit
+/////////////////////////////////////////////////////////////////////////////
 apiRoutes.route('/trainers/:id/client')
     .post(trainerCtrl.TrainerNewClient);//això es fa servir? funciona?
-
 apiRoutes.route('/trainers/:id/client/:client_id')
     .delete(trainerCtrl.TrainerRemoveClient);//això es fa servir? funciona?
-
 apiRoutes.route('/trainers/:id/routine')
     .post(trainerCtrl.TrainerNewRoutine);//això es fa servir? funciona?
-
 apiRoutes.route('/trainers/:id/routine/:routine_id')
     .delete(trainerCtrl.TrainerRemoveRoutine);//això es fa servir? funciona?
-
+/////////////////////////////////////////////////////////////////////////////
 apiRoutes.route('/trainers/acceptClientPetition')
     .post(trainerCtrl.acceptClientPetition);
-
 apiRoutes.route('/trainers/valorateTrainer/:trainerid')
     .post(trainerCtrl.valorateTrainer);
-
 apiRoutes.route('/trainers/:trainerid/getNotifications')
-  .get(trainerCtrl.getNotifications);
-
+    .get(trainerCtrl.getNotifications);
 apiRoutes.route('/trainers/searchByName/:trainername')
-  .get(trainerCtrl.searchByName);
+    .get(trainerCtrl.searchByName);
 apiRoutes.route('/trainers/searchByDiscipline/:discipline')
-  .get(trainerCtrl.searchByDiscipline);
+    .get(trainerCtrl.searchByDiscipline);
 /** ********** **/
 /******DIETS*****/
 /** ********** **/
 
- apiRoutes.route('/diets')
-     .post(dietCtrl.createDiet);
- apiRoutes.route('/diets/:dietid/days')
-     .post(dietCtrl.addDayToDiet);
- apiRoutes.route('/diets/deleteDiet/:dietid')//he canviat la ruta temporalment fins que la definim, pq colisionava amb la ruta de unchoose diet
-     .delete(dietCtrl.deleteDietById);
-
-
+apiRoutes.route('/diets')
+    .post(dietCtrl.createDiet);
+apiRoutes.route('/diets/:dietid/days')
+    .post(dietCtrl.addDayToDiet);
+apiRoutes.route('/diets/deleteDiet/:dietid')//he canviat la ruta temporalment fins que la definim, pq colisionava amb la ruta de unchoose diet
+    .delete(dietCtrl.deleteDietById);
 apiRoutes.route('/diets/choose')
     .post(dietCtrl.chooseDiet)
     .delete(dietCtrl.unchooseDiet);
-
 apiRoutes.route('/diets/completeDay')
     .post(dietCtrl.completeDay);
-
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
 
- apiRoutes.route('/routines/addToClient/:clientid')
-     .post(routineCtrl.addRoutineToClient);
- apiRoutes.route('/routines/:routineid/days')
-     .post(routineCtrl.addDayToRoutine);
-
+apiRoutes.route('/routines/addToClient/:clientid')
+    .post(routineCtrl.addRoutineToClient);
+apiRoutes.route('/routines/:routineid/days')
+    .post(routineCtrl.addDayToRoutine);
 apiRoutes.route('/routines/choose')
-   .post(routineCtrl.chooseRoutine)
-   .delete(routineCtrl.unchooseRoutine);
+    .post(routineCtrl.chooseRoutine)
+    .delete(routineCtrl.unchooseRoutine);
 apiRoutes.route('/routines/completeDay')
-   .post(routineCtrl.completeDay);
+    .post(routineCtrl.completeDay);
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/
@@ -255,16 +231,12 @@ apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);
 apiRoutes.route('/publications/:publicationid/like')
     .post(publicationCtrl.likePublication);
-
 /*apiRoutes.route('/publications')
-  .post(publicationCtrl.addPublicationToTimeline);*/
-
+ .post(publicationCtrl.addPublicationToTimeline);*/
 app.use('/api', apiRoutes);
-
 /**-------------------------------------------------------------**/
 /**--------------------END of API routes------------------------**/
 /**-------------------------------------------------------------**/
-
 /**Conexión a la base de datos de MongoDB que tenemos en local**/
 mongoose.Promise = global.Promise;
 require('mongoose-middleware').initialize(mongoose);
@@ -272,7 +244,6 @@ mongoose.connect(config.database, function (err, res) {
     if (err) throw err;
     console.log('Conectado con éxito a la Base de Datos');
 });
-
 /** Start server **/
 server.listen(config.port, function () {
     console.log("Servidor en http://localhost:" + config.port);
