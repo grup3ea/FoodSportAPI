@@ -40,9 +40,9 @@ exports.postPublication = function (req, res) {
                 user.points.history.push(reward);
                 user.points.total=user.points.total+1;
                 /* end of gamification */
-                user.save(function (err) {
+                user.save(function (err, user) {
                     if (err) return res.send(500, err.message);
-                    res.status(200).jsonp(publication);
+                    res.status(200).jsonp(user);
                 });
             });
         }//end else if

@@ -3,7 +3,7 @@ var mongooseUniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var publicationSchema = new Schema({
-    title: {type: String, required: true, unique: true},
+    title: {type: String, required: true},
     content: {type: String, required: true},
     user: {
         type: mongoose.Schema.Types.ObjectId,
