@@ -44,6 +44,7 @@ exports.register = function (req, res) {
         name: req.body.name,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
+        avatar: 'img/user.png',
         role: req.body.role,
         discipline: req.body.discipline
     });

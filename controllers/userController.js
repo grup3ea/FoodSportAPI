@@ -24,7 +24,7 @@ exports.register = function (req, res) {
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
         description: req.body.description,
-        avatar: req.body.avatar,
+        avatar: 'img/user.png',
         attributes: {
             height: req.body.height,
             weight: req.body.weight,
@@ -209,7 +209,7 @@ exports.getUserById = function (req, res) {
         .lean()
         .populate('diets', 'title description')
         .populate('routines', 'title description')
-        .populate('trainers', 'name description')
+        .populate('trainers', 'name avatar description')
         .populate('publications')
         .exec(function (err, user) {
             if (err) res.send(500, err.message);

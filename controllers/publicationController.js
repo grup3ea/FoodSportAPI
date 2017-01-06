@@ -99,10 +99,6 @@ exports.deletePublicationById = function (req, res) {
 
 
 
-/*
-  userA: el que fa l'acció de posar like
-  userB: el que reb el like al post del seu timeline
-*/
 exports.likePublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
@@ -119,6 +115,37 @@ exports.likePublication = function (req, res) {
 
       //          for(var i=0; i<userB.timeline)
                 publication.likes.push(user._id);
+                publication.save(function (err, publication) {
+                    if (err) res.send(500, err.message);
+
+                    res.status(200).jsonp(publication);
+                });
+              }//end else if
+          });
+        }//end else if
+    });
+};
+exports.dislikePublication = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'user not found.'});
+        }else if(user){
+          console.log(user.name);
+          //ara busquem el userB
+          publicationModel.findOne({_id: req.params.publicationid}, function (err, publication) {
+              if (err) res.send(500, err.message);
+              if(!publication) {
+                  res.json({success: false, message: 'publication not found.'});
+              }else if(publication){
+
+                for(var i=0; i<publication.likes.length; i++)
+                {
+                  if(publication.likes[i].equals(user._id))
+                  {
+                    publication.likes.splice(i, 1);
+                  }
+                }
                 publication.save(function (err, publication) {
                     if (err) res.send(500, err.message);
 

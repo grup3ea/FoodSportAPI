@@ -231,6 +231,8 @@ apiRoutes.route('/publications')
     .post(publicationCtrl.postPublication);
 apiRoutes.route('/publications/:publicationid/like')
     .post(publicationCtrl.likePublication);
+apiRoutes.route('/publications/:publicationid/dislike')
+    .post(publicationCtrl.dislikePublication);
 /*apiRoutes.route('/publications')
  .post(publicationCtrl.addPublicationToTimeline);*/
 app.use('/api', apiRoutes);
