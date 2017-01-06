@@ -16,7 +16,8 @@ var userSchema = new Schema({
       os_version: {type: String},
       browser_version: {type: String},
       ip: {type: String},
-      lastLogin: {type: Date}
+      lastLogin: {type: Date},
+      birthdate: {type: Date},
     }],
     email: {type: String, required: true, unique: true},
     description: {type: String},
