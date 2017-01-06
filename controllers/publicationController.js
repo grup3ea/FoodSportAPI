@@ -118,7 +118,17 @@ exports.likePublication = function (req, res) {
                 publication.save(function (err, publication) {
                     if (err) res.send(500, err.message);
 
-                    res.status(200).jsonp(publication);
+                    //res.status(200).jsonp(publication);
+                    userModel.findOne({_id: publication.user})
+                        .lean()
+                        .populate('diets', 'title description')
+                        .populate('routines', 'title description')
+                        .populate('trainers', 'name avatar description')
+                        .populate('publications')
+                        .exec(function (err, user) {
+                            if (err) res.send(500, err.message);
+                            res.status(200).jsonp(user);
+                        });
                 });
               }//end else if
           });
@@ -149,7 +159,17 @@ exports.dislikePublication = function (req, res) {
                 publication.save(function (err, publication) {
                     if (err) res.send(500, err.message);
 
-                    res.status(200).jsonp(publication);
+                    //res.status(200).jsonp(publication);
+                    userModel.findOne({_id: publication.user})
+                        .lean()
+                        .populate('diets', 'title description')
+                        .populate('routines', 'title description')
+                        .populate('trainers', 'name avatar description')
+                        .populate('publications')
+                        .exec(function (err, user) {
+                            if (err) res.send(500, err.message);
+                            res.status(200).jsonp(user);
+                        });
                 });
               }//end else if
           });
