@@ -203,7 +203,7 @@ exports.completeDay = function (req, res) {
             );
         }//end else if
     });
-}
+};
 
 /**NO coge days._id por lo que no hace la funcion y peta**/
 /*
@@ -231,5 +231,3 @@ exports.completeDayById = function (req, res) {
     });
 }
 */
-
-

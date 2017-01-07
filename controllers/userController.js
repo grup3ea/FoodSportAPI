@@ -216,6 +216,16 @@ exports.getUserById = function (req, res) {
             res.status(200).jsonp(user);
         });
 };
+exports.getUserNetworkById = function (req, res) {
+    userModel.findOne({_id: req.params.userid})
+        .lean()
+        .populate('followers', 'name avatar description')
+        .populate('following', 'name avatar description')
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
+            res.status(200).jsonp(user);
+        });
+};
 ///users/:userid/diets
 exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})

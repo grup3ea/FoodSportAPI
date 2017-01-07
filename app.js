@@ -168,6 +168,8 @@ apiRoutes.route('/users/:userid/deleteSelectedTokens')
     .post(userCtrl.deleteSelectedTokens);
 apiRoutes.route('/users/followUser')
     .post(userCtrl.followUser);
+apiRoutes.route('/users/:userid/network')
+    .get(userCtrl.getUserNetworkById);
 /*****************/
 /*** TRAINERS ****/
 /*****************/
@@ -210,8 +212,8 @@ apiRoutes.route('/diets/choose')
     .delete(dietCtrl.unchooseDiet);
 apiRoutes.route('/diets/completeDay')
     .post(dietCtrl.completeDay);
-apiRoutes.route('/diets/completeDay/:date')
-    .post(dietCtrl.completeDayByDate);
+/*apiRoutes.route('/diets/completeDay/:date')
+    .post(dietCtrl.completeDayByDate);*/
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
@@ -225,8 +227,8 @@ apiRoutes.route('/routines/choose')
     .delete(routineCtrl.unchooseRoutine);
 apiRoutes.route('/routines/completeDay/')//Only Gamification
     .post(routineCtrl.completeDay);
-apiRoutes.route('/routines/completeDay/:dayid')//Add true to done day completed
-    .post(routineCtrl.completeDayById);
+/*apiRoutes.route('/routines/completeDay/:dayid')//Add true to done day completed
+    .post(routineCtrl.completeDayById);*/
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/
