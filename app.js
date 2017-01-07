@@ -143,6 +143,13 @@ apiRoutes.use(function (req, res, next) {
 /** end of TOKEN MATCHING **/
 
 /** ********** **/
+/******GLOBAL*****/
+/** ********** **/
+
+apiRoutes.route('/search/:searchstring')
+.get(userCtrl.search);
+
+/** ********** **/
 /******USERS*****/
 /** ********** **/
 

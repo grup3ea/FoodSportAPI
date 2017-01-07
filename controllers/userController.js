@@ -352,3 +352,28 @@ exports.followUser = function (req, res) {
         }//end else if
     });
 };
+
+
+
+
+exports.search = function (req, res) {
+    userModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+    .exec(function (err, users) {
+        //if (err) res.send(500, err.message);
+        trainerModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+        .exec(function (err, trainers) {
+            routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+            .exec(function (err, routines) {
+                dietModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                .exec(function (err, diets) {
+                    res.json({
+                        users: users,
+                        trainers: trainers,
+                        routines: routines,
+                        diets: diets
+                    });
+                });//diets
+            });//routines
+        });//trainers
+    });//users
+};
