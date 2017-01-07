@@ -235,7 +235,7 @@ apiRoutes.route('/routines/choose')
 apiRoutes.route('/routines/completeDay/')//Only Gamification
     .post(routineCtrl.completeDay);
 /*apiRoutes.route('/routines/completeDay/:dayid')//Add true to done day completed
-    .post(routineCtrl.completeDayById);*/
+    .post(routineCtrl.completeDayGamificated);*/
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/

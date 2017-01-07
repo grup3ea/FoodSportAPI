@@ -206,28 +206,56 @@ exports.completeDay = function (req, res) {
 };
 
 /**NO coge days._id por lo que no hace la funcion y peta**/
-/*
-exports.completeDayById = function (req, res) {
-    routineModel.findOne({days._id: req.params.dayid}, function (err, routine) {
-        if (err) res.send(500, err.message);
-        if (!routine) {
-            res.json({success: false, message: 'Day of routine not found.'});
-        }
-        else if (routine) {
-            /!* True to day done*!/
-            var completeDay =
-                {
-                    done: true
-                };
-            routine.days.push(completeDay);
-            /!* end of done*!/
-            routine.save
-            (function (err) {
-                    if (err) res.send(500, err.message);
-                    res.status(200).jsonp(routine.days);
+
+/*exports.completeDayGamificated = function (req, res) {
+    userModel.find({'tokens.token': req.headers['x-access-token']})
+        .lean()
+        .populate('routines')
+        .exec(function (err, user) {
+            if (err) res.send(500, err.message);
+            if (!user) {
+                res.json({success: false, message: 'choosing routine failed. user not found.'});
+            }
+            else if (user) {
+                /!* gamification *!/
+                var reward =
+                    {
+                        concept: "routine day complete",
+                        date: Date(),
+                        value: +1
+                    };
+                user.points.history.push(reward);
+                user.points.total = user.points.total + 1;
+                /!* end of gamification *!/
+                user.save
+                (function (err) {
+                        if (err) res.send(500, err.message);
+                        res.status(200).jsonp(user);
+                    }
+                );
+            }//end else if
+        })
+        .exec(function (req, res) {
+            userModel.findOne(user.routines.days._id : req.params.dayid , function (err, routine) {
+                if (err) res.send(500, err.message);
+                if (!routine) {
+                    res.json({success: false, message: 'Day of routine not found.'});
                 }
-            );
-        }//end else if
-    });
-}
-*/
+                else if (routine) {
+                    /!* True to day done*!/
+                    var completeDay =
+                        {
+                            done: true
+                        };
+                    routine.days.push(completeDay);
+                    /!* end of done*!/
+                    routine.save
+                    (function (err) {
+                            if (err) res.send(500, err.message);
+                            res.status(200).jsonp(routine.days);
+                        }
+                    );
+                }//end else if
+            };
+        })
+}*/

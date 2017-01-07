@@ -1,23 +1,22 @@
 var mongoose = require('mongoose');
 var mongooseUniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
-
 var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
     password: {type: String, required: true},
     //token: {type: String},//el mantenim temporalment per permetre el funcionament de la resta
     tokens: [{
-      userAgent: {type: String},
-      token: {type: String},
-      os: {type: String},
-      browser: {type: String},
-      device: {type: String},
-      os_version: {type: String},
-      browser_version: {type: String},
-      ip: {type: String},
-      lastLogin: {type: Date},
-      birthdate: {type:  Date},
+        userAgent: {type: String},
+        token: {type: String},
+        os: {type: String},
+        browser: {type: String},
+        device: {type: String},
+        os_version: {type: String},
+        browser_version: {type: String},
+        ip: {type: String},
+        lastLogin: {type: Date},
+        birthdate: {type: Date},
     }],
     email: {type: String, required: true, unique: true},
     description: {type: String},
@@ -32,7 +31,7 @@ var userSchema = new Schema({
         age: {type: Number}
     },
     publications: [{
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'publicationModel'
     }],
     facebook: {
@@ -51,7 +50,6 @@ var userSchema = new Schema({
         provider_id: {type: String},
         photo: {type: String},
         createdAt: {type: Date, default: Date.now}
-
     },
     google: {
         id: {type: String},
@@ -72,31 +70,29 @@ var userSchema = new Schema({
         ref: 'routineModel'
     }],
     points: {
-      total: {type: Number},
-      history: [{
-        concept: {type: String},
-        date: {type: Date},
-        value: {type: Number}
-      }]
+        total: {type: Number},
+        history: [{
+            concept: {type: String},
+            date: {type: Date},
+            value: {type: Number}
+        }]
     },
     notifications: [{
-      state: {type: String},//viewed, pendent
-      message: {type: String},
-      link: {type: String},//aquí oju, a la app i a la web calen links diferents, però ho podem fer posant sempre a la app i a la web el prefix del link (#!/app) o (#/app/), i després afegint-hi la pàgina on volem enviar el routing, per exemple (dashboard)
-      icon: {type: String},
-      date: {type: Date},
-      dateviewed: {type: Date}
+        state: {type: String},//viewed, pendent
+        message: {type: String},
+        link: {type: String},//aquí oju, a la app i a la web calen links diferents, però ho podem fer posant sempre a la app i a la web el prefix del link (#!/app) o (#/app/), i després afegint-hi la pàgina on volem enviar el routing, per exemple (dashboard)
+        icon: {type: String},
+        date: {type: Date},
+        dateviewed: {type: Date}
     }],
     followers: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'userModel'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel'
     }],
     following: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'userModel'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel'
     }]
 });
-
 userSchema.plugin(mongooseUniqueValidator);
-
 module.exports = mongoose.model('userModel', userSchema);
