@@ -178,27 +178,58 @@ exports.unchooseRoutine = function (req, res) {
         }//end else if
     });
 };
-
 exports.completeDay = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) res.send(500, err.message);
-        if(!user) {
+        if (!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
-        }else if(user){
-          /* gamification */
-          var reward={
-            concept: "routine day complete",
-            date: Date(),
-            value: +1
-          };
-          user.points.history.push(reward);
-          user.points.total=user.points.total+1;
-          /* end of gamification */
-          user.save(function (err) {
-              if (err) res.send(500, err.message);
-
-              res.status(200).jsonp(user);
-          });
+        }
+        else if (user) {
+            /* gamification */
+            var reward =
+                {
+                    concept: "routine day complete",
+                    date: Date(),
+                    value: +1
+                };
+            user.points.history.push(reward);
+            user.points.total = user.points.total + 1;
+            /* end of gamification */
+            user.save
+            (function (err) {
+                    if (err) res.send(500, err.message);
+                    res.status(200).jsonp(user);
+                }
+            );
         }//end else if
     });
-};
+}
+
+/**NO coge days._id por lo que no hace la funcion y peta**/
+/*
+exports.completeDayById = function (req, res) {
+    routineModel.findOne({days._id: req.params.dayid}, function (err, routine) {
+        if (err) res.send(500, err.message);
+        if (!routine) {
+            res.json({success: false, message: 'Day of routine not found.'});
+        }
+        else if (routine) {
+            /!* True to day done*!/
+            var completeDay =
+                {
+                    done: true
+                };
+            routine.days.push(completeDay);
+            /!* end of done*!/
+            routine.save
+            (function (err) {
+                    if (err) res.send(500, err.message);
+                    res.status(200).jsonp(routine.days);
+                }
+            );
+        }//end else if
+    });
+}
+*/
+
+

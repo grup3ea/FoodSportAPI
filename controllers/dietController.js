@@ -176,3 +176,32 @@ exports.completeDay = function (req, res) {
         }//end else if
     });
 };
+
+/**Falla en el mismo sitio que routine, title:dietdate y no se activa la función**/
+
+/*
+exports.completeDayByDate = function (req, res) {
+    dietModel.findOne({days.title : req.params.dietdate}, function (err, diet) {
+        if (err) res.send(500, err.message);
+        if (!diet) {
+            res.json({success: false, message: 'Date of diet not found.'});
+        }
+        else if (diet) {
+            /!* True to day done*!/
+            var completeDay =
+                {
+                    done: true
+                };
+            diet.days.push(completeDay);
+            /!* end of done*!/
+            diet.save
+            (function (err) {
+                    if (err) res.send(500, err.message);
+                    res.status(200).jsonp(diet.days);
+                }
+            );
+        }//end else if
+    });
+}
+*/
+

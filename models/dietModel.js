@@ -17,7 +17,7 @@ var dietSchema = new Schema({
         ref: 'chefModel'
     },
     days: [{
-        title: {type: String},
+        date: {type: Date}, //Ha de ser realmente un día que empiezas por ejemplo 12/12/2016 para poder ir completando según la fecha, comer comes cada día
         name: {type:Date},
         description: {type: String},
         meals: [{
