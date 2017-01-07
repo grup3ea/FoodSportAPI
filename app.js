@@ -173,8 +173,8 @@ apiRoutes.route('/users/:userid/getNotifications')
     .get(userCtrl.getNotifications);
 apiRoutes.route('/users/:userid/deleteSelectedTokens')
     .post(userCtrl.deleteSelectedTokens);
-apiRoutes.route('/users/followUser')
-    .post(userCtrl.followUser);
+apiRoutes.route('/users/follow')
+    .post(userCtrl.follow);
 apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
 /*****************/

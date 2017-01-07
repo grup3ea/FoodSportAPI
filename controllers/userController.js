@@ -25,6 +25,7 @@ exports.register = function (req, res) {
         email: req.body.email,
         description: req.body.description,
         avatar: 'img/user.png',
+        background: 'img/background.png',
         attributes: {
             height: req.body.height,
             weight: req.body.weight,
@@ -321,13 +322,12 @@ exports.deleteSelectedTokens = function (req, res) {
  userA: el que fa l'acció de seguir --> se li posa userB a following
  userB: el que reb el seguiment  --> se li posa el userA al followers
  */
-exports.followUser = function (req, res) {
+exports.follow = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
         if (err) res.send(500, err.message);
         if (!userA) {
             res.json({success: false, message: 'userA not found.'});
         } else if (userA) {
-            console.log(userA.name);
             //ara busquem el userB
             userModel.findOne({_id: req.body.userid}, function (err, userB) {
                 if (err) res.send(500, err.message);
@@ -343,7 +343,8 @@ exports.followUser = function (req, res) {
                             userModel.findOne(userA).lean().populate('following', 'name avatar')
                                 .exec(function (err, userA) {
                                     if (err) res.send(500, err.message);
-                                    res.status(200).jsonp(userA);
+                                    console.log("user followed" + userB.name);
+                                    res.status(200).jsonp(userB);
                                 });
                         });
                     });
