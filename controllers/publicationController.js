@@ -118,17 +118,29 @@ exports.likePublication = function (req, res) {
                 publication.save(function (err, publication) {
                     if (err) res.send(500, err.message);
 
-                    //res.status(200).jsonp(publication);
-                    userModel.findOne({_id: publication.user})
-                        .lean()
-                        .populate('diets', 'title description')
-                        .populate('routines', 'title description')
-                        .populate('trainers', 'name avatar description')
-                        .populate('publications')
-                        .exec(function (err, user) {
-                            if (err) res.send(500, err.message);
-                            res.status(200).jsonp(user);
-                        });
+                    /* gamification */
+                    var reward={
+                      concept: "liked publication " + publication.title,
+                      date: Date(),
+                      value: +1
+                    };
+                    user.points.history.push(reward);
+                    user.points.total=user.points.total+1;
+                    /* end of gamification */
+                    user.save(function (err, user) {
+                        if (err) return res.send(500, err.message);
+                        userModel.findOne({_id: publication.user})
+                            .lean()
+                            .populate('diets', 'title description')
+                            .populate('routines', 'title description')
+                            .populate('trainers', 'name avatar description')
+                            .populate('publications')
+                            .exec(function (err, user) {
+                                if (err) res.send(500, err.message);
+                                res.status(200).jsonp(user);
+                            });
+                    });
+
                 });
               }//end else if
           });
@@ -159,17 +171,28 @@ exports.dislikePublication = function (req, res) {
                 publication.save(function (err, publication) {
                     if (err) res.send(500, err.message);
 
-                    //res.status(200).jsonp(publication);
-                    userModel.findOne({_id: publication.user})
-                        .lean()
-                        .populate('diets', 'title description')
-                        .populate('routines', 'title description')
-                        .populate('trainers', 'name avatar description')
-                        .populate('publications')
-                        .exec(function (err, user) {
-                            if (err) res.send(500, err.message);
-                            res.status(200).jsonp(user);
-                        });
+                    /* gamification */
+                    var reward={
+                      concept: "disliked publication " + publication.title,
+                      date: Date(),
+                      value: -1
+                    };
+                    user.points.history.push(reward);
+                    user.points.total=user.points.total-1;
+                    /* end of gamification */
+                    user.save(function (err, user) {
+                        if (err) return res.send(500, err.message);
+                        userModel.findOne({_id: publication.user})
+                            .lean()
+                            .populate('diets', 'title description')
+                            .populate('routines', 'title description')
+                            .populate('trainers', 'name avatar description')
+                            .populate('publications')
+                            .exec(function (err, user) {
+                                if (err) res.send(500, err.message);
+                                res.status(200).jsonp(user);
+                            });
+                    });
                 });
               }//end else if
           });

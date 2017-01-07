@@ -264,6 +264,7 @@ exports.sendPetitionToTrainer = function (req, res) {
                         state: "pendent"
                     };
                     trainer.clientsPetitions.push(newPetition);
+                    /*notification*/
                     var notification = {
                         state: "pendent",
                         message: "client has sent a petition to you",
@@ -272,6 +273,7 @@ exports.sendPetitionToTrainer = function (req, res) {
                         date: Date()
                     };
                     trainer.notifications.push(notification);
+                    /* end of notification*/
                     trainer.save(function (err) {
                         if (err) res.send(500, err.message);
                         res.status(200).jsonp(trainer);
@@ -335,9 +337,40 @@ exports.follow = function (req, res) {
                     res.json({success: false, message: 'userB not found.'});
                 } else if (userB) {
                     userB.followers.push(userA._id);
+
+                    /*notification*/
+                    var notification = {
+                        state: "pendent",
+                        message: userA.name + " followed you",
+                        link: "dashboard",
+                        icon: "follower.png",
+                        date: Date()
+                    };
+                    userB.notifications.push(notification);
+                    /* end of notification*/
+                    /* gamification */
+                    var reward={
+                      concept: userA.name + " followed you",
+                      date: Date(),
+                      value: +1
+                    };
+                    userB.points.history.push(reward);
+                    userB.points.total=userB.points.total+1;
+                    /* end of gamification */
+
                     userB.save(function (err) {
                         if (err) res.send(500, err.message);
                         userA.following.push(userB._id);
+
+                        /* gamification */
+                        var reward={
+                          concept: "followed " + userB.name,
+                          date: Date(),
+                          value: +5
+                        };
+                        userA.points.history.push(reward);
+                        userA.points.total=userA.points.total+1;
+                        /* end of gamification */
                         userA.save(function (err) {
                             if (err) res.send(500, err.message);
                             userModel.findOne(userA).lean().populate('following', 'name avatar')
