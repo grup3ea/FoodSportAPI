@@ -199,3 +199,33 @@ exports.dislikePublication = function (req, res) {
         }//end else if
     });
 };
+
+
+var ObjectId = require('mongodb').ObjectID;
+exports.getNewsFeed = function (req, res) {//getPublicationsFromFollowingUsers
+    //primer agafem l'user que fa la petició, per saber quins users està seguint
+    var newsfeed=[];
+    userModel.findOne({'tokens.token': req.headers['x-access-token']})
+    .exec(function (err, user) {
+        if (err) return res.send(500, err.message);
+        console.log("getting newsfeed for user: " + user.name);
+
+        var following=[];
+        for(var i=0; i<user.following.length; i++)
+        {//això ho fem perquè necessitem la array amb el contingut en format objectid
+            following.push(new ObjectId(user.following[i]));
+        }
+        
+        publicationModel.find({user: { $in: following}})
+        .lean()
+        .populate('user', 'name avatar')
+        .exec(function (err, publications) {
+            if (err) return res.send(500, err.message);
+            if(!publications) {
+                //
+            }else if(publications){
+                res.status(200).jsonp(publications);
+            }
+        });
+    });
+};
