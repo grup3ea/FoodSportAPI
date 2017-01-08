@@ -234,8 +234,8 @@ apiRoutes.route('/routines/choose')
     .delete(routineCtrl.unchooseRoutine);
 apiRoutes.route('/routines/completeDay/')//Only Gamification
     .post(routineCtrl.completeDay);
-/*apiRoutes.route('/routines/completeDay/:dayid')//Add true to done day completed
-    .post(routineCtrl.completeDayGamificated);*/
+apiRoutes.route('/routines/completeDay/:routineid')//Add true to done day completed
+    .post(routineCtrl.completeDayGamificated);
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/

@@ -29,7 +29,7 @@ var routineSchema = new Schema({
             reps: {type: String},
             series: {type: String}
         }],
-        done: {type: String}//si ha complert el dia
+        done: {type: String, default: false}//si ha complert el dia
     }]
 })
 ;

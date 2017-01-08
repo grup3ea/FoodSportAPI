@@ -128,7 +128,7 @@ exports.acceptClientPetition = function (req, res) {
         }else if(trainer){
           console.log(trainer);//aquí potser caldria comprovar que la routine és la que han creat per l'trainer
           //busquem la petition que estem processant
-          for(var i=0; i<trainer.clientsPetitions.length; i++)
+          for(var i=0; i<trainer.clientsPetitions.length; i++) //routine.days
           {
             if(trainer.clientsPetitions[i]._id.equals(req.body.petitionid))
             {
