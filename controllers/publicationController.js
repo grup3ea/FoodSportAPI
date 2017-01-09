@@ -144,16 +144,19 @@ exports.likePublication = function (req, res) {
                     /* end of gamification */
                     user.save(function (err, user) {
                         if (err) return res.send(500, err.message);
-                        userModel.findOne({_id: publication.user})
-                            .lean()
-                            .populate('diets', 'title description')
-                            .populate('routines', 'title description')
-                            .populate('trainers', 'name avatar description')
-                            .populate('publications')
-                            .exec(function (err, user) {
-                                if (err) return res.send(500, err.message);
-                                res.status(200).jsonp(user);
-                            });
+
+                        publicationModel.findOne({_id: req.params.publicationid})
+                        .lean()
+                        .populate('user', 'name avatar')
+                        .exec(function (err, publication) {
+                            if (err) return res.send(500, err.message);
+                            if(!publication) {
+                                //
+                            }else if(publication){
+                                res.status(200).jsonp(publication);
+                            }
+                        });
+
                     });
 
                 });
@@ -197,16 +200,18 @@ exports.dislikePublication = function (req, res) {
                     /* end of gamification */
                     user.save(function (err, user) {
                         if (err) return res.send(500, err.message);
-                        userModel.findOne({_id: publication.user})
-                            .lean()
-                            .populate('diets', 'title description')
-                            .populate('routines', 'title description')
-                            .populate('trainers', 'name avatar description')
-                            .populate('publications')
-                            .exec(function (err, user) {
-                                if (err) return res.send(500, err.message);
-                                res.status(200).jsonp(user);
-                            });
+
+                        publicationModel.findOne({_id: req.params.publicationid})
+                        .lean()
+                        .populate('user', 'name avatar')
+                        .exec(function (err, publication) {
+                            if (err) return res.send(500, err.message);
+                            if(!publication) {
+                                //
+                            }else if(publication){
+                                res.status(200).jsonp(publication);
+                            }
+                        });
                     });
                 });
               }//end else if
