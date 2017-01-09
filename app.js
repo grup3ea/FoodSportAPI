@@ -246,6 +246,8 @@ apiRoutes.route('/publications/:publicationid/like')
     .post(publicationCtrl.likePublication);
 apiRoutes.route('/publications/:publicationid/dislike')
     .post(publicationCtrl.dislikePublication);
+apiRoutes.route('/publications/:publicationid')
+    .delete(publicationCtrl.deletePublicationById);
 
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);

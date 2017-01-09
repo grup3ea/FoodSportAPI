@@ -73,7 +73,7 @@ exports.putUserPublicationsByUserId = function (req, res) {
             content: req.body.content,
             date: new Date()
         };
-        user.publications.push(publication);
+        user.publications.push(publication);//crec que això no funciona, pq no sap d'on està agafant l'user que aquí posa que guarda
         user.save(function (err) {
             if (err !== null) return res.send(500, err.message);
             res.status(200).jsonp(user.publications);
@@ -89,9 +89,24 @@ exports.putUserPublicationsByUserId = function (req, res) {
 /**DELETE User publications by publication ID**/
 //delete /publications/:publicationid
 exports.deletePublicationById = function (req, res) {
-    publicationModel.findByIdAndRemove({_id: req.params.publicationid}, function (err) {
-        if (err !== null) return res.send(500, err.message);
-        res.status(200).jsonp('Deleted');
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'user not found.'});
+        }else if(user){
+            for(var i=0; i<user.publications.length; i++)
+            {
+                if(user.publications[i].equals(req.params.publicationid))
+                {
+                    user.publications.splice(i, 1);
+                    //només si el user és qui ha fet la publication la pot esborrar
+                    publicationModel.findByIdAndRemove({_id: req.params.publicationid}, function (err) {
+                        if (err !== null) return res.send(500, err.message);
+                        res.status(200).jsonp('Deleted');
+                    });
+                }
+            }
+        }
     });
 };
 
@@ -218,6 +233,7 @@ exports.getNewsFeed = function (req, res) {//getPublicationsFromFollowingUsers
             {//això ho fem perquè necessitem la array amb el contingut en format objectid
                 following.push(new ObjectId(user.following[i]));
             }
+            following.push(new ObjectId(user._id));//així també reb les seves pròpies publicacions
 
             publicationModel.find({user: { $in: following}})
             .lean()
