@@ -205,7 +205,7 @@ exports.completeDay = function (req, res) {
     });
 };
 
-exports.completeDayGamificated = function (req, res) {
+exports.completeDayGamificatedRoutine = function (req, res) {
     //1r intentamos darle los puntos al usuario por haber completado el día
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err)
@@ -262,4 +262,4 @@ exports.completeDayGamificated = function (req, res) {
             });//En routineModel for done = true
         }//End else if (user)
     });//En UserModel findOne()
-}//End function
+};//End function
