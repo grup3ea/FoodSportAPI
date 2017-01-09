@@ -227,7 +227,6 @@ exports.completeDayGamificated = function (req, res) {
             user.save(function (err) {
                 if (err)
                     return res.send(500, err.message);
-                res.status(200).jsonp(user);
             });
             //Ahora intentamos añadir done = true dentro del modelo rutina
             routineModel.findOne({'_id': req.params.routineid}, function (err, routine) {
@@ -237,24 +236,28 @@ exports.completeDayGamificated = function (req, res) {
                     res.json({success: false, message: 'Routine not found'});
                 }
                 else if (routine) {
+                    var indexDay= -1;
                     for (var i = 0; i < routine.days.length; i++) //routine.days
                     {
                         if (routine.days[i]._id.equals(req.body.dayid)) {
-                            /* True to day done*/
-                            var completeDay =
-                                {
-                                    done: true
-                                };
-                            routine.days.push(completeDay);
-                            /* end of done*/
-                            routine.save(function (err) {
-                                if (err)
-                                    return res.send(500, err.message);
-                                res.status(200).jsonp(routine.days);
-                            });//Routine.save
-                        }//End if when day foung
-                        else res.json({success: false, message: 'Day not found'});
+                            //aquí hem trobat el dia que busquem
+                            indexDay=JSON.parse(JSON.stringify(i));
+                        }
                     }//End for looking for days
+                    if (indexDay>-1)
+                    {
+                        /* True to day done*/
+                        routine.days[indexDay].done=true;
+                        /* end of done*/
+                        routine.save(function (err) {
+                            if (err)
+                                return res.send(500, err.message);
+                            res.status(200).jsonp(routine.days);
+                        });//Routine.save
+                    }//End if when day foung
+                    else{
+                        res.json({success: false, message: 'Day not found'});
+                    }
                 }//End else if found routine
             });//En routineModel for done = true
         }//End else if (user)
