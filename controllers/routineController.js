@@ -12,7 +12,7 @@ var trainerModel = require('../models/trainerModel');
 
 exports.getRoutines = function (req, res) {
     routineModel.find(function (err, routines) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(routines);
     });
 };
@@ -25,7 +25,7 @@ exports.getRoutineById = function (req, res) {
     .populate('trainer', 'name avatar')
     .populate('client', 'name avatar points.total')
     .exec(function (err, routine) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(routine);
     });
 };
@@ -37,7 +37,7 @@ exports.acceptRoutine = function (req, res) {
 
 exports.addRoutineToClient = function (req, res) {
   trainerModel.findOne({'tokens.token': req.headers['x-access-token'], 'clients.client': req.params.clientid}, function (err, trainer) {
-    if (err) res.send(500, err.message);
+    if (err) return res.send(500, err.message);
     if (!trainer) {
         res.json({success: false, message: 'Routine creation failed. Trainer not found.'});
     }else if(trainer){
@@ -56,13 +56,13 @@ exports.addRoutineToClient = function (req, res) {
           //ara guardem la routineid al trainer
           trainer.routines.push(routine._id);
           trainer.save(function(err, trainer){
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
 
           });
           //res.status(200).jsonp(routine);
           //ara afegim la routine al client
           userModel.findOne({'_id': req.params.clientid}, function (err, user) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
               if(!user) {
                   res.json({success: false, message: 'adding routine to client failed. user not found.'});
               }else if(user){
@@ -86,7 +86,7 @@ exports.addRoutineToClient = function (req, res) {
                 };
                 user.notifications.push(notification);
                 user.save(function (err) {
-                    if (err) res.send(500, err.message);
+                    if (err) return res.send(500, err.message);
 
                     res.status(200).jsonp(routine);
                 });
@@ -100,12 +100,12 @@ exports.addRoutineToClient = function (req, res) {
 // add day
 exports.addDayToRoutine = function (req, res) {
   trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
-    if (err) res.send(500, err.message);
+    if (err) return res.send(500, err.message);
     if(!trainer) {
         res.json({success: false, message: 'Routine day addition failed. Trainer not found.'});
     }else if(trainer){
       routineModel.findOne({_id: req.params.routineid}, function (err, routine) {
-          if (err) res.send(500, err.message);
+          if (err) return res.send(500, err.message);
 
           if(trainer._id.equals(routine.trainer))
           {// si el trainer que fa el post realment és el trainer creator de la routine
@@ -125,7 +125,7 @@ exports.addDayToRoutine = function (req, res) {
 
 exports.chooseRoutine = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
         }else if(user){
@@ -141,7 +141,7 @@ exports.chooseRoutine = function (req, res) {
           user.points.total=user.points.total+5;
           /* end of gamification */
           user.save(function (err) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
 
               res.status(200).jsonp(user);
           });
@@ -150,7 +150,7 @@ exports.chooseRoutine = function (req, res) {
 };
 exports.unchooseRoutine = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
         }else if(user){
@@ -171,7 +171,7 @@ exports.unchooseRoutine = function (req, res) {
           user.points.total=user.points.total-7;
           /* end of gamification */
           user.save(function (err) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
 
               res.status(200).jsonp(user);
           });
@@ -180,7 +180,7 @@ exports.unchooseRoutine = function (req, res) {
 };
 exports.completeDay = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if (!user) {
             res.json({success: false, message: 'choosing routine failed. user not found.'});
         }
@@ -197,7 +197,7 @@ exports.completeDay = function (req, res) {
             /* end of gamification */
             user.save
             (function (err) {
-                    if (err) res.send(500, err.message);
+                    if (err) return res.send(500, err.message);
                     res.status(200).jsonp(user);
                 }
             );

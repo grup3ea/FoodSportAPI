@@ -12,7 +12,7 @@ var crypto = require('crypto');
 //  post /users/publications/:userid
 exports.postPublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'user not found.'});
         }else if(user){
@@ -53,7 +53,7 @@ exports.postPublication = function (req, res) {
 //  get /users/:userid/publications Putos populates que no salen los fuckers
 exports.getUserPublicationsByUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
     }).populate('publications')
         .exec(function (error, user) {
             if (error !== null) res.send(500, error.message);
@@ -66,7 +66,7 @@ exports.getUserPublicationsByUserId = function (req, res) {
 //  put /users/:userid/publications
 exports.putUserPublicationsByUserId = function (req, res) {
     publicationModel.findIdAndUpdate({_id: req.params.userid}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         user = user [0];
         var publication = {
             title: req.body.title,
@@ -101,14 +101,14 @@ exports.deletePublicationById = function (req, res) {
 
 exports.likePublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'user not found.'});
         }else if(user){
           console.log(user.name);
           //ara busquem el userB
           publicationModel.findOne({_id: req.params.publicationid}, function (err, publication) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
               if(!publication) {
                   res.json({success: false, message: 'publication not found.'});
               }else if(publication){
@@ -116,7 +116,7 @@ exports.likePublication = function (req, res) {
       //          for(var i=0; i<userB.timeline)
                 publication.likes.push(user._id);
                 publication.save(function (err, publication) {
-                    if (err) res.send(500, err.message);
+                    if (err) return res.send(500, err.message);
 
                     /* gamification */
                     var reward={
@@ -136,7 +136,7 @@ exports.likePublication = function (req, res) {
                             .populate('trainers', 'name avatar description')
                             .populate('publications')
                             .exec(function (err, user) {
-                                if (err) res.send(500, err.message);
+                                if (err) return res.send(500, err.message);
                                 res.status(200).jsonp(user);
                             });
                     });
@@ -149,14 +149,14 @@ exports.likePublication = function (req, res) {
 };
 exports.dislikePublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'user not found.'});
         }else if(user){
           console.log(user.name);
           //ara busquem el userB
           publicationModel.findOne({_id: req.params.publicationid}, function (err, publication) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
               if(!publication) {
                   res.json({success: false, message: 'publication not found.'});
               }else if(publication){
@@ -169,7 +169,7 @@ exports.dislikePublication = function (req, res) {
                   }
                 }
                 publication.save(function (err, publication) {
-                    if (err) res.send(500, err.message);
+                    if (err) return res.send(500, err.message);
 
                     /* gamification */
                     var reward={
@@ -189,7 +189,7 @@ exports.dislikePublication = function (req, res) {
                             .populate('trainers', 'name avatar description')
                             .populate('publications')
                             .exec(function (err, user) {
-                                if (err) res.send(500, err.message);
+                                if (err) return res.send(500, err.message);
                                 res.status(200).jsonp(user);
                             });
                     });
@@ -208,24 +208,28 @@ exports.getNewsFeed = function (req, res) {//getPublicationsFromFollowingUsers
     userModel.findOne({'tokens.token': req.headers['x-access-token']})
     .exec(function (err, user) {
         if (err) return res.send(500, err.message);
-        console.log("getting newsfeed for user: " + user.name);
+        if (!user) {
+            res.json({success: false, message: 'getting newsfeed failed. user not found.'});
+        } else if (user) {
+            console.log("getting newsfeed for user: " + user.name);
 
-        var following=[];
-        for(var i=0; i<user.following.length; i++)
-        {//això ho fem perquè necessitem la array amb el contingut en format objectid
-            following.push(new ObjectId(user.following[i]));
-        }
-        
-        publicationModel.find({user: { $in: following}})
-        .lean()
-        .populate('user', 'name avatar')
-        .exec(function (err, publications) {
-            if (err) return res.send(500, err.message);
-            if(!publications) {
-                //
-            }else if(publications){
-                res.status(200).jsonp(publications);
+            var following=[];
+            for(var i=0; i<user.following.length; i++)
+            {//això ho fem perquè necessitem la array amb el contingut en format objectid
+                following.push(new ObjectId(user.following[i]));
             }
-        });
+
+            publicationModel.find({user: { $in: following}})
+            .lean()
+            .populate('user', 'name avatar')
+            .exec(function (err, publications) {
+                if (err) return res.send(500, err.message);
+                if(!publications) {
+                    //
+                }else if(publications){
+                    res.status(200).jsonp(publications);
+                }
+            });
+        }
     });
 };

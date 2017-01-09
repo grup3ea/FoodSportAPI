@@ -14,7 +14,7 @@ var routineModel = require('../models/routineModel');
 
 exports.getTrainers = function (req, res) {
     trainerModel.find(function (err, trainers) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainers);
     });
 };
@@ -25,14 +25,14 @@ exports.getTrainerById = function (req, res) {
         .populate('clients.client', 'name avatar points')
         .populate('clientsPetitions.clientid', 'name avatar')
         .exec(function (err, trainer) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(trainer);
         });
 };
 exports.searchByDiscipline = function (req, res) {
     trainerModel.find({disciplines: req.body.discipline})
         .exec(function (err, trainers) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(trainers);
         });
 };
@@ -103,7 +103,7 @@ exports.login = function (req, res) {
                 trainer.tokens[indexToken].lastLogin=Date();
               }
               trainer.save(function (err, trainer) {
-                  if (err) res.send(500, err.message);
+                  if (err) return res.send(500, err.message);
 
                   // return the information including token as JSON
                   trainer.password = "";
@@ -122,7 +122,7 @@ exports.login = function (req, res) {
 
 exports.acceptClientPetition = function (req, res) {
     trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!trainer) {
             res.json({success: false, message: 'adding client to trainer failed. trainer not found.'});
         }else if(trainer){
@@ -142,7 +142,7 @@ exports.acceptClientPetition = function (req, res) {
               //la petició la marco com a accepted
               trainer.clientsPetitions[i].state="accepted";
               trainer.save(function (err) {
-                  if (err) res.send(500, err.message);
+                  if (err) return res.send(500, err.message);
 
                   trainerModel.findOne({_id: trainer._id})
                       .lean()
@@ -150,7 +150,7 @@ exports.acceptClientPetition = function (req, res) {
                       .populate('clients.client', 'name avatar points')
                       .populate('clientsPetitions.clientid', 'name avatar')
                       .exec(function (err, trainer) {
-                          if (err) res.send(500, err.message);
+                          if (err) return res.send(500, err.message);
                           res.status(200).jsonp(trainer);
                       });
               });
@@ -204,13 +204,13 @@ exports.updateTrainer = function (req, res) {
 };
 exports.valorateTrainer = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if(!user) {
             res.json({success: false, message: 'sending valoration failed. user not found.'});
         }else if(user){
           //ara busquem el trainer
           trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
-              if (err) res.send(500, err.message);
+              if (err) return res.send(500, err.message);
               if(!trainer) {
                   res.json({success: false, message: 'sending valoration failed. trainer not found.'});
               }else if(trainer){
@@ -242,7 +242,7 @@ exports.valorateTrainer = function (req, res) {
                   trainer.notifications.push(notification);
 
                   trainer.save(function (err) {
-                      if (err) res.send(500, err.message);
+                      if (err) return res.send(500, err.message);
 
                       res.status(200).jsonp(trainer);
                   });
@@ -261,7 +261,7 @@ exports.valorateTrainer = function (req, res) {
           user.points.total=user.points.total+1;
           /* end of gamification */
           user.save(function (err) {
-              /*if (err) res.send(500, err.message);
+              /*if (err) return res.send(500, err.message);
 
               res.status(200).jsonp(routine);*/
               console.log("points of gamification on trainer valorating added to user");
@@ -274,7 +274,7 @@ exports.valorateTrainer = function (req, res) {
 exports.getNotifications = function (req, res) {
     trainerModel.findOne({_id: req.params.trainerid})
         .exec(function (err, trainer) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             for(var i=0; i<trainer.notifications.length; i++)
             {
               if(trainer.notifications[i].state=="pendent")
@@ -284,7 +284,7 @@ exports.getNotifications = function (req, res) {
               }
             }
             trainer.save(function (err) {
-                if (err) res.send(500, err.message);
+                if (err) return res.send(500, err.message);
 
                 res.status(200).jsonp(trainer.notifications);
             });
@@ -295,13 +295,13 @@ exports.getNotifications = function (req, res) {
 exports.searchByName = function (req, res) {
   console.log("searchByName");
     trainerModel.find({'name': req.params.trainername}, function (err, trainers) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainers);
     });
 };
 exports.searchByDiscipline = function (req, res) {
     trainerModel.find({'disciplines': req.params.discipline}, function (err, trainers) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainers);
     });
 };

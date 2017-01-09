@@ -92,7 +92,7 @@ exports.login = function (req, res) {
                     user.tokens[indexToken].lastLogin = Date();
                 }
                 user.save(function (err, user) {
-                    if (err) res.send(500, err.message);
+                    if (err) return res.send(500, err.message);
                     // return the information including token as JSON
                     user.password = "";
                     res.json({
@@ -191,7 +191,7 @@ exports.updateUser = function (req, res) {//funciona
 //  /users/:id
 exports.deleteUserById = function (req, res) {
     userModel.findByIdAndRemove({_id: req.params.userid}, function (err) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).send("Deleted");
     });
 };
@@ -199,7 +199,7 @@ exports.deleteUserById = function (req, res) {
 // get /users
 exports.getUsers = function (req, res) {
     userModel.find(function (err, users) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(users);
     });
 };
@@ -213,7 +213,7 @@ exports.getUserById = function (req, res) {
         .populate('trainers', 'name avatar description')
         .populate('publications')
         .exec(function (err, user) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(user);
         });
 };
@@ -223,7 +223,7 @@ exports.getUserNetworkById = function (req, res) {
         .populate('followers', 'name avatar description')
         .populate('following', 'name avatar description')
         .exec(function (err, user) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(user);
         });
 };
@@ -232,7 +232,7 @@ exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .populate('diets')
         .exec(function (err, user) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(user.diets);
         });
 };
@@ -241,20 +241,20 @@ exports.getRoutinesFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .populate('routines')
         .exec(function (err, user) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(user.routines);
         });
 };
 exports.sendPetitionToTrainer = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if (!user) {
             res.json({success: false, message: 'sending petition failed. user not found.'});
         } else if (user) {
             console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
             //ara busquem el trainer
             trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
-                if (err) res.send(500, err.message);
+                if (err) return res.send(500, err.message);
                 if (!trainer) {
                     res.json({success: false, message: 'sending petition failed. trainer not found.'});
                 } else if (trainer) {
@@ -275,7 +275,7 @@ exports.sendPetitionToTrainer = function (req, res) {
                     trainer.notifications.push(notification);
                     /* end of notification*/
                     trainer.save(function (err) {
-                        if (err) res.send(500, err.message);
+                        if (err) return res.send(500, err.message);
                         res.status(200).jsonp(trainer);
                     });
                 }//end else if
@@ -286,7 +286,7 @@ exports.sendPetitionToTrainer = function (req, res) {
 exports.getNotifications = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .exec(function (err, user) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             for (var i = 0; i < user.notifications.length; i++) {
                 if (user.notifications[i].state == "pendent") {
                     user.notifications[i].state = "viewed";
@@ -294,14 +294,14 @@ exports.getNotifications = function (req, res) {
                 }
             }
             user.save(function (err) {
-                if (err) res.send(500, err.message);
+                if (err) return res.send(500, err.message);
                 res.status(200).jsonp(user.notifications);
             });
         });
 };
 exports.deleteSelectedTokens = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if (!user) {
             res.json({success: false, message: 'user not found.'});
         } else if (user) {
@@ -314,7 +314,7 @@ exports.deleteSelectedTokens = function (req, res) {
                 }
             }
             user.save(function (err) {
-                if (err) res.send(500, err.message);
+                if (err) return res.send(500, err.message);
                 res.status(200).jsonp(user);
             });
         }//end else if
@@ -326,13 +326,13 @@ exports.deleteSelectedTokens = function (req, res) {
  */
 exports.follow = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         if (!userA) {
             res.json({success: false, message: 'userA not found.'});
         } else if (userA) {
             //ara busquem el userB
             userModel.findOne({_id: req.body.userid}, function (err, userB) {
-                if (err) res.send(500, err.message);
+                if (err) return res.send(500, err.message);
                 if (!userB) {
                     res.json({success: false, message: 'userB not found.'});
                 } else if (userB) {
@@ -359,7 +359,7 @@ exports.follow = function (req, res) {
                     /* end of gamification */
 
                     userB.save(function (err) {
-                        if (err) res.send(500, err.message);
+                        if (err) return res.send(500, err.message);
                         userA.following.push(userB._id);
 
                         /* gamification */
@@ -372,10 +372,10 @@ exports.follow = function (req, res) {
                         userA.points.total=userA.points.total+1;
                         /* end of gamification */
                         userA.save(function (err) {
-                            if (err) res.send(500, err.message);
+                            if (err) return res.send(500, err.message);
                             userModel.findOne(userA).lean().populate('following', 'name avatar')
                                 .exec(function (err, userA) {
-                                    if (err) res.send(500, err.message);
+                                    if (err) return res.send(500, err.message);
                                     console.log("user followed" + userB.name);
                                     res.status(200).jsonp(userB);
                                 });
@@ -393,7 +393,7 @@ exports.follow = function (req, res) {
 exports.search = function (req, res) {
     userModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
     .exec(function (err, users) {
-        //if (err) res.send(500, err.message);
+        //if (err) return res.send(500, err.message);
         trainerModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
         .exec(function (err, trainers) {
             routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string

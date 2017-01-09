@@ -12,7 +12,7 @@ var dietModel = require('../models/dietModel');
 
 exports.getChefs = function (req, res) {
     chefModel.find(function (err, chefs) {
-        if (err) res.send(500, err.message);
+        if (err) return res.send(500, err.message);
         res.status(200).jsonp(chefs);
     });
 };
@@ -21,7 +21,7 @@ exports.getChefById = function (req, res) {
         .lean()
         .populate('diets', 'title description')
         .exec(function (err, chef) {
-            if (err) res.send(500, err.message);
+            if (err) return res.send(500, err.message);
             res.status(200).jsonp(chef);
         });
 };
@@ -79,7 +79,7 @@ exports.login = function (req, res) {
                 chef.tokens[indexToken].token=tokenGenerated;
               }
               chef.save(function (err, chef) {
-                  if (err) res.send(500, err.message);
+                  if (err) return res.send(500, err.message);
 
                   // return the information including token as JSON
                   chef.password = "";
