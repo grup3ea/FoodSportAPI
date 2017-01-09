@@ -219,8 +219,8 @@ apiRoutes.route('/diets/choose')
     .delete(dietCtrl.unchooseDiet);
 apiRoutes.route('/diets/completeDay')
     .post(dietCtrl.completeDay);
-/*apiRoutes.route('/diets/completeDay/:date')
-    .post(dietCtrl.completeDayByDate);*/
+apiRoutes.route('/diets/completeDay/:dietid')
+    .post(dietCtrl.completeDayGamificatedDiet);
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
@@ -235,7 +235,7 @@ apiRoutes.route('/routines/choose')
 apiRoutes.route('/routines/completeDay/')//Only Gamification
     .post(routineCtrl.completeDay);
 apiRoutes.route('/routines/completeDay/:routineid')//Add true to done day completed
-    .post(routineCtrl.completeDayGamificated);
+    .post(routineCtrl.completeDayGamificatedRoutine);
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/
