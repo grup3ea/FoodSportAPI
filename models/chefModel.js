@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var chefSchema = new Schema({
     name: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false},
     tokens: [{
       userAgent: {type: String},
       token: {type: String},

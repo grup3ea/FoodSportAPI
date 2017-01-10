@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false},
     //token: {type: String},//el mantenim temporalment per permetre el funcionament de la resta
     tokens: [{
         userAgent: {type: String},
