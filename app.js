@@ -179,6 +179,10 @@ apiRoutes.route('/users/unfollow')
 apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
 
+apiRoutes.route('/users/newMark')
+    .post(userCtrl.newMark);
+apiRoutes.route('/users/:markid/addDayToMark')
+    .post(userCtrl.addDayToMark);
 /** *********** **/
 /*** TRAINERS ****/
 /** *********** **/
