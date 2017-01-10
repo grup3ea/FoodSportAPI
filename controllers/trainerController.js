@@ -62,7 +62,9 @@ exports.register = function (req, res) {
 exports.login = function (req, res) {
     trainerModel.findOne({
         email: req.body.email
-    }, function (err, trainer) {
+    })
+    .select('+password')
+    .exec(function (err, trainer) {
         if (err) throw err;
         if (!trainer) {
             res.json({success: false, message: 'Authentication failed. trainer not found.'});

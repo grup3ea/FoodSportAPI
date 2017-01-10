@@ -50,7 +50,9 @@ exports.register = function (req, res) {
 exports.login = function (req, res) {
     userModel.findOne({
         email: req.body.email
-    }, function (err, user) {
+    })
+    .select('+password')
+    .exec(function (err, user) {
         if (err) throw err;
         if (!user) {
             res.json({success: false, message: 'Authentication failed. User not found.'});

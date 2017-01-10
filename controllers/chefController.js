@@ -48,7 +48,9 @@ exports.register = function (req, res) {
 exports.login = function (req, res) {
     chefModel.findOne({
         email: req.body.email
-    }, function (err, chef) {
+    })
+    .select('+password')
+    .exec(function (err, chef) {
         if (err) throw err;
         if (!chef) {
             res.json({success: false, message: 'Authentication failed. chef not found.'});
