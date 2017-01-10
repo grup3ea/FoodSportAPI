@@ -512,7 +512,7 @@ exports.search = function (req, res) {
         });//users
 };
 
-
+/** POST '/users/newMark' **/
 exports.newMark = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -531,11 +531,13 @@ exports.newMark = function (req, res) {
         }//end else if user
     });
 };
-/*
+
+/**
 cal rebre:
 _id
 value: 10
-*/
+**/
+/** POST '/users/:markid/addDayToMark' **/
 exports.addDayToMark = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
