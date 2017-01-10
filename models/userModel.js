@@ -77,6 +77,16 @@ var userSchema = new Schema({
             value: {type: Number}
         }]
     },
+    marks:{
+      records:[{//Just to show your best personal marks
+          exercise:{type: String},
+          alltimebest:{type: String}
+      }],
+        history:[{//In order to keep a progress history and look it in the graphics
+            exercise:{type: String},
+            alltimebest:{type: String}
+        }]
+    },
     notifications: [{
         state: {type: String},//viewed, pendent
         message: {type: String},

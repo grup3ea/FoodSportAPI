@@ -87,7 +87,6 @@ apiRoutes.route('/logout')
 /**Chefs**/
 apiRoutes.route('/chefs/register')
     .post(chefCtrl.register);
-/**NO funciona Chef Login**/
 apiRoutes.route('/chefs/login')
     .post(chefCtrl.login);
 apiRoutes.route('/chefs')
@@ -103,7 +102,7 @@ apiRoutes.route('/trainers')
     .get(trainerCtrl.getTrainers);
 apiRoutes.route('/trainers/:trainerid')
     .get(trainerCtrl.getTrainerById);
-apiRoutes.route('/tr    ainers/searchByDiscipline')
+apiRoutes.route('/trainers/searchByDiscipline')
     .post(trainerCtrl.searchByDiscipline);
 /**Diets**/
 apiRoutes.route('/diets')
@@ -177,9 +176,10 @@ apiRoutes.route('/users/follow')
     .post(userCtrl.follow);
 apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
-/*****************/
+
+/** *********** **/
 /*** TRAINERS ****/
-/*****************/
+/** *********** **/
 apiRoutes.route('/trainers/:trainerid')
     .put(trainerCtrl.updateTrainer)
     .delete(trainerCtrl.removeTrainer);
@@ -232,8 +232,6 @@ apiRoutes.route('/routines/:routineid/days')
 apiRoutes.route('/routines/choose')
     .post(routineCtrl.chooseRoutine)
     .delete(routineCtrl.unchooseRoutine);
-apiRoutes.route('/routines/completeDay/')//Only Gamification
-    .post(routineCtrl.completeDay);
 apiRoutes.route('/routines/completeDay/:routineid')//Add true to done day completed
     .post(routineCtrl.completeDayGamificatedRoutine);
 /** ********** **/
@@ -248,7 +246,6 @@ apiRoutes.route('/publications/:publicationid/dislike')
     .post(publicationCtrl.dislikePublication);
 apiRoutes.route('/publications/:publicationid')
     .delete(publicationCtrl.deletePublicationById);
-
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);
 /*apiRoutes.route('/publications')
