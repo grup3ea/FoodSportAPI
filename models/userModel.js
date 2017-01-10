@@ -77,19 +77,13 @@ var userSchema = new Schema({
             value: {type: Number}
         }]
     },
-    marks2:{
-      records:[{//Just to show your best personal marks
-          exercise:{type: String},
-          alltimebest:{type: String}
-      }],
-        history:[{//In order to keep a progress history and look it in the graphics
-            exercise:{type: String},
-            alltimebest:{type: String}
-        }]
-    },
     marks: [{
         title: {type: String},
         unit: {type: String},//si són kg, km
+        best: {
+            date: {type: Date},
+            value: {type: String}
+        },
         days:[{
             date: {type: Date},
             value: {type: String}

@@ -28,10 +28,6 @@ exports.getRoutineById = function (req, res) {
         });
 };
 
-exports.acceptRoutine = function (req, res) {
-/** Arnau que es això? ha d'estar buit? **/
-};
-
 /** POST '/routines/addToClient/:clientid' **/
 exports.addRoutineToClient = function (req, res) {
     trainerModel.findOne({

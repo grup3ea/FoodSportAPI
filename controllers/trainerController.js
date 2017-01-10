@@ -41,13 +41,6 @@ exports.searchByDiscipline = function (req, res) {
             res.status(200).jsonp(trainers);
         });
 };
-/** Arnau està repetit quin es el bò?**/
-exports.searchByDiscipline = function (req, res) {
-    trainerModel.find({'disciplines': req.params.discipline}, function (err, trainers) {
-        if (err) return res.send(500, err.message);
-        res.status(200).jsonp(trainers);
-    });
-};
 
 /** POST '/trainers/register' **/
 exports.register = function (req, res) {
