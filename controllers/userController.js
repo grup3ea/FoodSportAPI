@@ -524,6 +524,15 @@ exports.newMark = function (req, res) {
                 unit: req.body.unit
             };
             user.marks.push(newmark);
+            /* gamification */
+            var reward = {
+                concept: "new mark created: " + newmark.title,
+                date: Date(),
+                value: +3
+            };
+            user.points.history.push(reward);
+            user.points.total = user.points.total + 3;
+            /* end of gamification */
             user.save(function (err) {
                 if (err) return res.send(500, err.message);
                 res.status(200).jsonp(user.marks);
@@ -564,11 +573,20 @@ exports.addDayToMark = function (req, res) {
             {
                 if(indexDay==-1)//però el dia no existeix encara
                 {
-                    newday={
+                    var newday={
                         date: Date(),
                         value: req.body.value
-                    }
+                    };
                     user.marks[indexMark].days.push(newday);
+                    /* gamification */
+                    var reward = {
+                        concept: "day value added to mark: " + user.marks[indexMark].title,
+                        date: Date(),
+                        value: +1
+                    };
+                    user.points.history.push(reward);
+                    user.points.total = user.points.total + 1;
+                    /* end of gamification */
                     user.save(function (err) {
                         if (err) return res.send(500, err.message);
                         res.status(200).jsonp(user.marks);
