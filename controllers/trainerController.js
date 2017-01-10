@@ -14,7 +14,7 @@ var routineModel = require('../models/routineModel');
 
 /** GET '/trainers' **/
 exports.getTrainers = function (req, res) {
-    trainerModel.find(function (err, trainers) {
+    userModel.find({role: 'trainer'}, function (err, trainers) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainers);
     });
@@ -22,7 +22,7 @@ exports.getTrainers = function (req, res) {
 
 /** GET '/trainers/:trainerid' **/
 exports.getTrainerById = function (req, res) {
-    trainerModel.findOne({_id: req.params.trainerid})
+    userModel.findOne({_id: req.params.trainerid, role: 'trainer'})
         .lean()
         .populate('routines', 'title description')
         .populate('clients.client', 'name avatar points')
@@ -35,7 +35,7 @@ exports.getTrainerById = function (req, res) {
 
 /** GET '/trainers/searchByDiscipline' **/
 exports.searchByDiscipline = function (req, res) {
-    trainerModel.find({disciplines: req.body.discipline})
+    userModel.find({disciplines: req.params.discipline, role: 'trainer'})
         .exec(function (err, trainers) {
             if (err) return res.send(500, err.message);
             res.status(200).jsonp(trainers);
@@ -44,7 +44,7 @@ exports.searchByDiscipline = function (req, res) {
 
 /** POST '/trainers/register' **/
 exports.register = function (req, res) {
-    var trainer = new trainerModel({
+    var trainer = new userModel({
         name: req.body.name,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
@@ -60,8 +60,8 @@ exports.register = function (req, res) {
 
 /** POST '/trainers/login' **/
 exports.login = function (req, res) {
-    trainerModel.findOne({
-        email: req.body.email
+    userModel.findOne({
+        email: req.body.email, role: 'trainer'
     })
     .select('+password')
     .exec(function (err, trainer) {
@@ -126,7 +126,7 @@ exports.login = function (req, res) {
 
 /** POST '/trainers/acceptClientPetition' **/
 exports.acceptClientPetition = function (req, res) {
-    trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role: 'trainer'}, function (err, trainer) {
         if (err) return res.send(500, err.message);
         if (!trainer) {
             res.json({success: false, message: 'adding client to trainer failed. trainer not found.'});
@@ -148,7 +148,7 @@ exports.acceptClientPetition = function (req, res) {
                     trainer.save(function (err) {
                         if (err) return res.send(500, err.message);
 
-                        trainerModel.findOne({_id: trainer._id})
+                        userModel.findOne({_id: trainer._id, role: 'trainer'})
                             .lean()
                             .populate('routines', 'title description')
                             .populate('clients.client', 'name avatar points')
@@ -200,7 +200,7 @@ exports.acceptClientPetition = function (req, res) {
 /** PUT '/trainers/:trainerid' **/
 exports.updateTrainer = function (req, res) {
     var trainer = req.body;
-    trainerModel.update({"_id": req.params.trainerid}, trainer,
+    userModel.update({"_id": req.params.trainerid, role: 'trainer'}, trainer,
         function (err) {
             if (err) return console.log(err);
             console.log(trainer);
@@ -216,7 +216,7 @@ exports.valorateTrainer = function (req, res) {
             res.json({success: false, message: 'sending valoration failed. user not found.'});
         } else if (user) {
             //ara busquem el trainer
-            trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
+            userModel.findOne({_id: req.params.trainerid, role: 'trainer'}, function (err, trainer) {
                 if (err) return res.send(500, err.message);
                 if (!trainer) {
                     res.json({success: false, message: 'sending valoration failed. trainer not found.'});
@@ -279,7 +279,7 @@ exports.valorateTrainer = function (req, res) {
 
 /** GET '/trainers/:trainerid/getNotifications' **/
 exports.getNotifications = function (req, res) {
-    trainerModel.findOne({_id: req.params.trainerid})
+    userModel.findOne({_id: req.params.trainerid, role: 'trainer'})
         .exec(function (err, trainer) {
             if (err) return res.send(500, err.message);
             for (var i = 0; i < trainer.notifications.length; i++) {
@@ -299,14 +299,14 @@ exports.getNotifications = function (req, res) {
 /** GET '/trainers/searchByName/:trainername' **/
 exports.searchByName = function (req, res) {
     console.log("searchByName");
-    trainerModel.find({'name': req.params.trainername}, function (err, trainers) {
+    userModel.find({name: new RegExp(req.params.trainername, "i"), role: 'trainer'}, function (err, trainers) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainers);
     });
 };
 
 /** DELETE '/trainers/:trainerid' **/
-exports.removeTrainer = function (req, res) {
+exports.removeTrainer = function (req, res) {/* AQUESTA FUNCIÖ CREC QUE ESTÂ MAL PLANTEJADA, DIRIA QUE NO FUNCIONA */
     trainerModel.remove({_id: req.params.trainerid}, function (err) {
         if (err)
             res.send(err);

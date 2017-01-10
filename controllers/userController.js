@@ -49,7 +49,7 @@ exports.register = function (req, res) {
 /** POST '/users/login' **/
 exports.login = function (req, res) {
     userModel.findOne({
-        email: req.body.email
+        email: req.body.email, role: 'user'}
     })
     .select('+password')
     .exec(function (err, user) {
@@ -203,7 +203,7 @@ exports.deleteUserById = function (req, res) {
 
 /** GET '/users/' **/
 exports.getUsers = function (req, res) {
-    userModel.find(function (err, users) {
+    userModel.find({role: 'user'}, function (err, users) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(users);
     });
@@ -263,7 +263,7 @@ exports.sendPetitionToTrainer = function (req, res) {
         } else if (user) {
             console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
             //ara busquem el trainer
-            trainerModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
+            userModel.findOne({_id: req.params.trainerid}}, function (err, trainer) {
                 if (err) return res.send(500, err.message);
                 if (!trainer) {
                     res.json({success: false, message: 'sending petition failed. trainer not found.'});
@@ -493,10 +493,10 @@ exports.unfollow = function (req, res) {
 
 /**GET '/search/:searchstring' **/
 exports.search = function (req, res) {
-    userModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+    userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'user'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
         .exec(function (err, users) {
             //if (err) return res.send(500, err.message);
-            trainerModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+            userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'trainer'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
                 .exec(function (err, trainers) {
                     routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
                         .exec(function (err, routines) {

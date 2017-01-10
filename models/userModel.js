@@ -63,12 +63,38 @@ var userSchema = new Schema({
     }],
     trainers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'trainerModel'
+        ref: 'userModel'
     }],
     routines: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
+    }],// trainermodel
+    disciplines : [{type:String}],
+    clients: [{
+      client: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel'
+      },
+      petitionMessage: {type: String},
+      date: {type: Date}
     }],
+    clientsPetitions: [{
+      clientid: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'userModel'
+      },
+      message: {type: String},
+      state: {type: String}//pendent, accepted, declined
+    }],
+    valorations: [{
+      clientid: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'userModel'
+      },
+      date: {type: Date},
+      message: {type: String},//missatge de valoració
+      value: {type: Number}//per exemple sistema d'estrelles sobre 5
+  }],//end of trainermodel
     points: {
         total: {type: Number},
         history: [{

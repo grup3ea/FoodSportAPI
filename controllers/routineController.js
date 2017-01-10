@@ -30,9 +30,10 @@ exports.getRoutineById = function (req, res) {
 
 /** POST '/routines/addToClient/:clientid' **/
 exports.addRoutineToClient = function (req, res) {
-    trainerModel.findOne({
+    userModel.findOne({
         'tokens.token': req.headers['x-access-token'],
-        'clients.client': req.params.clientid
+        'clients.client': req.params.clientid,
+        'role': 'trainer'
     }, function (err, trainer) {
         if (err) return res.send(500, err.message);
         if (!trainer) {
@@ -96,7 +97,7 @@ exports.addRoutineToClient = function (req, res) {
 
 /** POST '/routines/:routineid/days' **/
 exports.addDayToRoutine = function (req, res) {
-    trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
         if (err) return res.send(500, err.message);
         if (!trainer) {
             res.json({success: false, message: 'Routine day addition failed. Trainer not found.'});
