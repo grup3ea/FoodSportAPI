@@ -511,3 +511,72 @@ exports.search = function (req, res) {
                 });//trainers
         });//users
 };
+
+
+exports.newMark = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'user not found.'});
+        }else if(user){
+            var newmark={
+                title: req.body.title,
+                unit: req.body.unit
+            };
+            user.marks.push(newmark);
+            user.save(function (err) {
+                if (err) return res.send(500, err.message);
+                res.status(200).jsonp(user.marks);
+            });
+        }//end else if user
+    });
+};
+/*
+cal rebre:
+_id
+value: 10
+*/
+exports.addDayToMark = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if(!user) {
+            res.json({success: false, message: 'user not found.'});
+        }else if(user){
+            var indexMark=-1;
+            var indexDay=-1;
+            for(var i=0; i<user.marks.length; i++)
+            {
+                if(user.marks[i]._id==req.params.markid)
+                {
+                    indexMark=JSON.parse(JSON.stringify(i));
+                    for(var j=0; j<user.marks[i].days.length; j++)
+                    {
+                        if(user.marks[i].days[j].date==Date())
+                        {
+                            indexDay=JSON.parse(JSON.stringify(j));
+                        }
+                    }
+                }
+            }
+            if(indexMark>-1)//si la mark existeix
+            {
+                if(indexDay==-1)//però el dia no existeix encara
+                {
+                    newday={
+                        date: Date(),
+                        value: req.body.value
+                    }
+                    user.marks[indexMark].days.push(newday);
+                    user.save(function (err) {
+                        if (err) return res.send(500, err.message);
+                        res.status(200).jsonp(user.marks);
+                    });
+                }else{
+                    res.status(200).jsonp({message: 'mark of day already registered'});
+                }
+            }else{
+                res.status(200).jsonp({message: 'mark not registered'});
+            }
+        }//end else if user
+    });
+};

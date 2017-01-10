@@ -77,7 +77,7 @@ var userSchema = new Schema({
             value: {type: Number}
         }]
     },
-    marks:{
+    marks2:{
       records:[{//Just to show your best personal marks
           exercise:{type: String},
           alltimebest:{type: String}
@@ -87,6 +87,14 @@ var userSchema = new Schema({
             alltimebest:{type: String}
         }]
     },
+    marks: [{
+        title: {type: String},
+        unit: {type: String},//si són kg, km
+        days:[{
+            date: {type: Date},
+            value: {type: String}
+        }]
+    }],
     notifications: [{
         state: {type: String},//viewed, pendent
         message: {type: String},
