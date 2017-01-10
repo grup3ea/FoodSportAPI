@@ -175,6 +175,8 @@ apiRoutes.route('/users/:userid/deleteSelectedTokens')
     .post(userCtrl.deleteSelectedTokens);
 apiRoutes.route('/users/follow')
     .post(userCtrl.follow);
+apiRoutes.route('/users/unfollow')
+    .post(userCtrl.unfollow);
 apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
 /*****************/

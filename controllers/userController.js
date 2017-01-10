@@ -366,7 +366,7 @@ exports.follow = function (req, res) {
                         var reward={
                           concept: "followed " + userB.name,
                           date: Date(),
-                          value: +5
+                          value: +1
                         };
                         userA.points.history.push(reward);
                         userA.points.total=userA.points.total+1;
@@ -386,7 +386,98 @@ exports.follow = function (req, res) {
         }//end else if
     });
 };
+/*
+ userA: el que fa l'acció de deixar de seguir --> se li treu userB de following
+ userB: el que deixa de tenir el seguiment  --> se li treu l'userA del followers
+ */
+exports.unfollow = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
+        if (err) return res.send(500, err.message);
+        if (!userA) {
+            res.json({success: false, message: 'userA not found.'});
+        } else if (userA) {
+            //ara busquem el userB
+            userModel.findOne({_id: req.body.userid}, function (err, userB) {
+                if (err) return res.send(500, err.message);
+                if (!userB) {
+                    res.json({success: false, message: 'userB not found.'});
+                } else if (userB) {
+                    var indexFollower=-1;
+                    for(var i=0; i<userB.followers.length; i++)
+                    {
+                        if(userB.followers[i].equals(userA._id))
+                        {
+                            indexFollower=JSON.parse(JSON.stringify(i));
+                        }
+                    }
+                    if(indexFollower>-1)
+                    {
+                        userB.followers.splice(indexFollower, 1);
 
+                        /*notification*/
+                        var notification = {
+                            state: "pendent",
+                            message: userA.name + " unfollowed you",
+                            link: "dashboard",
+                            icon: "unfollower.png",
+                            date: Date()
+                        };
+                        userB.notifications.push(notification);
+                        /* end of notification*/
+                        /* gamification */
+                        var reward={
+                          concept: userA.name + " unfollowed you",
+                          date: Date(),
+                          value: -1
+                        };
+                        userB.points.history.push(reward);
+                        userB.points.total=userB.points.total-1;
+                        /* end of gamification */
+
+                        userB.save(function (err) {
+                            if (err) return res.send(500, err.message);
+                            var indexFollower=-1;
+                            for(var i=0; i<userA.following.length; i++)
+                            {
+                                if(userA.following[i].equals(userB._id))
+                                {
+                                    indexFollower=JSON.parse(JSON.stringify(i));
+                                }
+                            }
+                            if(indexFollower>-1)
+                            {
+                                userA.following.splice(indexFollower, 1);
+
+                                /* gamification */
+                                var reward={
+                                  concept: "unfollowed " + userB.name,
+                                  date: Date(),
+                                  value: -1
+                                };
+                                userA.points.history.push(reward);
+                                userA.points.total=userA.points.total-1;
+                                /* end of gamification */
+                                userA.save(function (err) {
+                                    if (err) return res.send(500, err.message);
+                                    userModel.findOne(userA).lean().populate('following', 'name avatar')
+                                        .exec(function (err, userA) {
+                                            if (err) return res.send(500, err.message);
+                                            console.log("user followed" + userB.name);
+                                            res.status(200).jsonp(userB);
+                                        });
+                                });
+                            }else{//else de indexFollower>-1
+                                res.status(200).jsonp({message: 'not found'});
+                            }
+                        });
+                    }else{//else de indexFollower>-1
+                        res.status(200).jsonp({message: 'not found'});
+                    }
+                }//end else if
+            });
+        }//end else if
+    });
+};
 
 
 
