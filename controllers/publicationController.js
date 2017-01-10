@@ -134,18 +134,34 @@ exports.likePublication = function (req, res) {
                         /* end of gamification */
                         user.save(function (err, user) {
                             if (err) return res.send(500, err.message);
-
-                            publicationModel.findOne({_id: req.params.publicationid})
-                                .lean()
-                                .populate('user', 'name avatar')
-                                .exec(function (err, publication) {
+                            //ara busquem el user que ha fet la publication que ha rebut el like
+                            userModel.findOne({_id: publication.user})
+                            .exec(function (err, userB) {
+                                /*notification*/
+                                var notification = {
+                                    state: "pendent",
+                                    message: "user clicked like",
+                                    link: "user/"+userB._id,
+                                    icon: "newlike.png",
+                                    date: Date()
+                                };
+                                userB.notifications.push(notification);
+                                /* end of notification*/
+                                userB.save(function (err, user) {
                                     if (err) return res.send(500, err.message);
-                                    if (!publication) {
-                                        //
-                                    } else if (publication) {
-                                        res.status(200).jsonp(publication);
-                                    }
+                                    publicationModel.findOne({_id: req.params.publicationid})
+                                    .lean()
+                                    .populate('user', 'name avatar')
+                                    .exec(function (err, publication) {
+                                        if (err) return res.send(500, err.message);
+                                        if (!publication) {
+                                            //
+                                        } else if (publication) {
+                                            res.status(200).jsonp(publication);
+                                        }
+                                    });
                                 });
+                            });
 
                         });
 

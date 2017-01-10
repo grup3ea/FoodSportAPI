@@ -37,6 +37,16 @@ exports.register = function (req, res) {
             total: 0
         }
     });
+    /* gamification */
+    var reward = {
+        concept: "account created",
+        date: Date(),
+        value: +1
+    };
+    user.points.history.push(reward);
+    user.points.total = user.points.total + 1;
+    /* end of gamification */
+
     user.save(function (err, user) {
         if (err) {
             console.log(err.message);
@@ -215,6 +225,7 @@ exports.getUserById = function (req, res) {
         .populate('diets', 'title description')
         .populate('routines', 'title description')
         .populate('trainers', 'name avatar description')
+        .populate('clients.client', 'name avatar')
         .populate('publications')
         .exec(function (err, user) {
             if (err) return res.send(500, err.message);
@@ -389,7 +400,7 @@ exports.follow = function (req, res) {
                         /* end of gamification */
                         userA.save(function (err) {
                             if (err) return res.send(500, err.message);
-                            userModel.findOne(userA).lean().populate('following', 'name avatar')
+                            userModel.findOne({_id: userA._id}).lean().populate('following', 'name avatar')
                                 .exec(function (err, userA) {
                                     if (err) return res.send(500, err.message);
                                     console.log("user followed" + userB.name);

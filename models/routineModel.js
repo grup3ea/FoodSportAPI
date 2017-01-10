@@ -15,7 +15,7 @@ var routineSchema = new Schema({
     },
     trainer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'trainerModel'
+        ref: 'userModel'
     },
     days: [{
         title: {type: String},

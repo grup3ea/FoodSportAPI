@@ -49,9 +49,22 @@ exports.register = function (req, res) {
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
         avatar: 'img/user.png',
+        background: 'img/background.png',
         role: req.body.role,
-        discipline: req.body.discipline
+        discipline: req.body.discipline,
+        points: {
+            total: 0
+        }
     });
+    /* gamification */
+    var reward = {
+        concept: "account created",
+        date: Date(),
+        value: +1
+    };
+    trainer.points.history.push(reward);
+    trainer.points.total = trainer.points.total + 1;
+    /* end of gamification */
     trainer.save(function (err, trainer) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(trainer);
