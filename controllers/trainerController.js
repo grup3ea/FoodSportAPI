@@ -7,7 +7,7 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret);
 
 /*******MODELS*********/
-var trainerModel = require('../models/trainerModel');
+//var trainerModel = require('../models/trainerModel');
 var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');

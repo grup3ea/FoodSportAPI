@@ -6,7 +6,7 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret);
 var userModel = require('../models/userModel');
 var routineModel = require('../models/routineModel');
-var trainerModel = require('../models/trainerModel');
+//var trainerModel = require('../models/trainerModel');
 
 /** GET '/routines/' **/
 exports.getRoutines = function (req, res) {

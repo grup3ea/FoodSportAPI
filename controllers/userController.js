@@ -12,7 +12,7 @@ app.set('superSecret', config.secret);
 /*******MODELS*********/
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
-var trainerModel = require('../models/trainerModel');
+//var trainerModel = require('../models/trainerModel');
 var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
 
@@ -49,7 +49,7 @@ exports.register = function (req, res) {
 /** POST '/users/login' **/
 exports.login = function (req, res) {
     userModel.findOne({
-        email: req.body.email, role: 'user'}
+        email: req.body.email, role: 'user'
     })
     .select('+password')
     .exec(function (err, user) {
@@ -263,7 +263,7 @@ exports.sendPetitionToTrainer = function (req, res) {
         } else if (user) {
             console.log(user.name);//aquí potser caldria comprovar que la routine és la que han creat per l'user
             //ara busquem el trainer
-            userModel.findOne({_id: req.params.trainerid}}, function (err, trainer) {
+            userModel.findOne({_id: req.params.trainerid}, function (err, trainer) {
                 if (err) return res.send(500, err.message);
                 if (!trainer) {
                     res.json({success: false, message: 'sending petition failed. trainer not found.'});

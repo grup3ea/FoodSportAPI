@@ -3,7 +3,7 @@ var app = express();
 var passport = require('passport');
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
-var trainerModel = require('../models/trainerModel');
+//var trainerModel = require('../models/trainerModel');
 var crypto = require('crypto');
 
 /**POST '/publications' **/
