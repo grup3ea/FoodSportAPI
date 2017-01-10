@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var trainerSchema = new Schema({
     name: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false},
     role: {type: String, required: true},
     //token: {type: String},
     tokens: [{
