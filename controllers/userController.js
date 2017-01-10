@@ -3,19 +3,20 @@ var app = express();
 var router = express.Router();
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var passport = require('passport');
+var config = require('../config/config');
+var crypto = require('crypto');
+var formidable = require('formidable');
+var fs = require('fs');
+app.set('superSecret', config.secret);
+
+/*******MODELS*********/
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
 var trainerModel = require('../models/trainerModel');
 var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
-var config = require('../config/config'); // get our config file
-var crypto = require('crypto');
-var formidable = require('formidable');
-var fs = require('fs');
-app.set('superSecret', config.secret); // secret variable
-/**POST add new user to DB - Register**/
-/*** OK ***/
 
+/** POST '/users/register' **/
 exports.register = function (req, res) {
     console.log(req.body);
     var user = new userModel({
@@ -44,9 +45,8 @@ exports.register = function (req, res) {
         res.status(200).jsonp(user);
     });
 };
-/**POST user login - authentication**/
-/*** OK ***/
 
+/** POST '/users/login' **/
 exports.login = function (req, res) {
     userModel.findOne({
         email: req.body.email
@@ -106,7 +106,8 @@ exports.login = function (req, res) {
         }
     });
 };
-/**Logout & Invalidate Token so the user is really out**/
+
+/**POST '/logout' **/
 exports.logout = function (req, res, callback) {
     var token = req.headers.authorization;
     var decoded = verify(token);
@@ -127,6 +128,7 @@ exports.logout = function (req, res, callback) {
         return callback(res);
     }
 };
+
 /** Rutas de Passport **/
 // Ruta para desloguearse
 router.get('/logout', function (req, res) {
@@ -152,6 +154,7 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook',
  * https://coligo.io/building-ajax-file-uploader-with-node/
  */
 
+/** POST '/users/upload' **/
 exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona, per ara almenys no està linkat ni es fa servir */
     // create an incoming form object
     var form = new formidable.IncomingForm();
@@ -174,9 +177,9 @@ exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona
     });
     // parse the incoming request containing the form data
     form.parse(req);
-}
-/** UPDATE user by user._id**/
-//  put /users/:id
+};
+
+/** UPDATE '/users/:userid' **/
 exports.updateUser = function (req, res) {//funciona
     var id = req.params.userid;
     var user = req.body;
@@ -186,25 +189,24 @@ exports.updateUser = function (req, res) {//funciona
             console.log(user);
             res.status(200).jsonp(user);
         });
-}
-/** DELETE user by user._id**/
-//  /users/:id
+};
+
+/** DELETE '/users/:userid' **/
 exports.deleteUserById = function (req, res) {
     userModel.findByIdAndRemove({_id: req.params.userid}, function (err) {
         if (err) return res.send(500, err.message);
         res.status(200).send("Deleted");
     });
 };
-/**GET list of all users**/
-// get /users
+
+/** GET '/users/' **/
 exports.getUsers = function (req, res) {
     userModel.find(function (err, users) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(users);
     });
 };
-/** GET user by user._id**/
-//  get /users/:id
+/** GET '/users/:userid' **/
 exports.getUserById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .lean()
@@ -217,6 +219,8 @@ exports.getUserById = function (req, res) {
             res.status(200).jsonp(user);
         });
 };
+
+/** GET '/users/:userid/network' **/
 exports.getUserNetworkById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .lean()
@@ -227,7 +231,8 @@ exports.getUserNetworkById = function (req, res) {
             res.status(200).jsonp(user);
         });
 };
-///users/:userid/diets
+
+/** GET '/users/:userid/diets' **/
 exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .populate('diets')
@@ -236,7 +241,8 @@ exports.getDietsFromUserId = function (req, res) {
             res.status(200).jsonp(user.diets);
         });
 };
-///users/:userid/routines
+
+/** GET '/users/:userid/routines' **/
 exports.getRoutinesFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .populate('routines')
@@ -245,6 +251,8 @@ exports.getRoutinesFromUserId = function (req, res) {
             res.status(200).jsonp(user.routines);
         });
 };
+
+/** POST '/users/sendPetitionToTrainer/:trainerid' **/
 exports.sendPetitionToTrainer = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -283,6 +291,8 @@ exports.sendPetitionToTrainer = function (req, res) {
         }//end else if
     });
 };
+
+/** GET '/users/:userid/getNotifications' **/
 exports.getNotifications = function (req, res) {
     userModel.findOne({_id: req.params.userid})
         .exec(function (err, user) {
@@ -299,6 +309,8 @@ exports.getNotifications = function (req, res) {
             });
         });
 };
+
+/** POST '/users/:userid/deleteSelectedTokens' **/
 exports.deleteSelectedTokens = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -320,10 +332,12 @@ exports.deleteSelectedTokens = function (req, res) {
         }//end else if
     });
 };
-/*
+
+/**
  userA: el que fa l'acció de seguir --> se li posa userB a following
  userB: el que reb el seguiment  --> se li posa el userA al followers
- */
+ **/
+/** POST '/users/follow' **/
 exports.follow = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
         if (err) return res.send(500, err.message);
@@ -349,13 +363,13 @@ exports.follow = function (req, res) {
                     userB.notifications.push(notification);
                     /* end of notification*/
                     /* gamification */
-                    var reward={
-                      concept: userA.name + " followed you",
-                      date: Date(),
-                      value: +1
+                    var reward = {
+                        concept: userA.name + " followed you",
+                        date: Date(),
+                        value: +1
                     };
                     userB.points.history.push(reward);
-                    userB.points.total=userB.points.total+1;
+                    userB.points.total = userB.points.total + 1;
                     /* end of gamification */
 
                     userB.save(function (err) {
@@ -363,13 +377,13 @@ exports.follow = function (req, res) {
                         userA.following.push(userB._id);
 
                         /* gamification */
-                        var reward={
-                          concept: "followed " + userB.name,
-                          date: Date(),
-                          value: +1
+                        var reward = {
+                            concept: "followed " + userB.name,
+                            date: Date(),
+                            value: +1
                         };
                         userA.points.history.push(reward);
-                        userA.points.total=userA.points.total+1;
+                        userA.points.total = userA.points.total + 1;
                         /* end of gamification */
                         userA.save(function (err) {
                             if (err) return res.send(500, err.message);
@@ -386,10 +400,12 @@ exports.follow = function (req, res) {
         }//end else if
     });
 };
-/*
+
+/**
  userA: el que fa l'acció de deixar de seguir --> se li treu userB de following
  userB: el que deixa de tenir el seguiment  --> se li treu l'userA del followers
- */
+ **/
+/** POST '/users/unfollow' **/
 exports.unfollow = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, userA) {
         if (err) return res.send(500, err.message);
@@ -402,16 +418,13 @@ exports.unfollow = function (req, res) {
                 if (!userB) {
                     res.json({success: false, message: 'userB not found.'});
                 } else if (userB) {
-                    var indexFollower=-1;
-                    for(var i=0; i<userB.followers.length; i++)
-                    {
-                        if(userB.followers[i].equals(userA._id))
-                        {
-                            indexFollower=JSON.parse(JSON.stringify(i));
+                    var indexFollower = -1;
+                    for (var i = 0; i < userB.followers.length; i++) {
+                        if (userB.followers[i].equals(userA._id)) {
+                            indexFollower = JSON.parse(JSON.stringify(i));
                         }
                     }
-                    if(indexFollower>-1)
-                    {
+                    if (indexFollower > -1) {
                         userB.followers.splice(indexFollower, 1);
 
                         /*notification*/
@@ -425,37 +438,34 @@ exports.unfollow = function (req, res) {
                         userB.notifications.push(notification);
                         /* end of notification*/
                         /* gamification */
-                        var reward={
-                          concept: userA.name + " unfollowed you",
-                          date: Date(),
-                          value: -1
+                        var reward = {
+                            concept: userA.name + " unfollowed you",
+                            date: Date(),
+                            value: -1
                         };
                         userB.points.history.push(reward);
-                        userB.points.total=userB.points.total-1;
+                        userB.points.total = userB.points.total - 1;
                         /* end of gamification */
 
                         userB.save(function (err) {
                             if (err) return res.send(500, err.message);
-                            var indexFollower=-1;
-                            for(var i=0; i<userA.following.length; i++)
-                            {
-                                if(userA.following[i].equals(userB._id))
-                                {
-                                    indexFollower=JSON.parse(JSON.stringify(i));
+                            var indexFollower = -1;
+                            for (var i = 0; i < userA.following.length; i++) {
+                                if (userA.following[i].equals(userB._id)) {
+                                    indexFollower = JSON.parse(JSON.stringify(i));
                                 }
                             }
-                            if(indexFollower>-1)
-                            {
+                            if (indexFollower > -1) {
                                 userA.following.splice(indexFollower, 1);
 
                                 /* gamification */
-                                var reward={
-                                  concept: "unfollowed " + userB.name,
-                                  date: Date(),
-                                  value: -1
+                                var reward = {
+                                    concept: "unfollowed " + userB.name,
+                                    date: Date(),
+                                    value: -1
                                 };
                                 userA.points.history.push(reward);
-                                userA.points.total=userA.points.total-1;
+                                userA.points.total = userA.points.total - 1;
                                 /* end of gamification */
                                 userA.save(function (err) {
                                     if (err) return res.send(500, err.message);
@@ -466,11 +476,11 @@ exports.unfollow = function (req, res) {
                                             res.status(200).jsonp(userB);
                                         });
                                 });
-                            }else{//else de indexFollower>-1
+                            } else {//else de indexFollower>-1
                                 res.status(200).jsonp({message: 'not found'});
                             }
                         });
-                    }else{//else de indexFollower>-1
+                    } else {//else de indexFollower>-1
                         res.status(200).jsonp({message: 'not found'});
                     }
                 }//end else if
@@ -479,26 +489,25 @@ exports.unfollow = function (req, res) {
     });
 };
 
-
-
+/**GET '/search/:searchstring' **/
 exports.search = function (req, res) {
     userModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
-    .exec(function (err, users) {
-        //if (err) return res.send(500, err.message);
-        trainerModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
-        .exec(function (err, trainers) {
-            routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
-            .exec(function (err, routines) {
-                dietModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
-                .exec(function (err, diets) {
-                    res.json({
-                        users: users,
-                        trainers: trainers,
-                        routines: routines,
-                        diets: diets
-                    });
-                });//diets
-            });//routines
-        });//trainers
-    });//users
+        .exec(function (err, users) {
+            //if (err) return res.send(500, err.message);
+            trainerModel.find({name: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                .exec(function (err, trainers) {
+                    routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                        .exec(function (err, routines) {
+                            dietModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                                .exec(function (err, diets) {
+                                    res.json({
+                                        users: users,
+                                        trainers: trainers,
+                                        routines: routines,
+                                        diets: diets
+                                    });
+                                });//diets
+                        });//routines
+                });//trainers
+        });//users
 };

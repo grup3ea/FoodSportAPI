@@ -1,15 +1,14 @@
 var express = require('express');
 var app = express();
-var config = require('../config/config'); // get our config file
+var config = require('../config/config');
 var crypto = require('crypto');
 
-
-app.set('superSecret', config.secret); // secret variable
-
+app.set('superSecret', config.secret);
 var userModel = require('../models/userModel');
 var routineModel = require('../models/routineModel');
 var trainerModel = require('../models/trainerModel');
 
+/** GET '/routines/' **/
 exports.getRoutines = function (req, res) {
     routineModel.find(function (err, routines) {
         if (err) return res.send(500, err.message);
@@ -17,7 +16,7 @@ exports.getRoutines = function (req, res) {
     });
 };
 
-//  get /routines/:id
+/** GET '/routines/:routineid' **/
 exports.getRoutineById = function (req, res) {
     routineModel.findOne({_id: req.params.routineid})
         .lean()
@@ -30,9 +29,10 @@ exports.getRoutineById = function (req, res) {
 };
 
 exports.acceptRoutine = function (req, res) {
-
+/** Arnau que es això? ha d'estar buit? **/
 };
 
+/** POST '/routines/addToClient/:clientid' **/
 exports.addRoutineToClient = function (req, res) {
     trainerModel.findOne({
         'tokens.token': req.headers['x-access-token'],
@@ -98,7 +98,7 @@ exports.addRoutineToClient = function (req, res) {
     });
 };
 
-// add day
+/** POST '/routines/:routineid/days' **/
 exports.addDayToRoutine = function (req, res) {
     trainerModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, trainer) {
         if (err) return res.send(500, err.message);
@@ -122,6 +122,7 @@ exports.addDayToRoutine = function (req, res) {
     });
 };
 
+/** POST '/routines/choose' **/
 exports.chooseRoutine = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -148,6 +149,7 @@ exports.chooseRoutine = function (req, res) {
     });
 };
 
+/** DELETE '/routines/choose' **/
 exports.unchooseRoutine = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -177,6 +179,7 @@ exports.unchooseRoutine = function (req, res) {
     });
 };
 
+/** POST '/routines/completeDay/:routineid' **/
 exports.completeDayGamificatedRoutine = function (req, res) {
     //1r intentamos darle los puntos al usuario por haber completado el día
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {

@@ -146,7 +146,7 @@ apiRoutes.use(function (req, res, next) {
 /** ********** **/
 
 apiRoutes.route('/search/:searchstring')
-.get(userCtrl.search);
+    .get(userCtrl.search);
 
 /** ********** **/
 /******USERS*****/
@@ -160,12 +160,14 @@ apiRoutes.route('/users/:userid')
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/upload')
     .post(userCtrl.avatarUpload);
-apiRoutes.route('/users/:userid/diets')
+apiRoutes.route('/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
 apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
+apiRoutes.route('/users/:userid/publications/:publicationid')
+    .put(publicationCtrl.putUserPublicationsByPublicationId);
 apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
     .post(userCtrl.sendPetitionToTrainer);
 apiRoutes.route('/users/:userid/getNotifications')
@@ -182,20 +184,10 @@ apiRoutes.route('/users/:userid/network')
 /** *********** **/
 /*** TRAINERS ****/
 /** *********** **/
+
 apiRoutes.route('/trainers/:trainerid')
     .put(trainerCtrl.updateTrainer)
     .delete(trainerCtrl.removeTrainer);
-//Jo aixo no en tinc ni idea d'on a surtit
-/////////////////////////////////////////////////////////////////////////////
-apiRoutes.route('/trainers/:id/client')
-    .post(trainerCtrl.TrainerNewClient);//això es fa servir? funciona?
-apiRoutes.route('/trainers/:id/client/:client_id')
-    .delete(trainerCtrl.TrainerRemoveClient);//això es fa servir? funciona?
-apiRoutes.route('/trainers/:id/routine')
-    .post(trainerCtrl.TrainerNewRoutine);//això es fa servir? funciona?
-apiRoutes.route('/trainers/:id/routine/:routine_id')
-    .delete(trainerCtrl.TrainerRemoveRoutine);//això es fa servir? funciona?
-/////////////////////////////////////////////////////////////////////////////
 apiRoutes.route('/trainers/acceptClientPetition')
     .post(trainerCtrl.acceptClientPetition);
 apiRoutes.route('/trainers/valorateTrainer/:trainerid')
@@ -206,6 +198,7 @@ apiRoutes.route('/trainers/searchByName/:trainername')
     .get(trainerCtrl.searchByName);
 apiRoutes.route('/trainers/searchByDiscipline/:discipline')
     .get(trainerCtrl.searchByDiscipline);
+
 /** ********** **/
 /******DIETS*****/
 /** ********** **/
@@ -214,15 +207,14 @@ apiRoutes.route('/diets')
     .post(dietCtrl.createDiet);
 apiRoutes.route('/diets/:dietid/days')
     .post(dietCtrl.addDayToDiet);
-apiRoutes.route('/diets/deleteDiet/:dietid')//he canviat la ruta temporalment fins que la definim, pq colisionava amb la ruta de unchoose diet
+apiRoutes.route('/diets/deleteDiet/:dietid')
     .delete(dietCtrl.deleteDietById);
 apiRoutes.route('/diets/choose')
     .post(dietCtrl.chooseDiet)
     .delete(dietCtrl.unchooseDiet);
-apiRoutes.route('/diets/completeDay')
-    .post(dietCtrl.completeDay);
 apiRoutes.route('/diets/completeDay/:dietid')
     .post(dietCtrl.completeDayGamificatedDiet);
+
 /** ********** **/
 /****ROUTINES****/
 /** ********** **/
@@ -234,8 +226,9 @@ apiRoutes.route('/routines/:routineid/days')
 apiRoutes.route('/routines/choose')
     .post(routineCtrl.chooseRoutine)
     .delete(routineCtrl.unchooseRoutine);
-apiRoutes.route('/routines/completeDay/:routineid')//Add true to done day completed
+apiRoutes.route('/routines/completeDay/:routineid')
     .post(routineCtrl.completeDayGamificatedRoutine);
+
 /** ********** **/
 /**PUBLICATIONS**/
 /** ********** **/
@@ -250,12 +243,12 @@ apiRoutes.route('/publications/:publicationid')
     .delete(publicationCtrl.deletePublicationById);
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);
-/*apiRoutes.route('/publications')
- .post(publicationCtrl.addPublicationToTimeline);*/
+
 app.use('/api', apiRoutes);
 /**-------------------------------------------------------------**/
 /**--------------------END of API routes------------------------**/
 /**-------------------------------------------------------------**/
+
 /**Conexión a la base de datos de MongoDB que tenemos en local**/
 mongoose.Promise = global.Promise;
 require('mongoose-middleware').initialize(mongoose);

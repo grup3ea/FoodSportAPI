@@ -1,23 +1,22 @@
 var express = require('express');
 var app = express();
-var config = require('../config/config'); // get our config file
+var config = require('../config/config');
 var crypto = require('crypto');
 
-app.set('superSecret', config.secret); // secret variable
-
-
+app.set('superSecret', config.secret);
 var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
 var chefModel = require('../models/chefModel');
 
+/** GET '/diets' ***/
 exports.getDiets = function (req, res) {
     dietModel.find(function (err, diets) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(diets);
     });
 };
-/** GET Diet by diet._id**/
-//  get /diets/:id
+
+/** GET '/diets/:dietid' **/
 exports.getDietById = function (req, res) {
     dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
         if (err) return res.send(500, err.message);
@@ -25,9 +24,7 @@ exports.getDietById = function (req, res) {
     });
 };
 
-
-/**POST add new diet to DB**/
-
+/**POST '/diets' **/
 exports.createDiet = function (req, res) {
     chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
         if (err) return res.send(500, err.message);
@@ -58,7 +55,7 @@ exports.createDiet = function (req, res) {
     });
 };
 
-// add day
+/** POST '/diets/:dietid/days' **/
 exports.addDayToDiet = function (req, res) {
     chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
         if (err) return res.send(500, err.message);
@@ -82,9 +79,7 @@ exports.addDayToDiet = function (req, res) {
     });
 };
 
-
-/** DELETE diet by diet._id**/
-//  /diets/:id
+/** DELETE '/diets/deleteDiet/:dietid' **/
 exports.deleteDietById = function (req, res) {
     dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
         if (err) return res.send(500, err.message);
@@ -92,7 +87,7 @@ exports.deleteDietById = function (req, res) {
     });
 };
 
-
+/** POST '/diets/choose' **/
 exports.chooseDiet = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -117,6 +112,8 @@ exports.chooseDiet = function (req, res) {
         }//end else if
     });
 };
+
+/** DELETE '/diets/choose' **/
 exports.unchooseDiet = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
@@ -146,30 +143,7 @@ exports.unchooseDiet = function (req, res) {
     });
 };
 
-exports.completeDay = function (req, res) {
-    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
-        if (err) return res.send(500, err.message);
-        if (!user) {
-            res.json({success: false, message: 'user not found.'});
-        } else if (user) {
-            /* gamification */
-            var reward = {
-                concept: "diet day complete",
-                date: Date(),
-                value: +1
-            };
-            user.points.history.push(reward);
-            user.points.total = user.points.total + 1;
-            /* end of gamification */
-            user.save(function (err) {
-                if (err) return res.send(500, err.message);
-
-                res.status(200).jsonp(user);
-            });
-        }//end else if
-    });
-};
-
+/** POST '/diets/completeDay/:dietid' **/
 exports.completeDayGamificatedDiet = function (req, res) {
     //1r intentamos darle los puntos al usuario por haber completado el día
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
@@ -227,4 +201,3 @@ exports.completeDayGamificatedDiet = function (req, res) {
         }//End else if (user)
     });//En UserModel findOne()
 };//End function
-
