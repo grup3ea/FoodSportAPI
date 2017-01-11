@@ -69,7 +69,9 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'routineModel'
     }],// trainermodel
-    disciplines : [{type:String}],
+    disciplines : [{
+        name: {type: String}
+    }],
     clients: [{
       client: {
         type: mongoose.Schema.Types.ObjectId,
