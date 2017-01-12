@@ -9,7 +9,6 @@ var expressValidator = require('express-validator');
 var session = require('express-session');
 var app = express();
 var config = require('./config/config');
-var paginate = require('express-paginate');
 /**Inicio Express**/
 var app = express();
 var server = require('http').Server(app);
