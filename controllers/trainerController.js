@@ -35,7 +35,7 @@ exports.getTrainerById = function (req, res) {
 
 /** GET '/trainers/searchByDiscipline' **/
 exports.searchByDiscipline = function (req, res) {
-    userModel.find({disciplines: req.params.discipline, role: 'trainer'})
+    userModel.find({'disciplines.name': req.params.discipline, role: 'trainer'})
         .exec(function (err, trainers) {
             if (err) return res.send(500, err.message);
             res.status(200).jsonp(trainers);
