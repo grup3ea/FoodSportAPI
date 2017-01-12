@@ -14,10 +14,13 @@ var routineModel = require('../models/routineModel');
 
 /** GET '/trainers' **/
 exports.getTrainers = function (req, res) {
-    userModel.find({role: 'trainer'}, function (err, trainers) {
-        if (err) return res.send(500, err.message);
-        res.status(200).jsonp(trainers);
-    });
+    userModel.find({role: 'trainer'})
+        .limit(Number(req.query.pageSize))
+        .skip(Number(req.query.pageSize)*Number(req.query.page))
+        .exec(function (err, trainers) {
+            if (err) return res.send(500, err.message);
+            res.status(200).jsonp(trainers);
+        });
 };
 
 /** GET '/trainers/:trainerid' **/
@@ -36,6 +39,8 @@ exports.getTrainerById = function (req, res) {
 /** GET '/trainers/searchByDiscipline' **/
 exports.searchByDiscipline = function (req, res) {
     userModel.find({'disciplines.name': req.params.discipline, role: 'trainer'})
+        .limit(Number(req.query.pageSize))
+        .skip(Number(req.query.pageSize)*Number(req.query.page))
         .exec(function (err, trainers) {
             if (err) return res.send(500, err.message);
             res.status(200).jsonp(trainers);
@@ -312,10 +317,13 @@ exports.getNotifications = function (req, res) {
 /** GET '/trainers/searchByName/:trainername' **/
 exports.searchByName = function (req, res) {
     console.log("searchByName");
-    userModel.find({name: new RegExp(req.params.trainername, "i"), role: 'trainer'}, function (err, trainers) {
-        if (err) return res.send(500, err.message);
-        res.status(200).jsonp(trainers);
-    });
+    userModel.find({name: new RegExp(req.params.trainername, "i"), role: 'trainer'})
+        .limit(Number(req.query.pageSize))
+        .skip(Number(req.query.pageSize)*Number(req.query.page))
+        .exec(function (err, trainers) {
+            if (err) return res.send(500, err.message);
+            res.status(200).jsonp(trainers);
+        });
 };
 
 /** DELETE '/trainers/:trainerid' **/

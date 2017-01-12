@@ -10,7 +10,10 @@ var chefModel = require('../models/chefModel');
 
 /** GET '/diets' ***/
 exports.getDiets = function (req, res) {
-    dietModel.find(function (err, diets) {
+    dietModel.find()
+    .limit(Number(req.query.pageSize))
+    .skip(Number(req.query.pageSize)*Number(req.query.page))
+    .exec(function (err, diets) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(diets);
     });

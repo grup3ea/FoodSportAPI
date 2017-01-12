@@ -213,7 +213,10 @@ exports.deleteUserById = function (req, res) {
 
 /** GET '/users/' **/
 exports.getUsers = function (req, res) {
-    userModel.find({role: 'user'}, function (err, users) {
+    userModel.find({role: 'user'})
+    .limit(Number(req.query.pageSize))
+    .skip(Number(req.query.pageSize)*Number(req.query.page))
+    .exec(function (err, users) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(users);
     });
@@ -505,13 +508,21 @@ exports.unfollow = function (req, res) {
 /**GET '/search/:searchstring' **/
 exports.search = function (req, res) {
     userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'user'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+        .limit(Number(req.query.pageSize))
+        .skip(Number(req.query.pageSize)*Number(req.query.page))
         .exec(function (err, users) {
             //if (err) return res.send(500, err.message);
             userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'trainer'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                .limit(Number(req.query.pageSize))
+                .skip(Number(req.query.pageSize)*Number(req.query.page))
                 .exec(function (err, trainers) {
                     routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                        .limit(Number(req.query.pageSize))
+                        .skip(Number(req.query.pageSize)*Number(req.query.page))
                         .exec(function (err, routines) {
                             dietModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+                                .limit(Number(req.query.pageSize))
+                                .skip(Number(req.query.pageSize)*Number(req.query.page))
                                 .exec(function (err, diets) {
                                     res.json({
                                         users: users,

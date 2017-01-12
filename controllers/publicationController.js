@@ -6,6 +6,23 @@ var userModel = require('../models/userModel');
 //var trainerModel = require('../models/trainerModel');
 var crypto = require('crypto');
 
+/**GET '/publications' **/
+exports.getAllPublications = function (req, res) {
+    publicationModel.find()
+    .limit(Number(req.query.pageSize))
+    .skip(Number(req.query.pageSize)*Number(req.query.page))
+    .lean()
+    .populate('user', 'name avatar')
+    .exec(function (err, publications) {
+        if (err) return res.send(500, err.message);
+        if (!publications) {
+            //
+        } else if (publications) {
+            res.status(200).jsonp(publications);
+        }
+    });
+};
+
 /**POST '/publications' **/
 exports.postPublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {

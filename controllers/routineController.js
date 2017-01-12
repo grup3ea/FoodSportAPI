@@ -10,7 +10,10 @@ var routineModel = require('../models/routineModel');
 
 /** GET '/routines/' **/
 exports.getRoutines = function (req, res) {
-    routineModel.find(function (err, routines) {
+    routineModel.find()
+    .limit(Number(req.query.pageSize))
+    .skip(Number(req.query.pageSize)*Number(req.query.page))
+    .exec(function (err, routines) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(routines);
     });
