@@ -54,11 +54,11 @@ exports.deleteRoutineById = function (req, res) {
 
 /** PUT '/routines/:routineid' **/
 exports.updateRoutineById = function (req, res) {
-    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'trainer'}, function (err, trainer) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'trainer'}, function (err, user) {
         if (err) return res.send(500, err.message);
-        if (!trainer) {
+        if (!user) {
             res.json({success: false, message: 'Trainer not found.'});
-        } else if (trainer) {
+        } else if (user) {
             for (var i = 0; i < user.routines.length; i++) {
                 if (user.routines[i].equals(req.params.routineid)) {
                     user.routines.splice(i, 1);
