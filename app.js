@@ -3,7 +3,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
-var passport = require('passport');
 var jwt = require('jsonwebtoken');
 var expressValidator = require('express-validator');
 var session = require('express-session');
@@ -64,7 +63,6 @@ var dietMdl = require('./models/dietModel')(app, mongoose);
 var dietCtrl = require('./controllers/dietController');
 var routineMdl = require('./models/routineModel')(app, mongoose);
 var routineCtrl = require('./controllers/routineController');
-//var trainerMdl = require('./models/trainerModel')(app, mongoose);
 var trainerCtrl = require('./controllers/trainerController');
 var chefMdl = require('./models/chefModel')(app, mongoose);
 var chefCtrl = require('./controllers/chefController');
@@ -182,8 +180,11 @@ apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
 apiRoutes.route('/users/newMark')
     .post(userCtrl.newMark);
+apiRoutes.route('/users/:markid')
+    .delete(userCtrl.deleteUserMark);
 apiRoutes.route('/users/:markid/addDayToMark')
     .post(userCtrl.addDayToMark);
+
 /** *********** **/
 /*** TRAINERS ****/
 /** *********** **/
@@ -210,8 +211,9 @@ apiRoutes.route('/diets')
     .post(dietCtrl.createDiet);
 apiRoutes.route('/diets/:dietid/days')
     .post(dietCtrl.addDayToDiet);
-apiRoutes.route('/diets/deleteDiet/:dietid')
-    .delete(dietCtrl.deleteDietById);
+apiRoutes.route('/diets/:dietid')
+    .delete(dietCtrl.deleteDietById)
+    .put(dietCtrl.updateDietById);
 apiRoutes.route('/diets/choose')
     .post(dietCtrl.chooseDiet)
     .delete(dietCtrl.unchooseDiet);
@@ -229,6 +231,9 @@ apiRoutes.route('/routines/:routineid/days')
 apiRoutes.route('/routines/choose')
     .post(routineCtrl.chooseRoutine)
     .delete(routineCtrl.unchooseRoutine);
+apiRoutes.route('/routines/:routineid')
+    .delete(routineCtrl.deleteRoutineById)
+    .put(routineCtrl.updateRoutineById);
 apiRoutes.route('/routines/completeDay/:routineid')
     .post(routineCtrl.completeDayGamificatedRoutine);
 
@@ -244,7 +249,8 @@ apiRoutes.route('/publications/:publicationid/like')
 apiRoutes.route('/publications/:publicationid/dislike')
     .post(publicationCtrl.dislikePublication);
 apiRoutes.route('/publications/:publicationid')
-    .delete(publicationCtrl.deletePublicationById);
+    .delete(publicationCtrl.deletePublicationById)
+    .put(publicationCtrl.updatePublicationById);
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);
 
@@ -256,7 +262,7 @@ app.use('/api', apiRoutes);
 /**Conexión a la base de datos de MongoDB que tenemos en local**/
 mongoose.Promise = global.Promise;
 require('mongoose-middleware').initialize(mongoose);
-mongoose.connect(config.database, function (err, res) {
+mongoose.connect(config.database, function (err) {
     if (err) throw err;
     console.log('Conectado con éxito a la Base de Datos');
 });

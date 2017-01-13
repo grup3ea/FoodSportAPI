@@ -33,6 +33,26 @@ exports.getChefById = function (req, res) {
         });
 };
 
+/** PUT '/chefs/:chefid' **/
+exports.updateChefById = function (req, res) {
+    var id = req.params.chefid;
+    var chef = req.body;
+    chefModel.update({"_id": id}, chef,
+        function (err) {
+            if (err) return console.log(err);
+            console.log(chef);
+            res.status(200).jsonp(chef);
+        });
+};
+
+/** DELETE '/chefs/:chefid' **/
+exports.deleteChefById = function (req, res) {
+    chefModel.findByIdAndRemove({_id: req.params.chefid}, function (err) {
+        if (err) return res.send(500, err.message);
+        res.status(200).send("Chef deleted");
+    });
+};
+
 /** POST '/chefs/register' **/
 exports.register = function (req, res) {
     var chef = new chefModel({

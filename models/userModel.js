@@ -5,7 +5,6 @@ var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
     password: {type: String, required: true, select: false},
-    //token: {type: String},//el mantenim temporalment per permetre el funcionament de la resta
     tokens: [{
         userAgent: {type: String},
         token: {type: String},
@@ -34,29 +33,6 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'publicationModel'
     }],
-    facebook: {
-        id: {type: String},
-        token: {type: String},
-        email: {type: String},
-        name: {type: String}
-    },
-    twitter: {
-        /*id: {type: String},
-         token: {type: String},
-         displayName: {type: String},
-         username: {type: String}*/
-        name: {type: String},
-        provider: {type: String},
-        provider_id: {type: String},
-        photo: {type: String},
-        createdAt: {type: Date, default: Date.now}
-    },
-    google: {
-        id: {type: String},
-        token: {type: String},
-        email: {type: String},
-        name: {type: String}
-    },
     diets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'dietModel'

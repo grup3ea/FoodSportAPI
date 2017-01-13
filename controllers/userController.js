@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var config = require('../config/config');
 var crypto = require('crypto');
@@ -12,7 +12,6 @@ app.set('superSecret', config.secret);
 /*******MODELS*********/
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
-//var trainerModel = require('../models/trainerModel');
 var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
 
@@ -46,7 +45,6 @@ exports.register = function (req, res) {
     user.points.history.push(reward);
     user.points.total = user.points.total + 1;
     /* end of gamification */
-
     user.save(function (err, user) {
         if (err) {
             console.log(err.message);
@@ -61,65 +59,65 @@ exports.login = function (req, res) {
     userModel.findOne({
         email: req.body.email, role: 'user'
     })
-    .select('+password')
-    .exec(function (err, user) {
-        if (err) throw err;
-        if (!user) {
-            res.json({success: false, message: 'Authentication failed. User not found.'});
-        } else if (user) {
-            req.body.password = crypto.createHash('sha256').update(req.body.password).digest('base64');
-            if (user.password != req.body.password) {
-                res.json({success: false, message: 'Authentication failed. Wrong password.'});
-            } else {
-                var indexToken = -1;
-                for (var i = 0; i < user.tokens.length; i++) {
-                    if (user.tokens[i].userAgent == req.body.userAgent) {
-                        indexToken = JSON.parse(JSON.stringify(i));//stringify i parse pq es faci una còpia de la variable i, enlloc de una referència
+        .select('+password')
+        .exec(function (err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.json({success: false, message: 'Authentication failed. User not found.'});
+            } else if (user) {
+                req.body.password = crypto.createHash('sha256').update(req.body.password).digest('base64');
+                if (user.password != req.body.password) {
+                    res.json({success: false, message: 'Authentication failed. Wrong password.'});
+                } else {
+                    var indexToken = -1;
+                    for (var i = 0; i < user.tokens.length; i++) {
+                        if (user.tokens[i].userAgent == req.body.userAgent) {
+                            indexToken = JSON.parse(JSON.stringify(i));//stringify i parse pq es faci una còpia de la variable i, enlloc de una referència
+                        }
                     }
+                    console.log(indexToken);
+                    if (indexToken == -1) {//userAgent no exist
+                        var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
+                            //  expiresIn: 86400 // expires in 24 hours
+                        });
+                        var newToken = {
+                            userAgent: req.body.userAgent,
+                            token: tokenGenerated,
+                            os: req.body.os,
+                            browser: req.body.browser,
+                            device: req.body.device,
+                            os_version: req.body.os_version,
+                            browser_version: req.body.browser_version,
+                            ip: req.body.ip,
+                            lastLogin: Date()
+                        };
+                        user.tokens.push(newToken);
+                    } else {//userAgent already exist
+                        user.tokens[indexToken].token = "";
+                        var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
+                            //  expiresIn: 86400 // expires in 24 hours
+                        });
+                        user.tokens[indexToken].token = tokenGenerated;
+                        user.tokens[indexToken].ip = req.body.ip;
+                        user.tokens[indexToken].lastLogin = Date();
+                    }
+                    user.save(function (err, user) {
+                        if (err) return res.send(500, err.message);
+                        // return the information including token as JSON
+                        user.password = "";
+                        res.json({
+                            user: user,
+                            success: true,
+                            message: 'Enjoy your token!',
+                            token: tokenGenerated
+                        });
+                    });
                 }
-                console.log(indexToken);
-                if (indexToken == -1) {//userAgent no exist
-                    var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
-                        //  expiresIn: 86400 // expires in 24 hours
-                    });
-                    var newToken = {
-                        userAgent: req.body.userAgent,
-                        token: tokenGenerated,
-                        os: req.body.os,
-                        browser: req.body.browser,
-                        device: req.body.device,
-                        os_version: req.body.os_version,
-                        browser_version: req.body.browser_version,
-                        ip: req.body.ip,
-                        lastLogin: Date()
-                    };
-                    user.tokens.push(newToken);
-                } else {//userAgent already exist
-                    user.tokens[indexToken].token = "";
-                    var tokenGenerated = jwt.sign({foo: 'bar'}, app.get('superSecret'), {
-                        //  expiresIn: 86400 // expires in 24 hours
-                    });
-                    user.tokens[indexToken].token = tokenGenerated;
-                    user.tokens[indexToken].ip = req.body.ip;
-                    user.tokens[indexToken].lastLogin = Date();
-                }
-                user.save(function (err, user) {
-                    if (err) return res.send(500, err.message);
-                    // return the information including token as JSON
-                    user.password = "";
-                    res.json({
-                        user: user,
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: tokenGenerated
-                    });
-                });
             }
-        }
-    });
+        });
 };
 
-/**POST '/logout' **/
+/** POST '/logout' **/
 exports.logout = function (req, res, callback) {
     var token = req.headers.authorization;
     var decoded = verify(token);
@@ -141,31 +139,9 @@ exports.logout = function (req, res, callback) {
     }
 };
 
-/** Rutas de Passport **/
-// Ruta para desloguearse
-router.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/');
-});
-// Ruta para autenticarse con Twitter (enlace de login)
-router.get('/auth/twitter', passport.authenticate('twitter'));
-// Ruta para autenticarse con Facebook (enlace de login)
-router.get('/auth/facebook', passport.authenticate('facebook'));
-// Ruta de callback, a la que redirigirá tras autenticarse con Twitter.
-// En caso de fallo redirige a otra vista '/login'
-router.get('/auth/twitter/callback', passport.authenticate('twitter',
-    {successRedirect: '/', failureRedirect: '/login'}
-));
-// Ruta de callback, a la que redirigirá tras autenticarse con Facebook.
-// En caso de fallo redirige a otra vista '/login'
-router.get('/auth/facebook/callback', passport.authenticate('facebook',
-    {successRedirect: '/', failureRedirect: '/login'}
-));
-/* fin de rutas de passport */
 /*** Building a File Uploader with NodeJs
  * https://coligo.io/building-ajax-file-uploader-with-node/
  */
-
 /** POST '/users/upload' **/
 exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona, per ara almenys no està linkat ni es fa servir */
     // create an incoming form object
@@ -191,11 +167,11 @@ exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona
     form.parse(req);
 };
 
-/** UPDATE '/users/:userid' **/
+/** PUT '/users/:userid' **/
 exports.updateUser = function (req, res) {//funciona
     var id = req.params.userid;
     var user = req.body;
-    userModel.update({"_id": id}, user,
+    userModel.update({"_id": id, role: 'user'}, user,
         function (err) {
             if (err) return console.log(err);
             console.log(user);
@@ -214,13 +190,14 @@ exports.deleteUserById = function (req, res) {
 /** GET '/users/' **/
 exports.getUsers = function (req, res) {
     userModel.find({role: 'user'})
-    .limit(Number(req.query.pageSize))
-    .skip(Number(req.query.pageSize)*Number(req.query.page))
-    .exec(function (err, users) {
-        if (err) return res.send(500, err.message);
-        res.status(200).jsonp(users);
-    });
+        .limit(Number(req.query.pageSize))
+        .skip(Number(req.query.pageSize) * Number(req.query.page))
+        .exec(function (err, users) {
+            if (err) return res.send(500, err.message);
+            res.status(200).jsonp(users);
+        });
 };
+
 /** GET '/users/:userid' **/
 exports.getUserById = function (req, res) {
     userModel.findOne({_id: req.params.userid})
@@ -367,7 +344,6 @@ exports.follow = function (req, res) {
                     res.json({success: false, message: 'userB not found.'});
                 } else if (userB) {
                     userB.followers.push(userA._id);
-
                     /*notification*/
                     var notification = {
                         state: "pendent",
@@ -387,11 +363,9 @@ exports.follow = function (req, res) {
                     userB.points.history.push(reward);
                     userB.points.total = userB.points.total + 1;
                     /* end of gamification */
-
                     userB.save(function (err) {
                         if (err) return res.send(500, err.message);
                         userA.following.push(userB._id);
-
                         /* gamification */
                         var reward = {
                             concept: "followed " + userB.name,
@@ -442,7 +416,6 @@ exports.unfollow = function (req, res) {
                     }
                     if (indexFollower > -1) {
                         userB.followers.splice(indexFollower, 1);
-
                         /*notification*/
                         var notification = {
                             state: "pendent",
@@ -462,7 +435,6 @@ exports.unfollow = function (req, res) {
                         userB.points.history.push(reward);
                         userB.points.total = userB.points.total - 1;
                         /* end of gamification */
-
                         userB.save(function (err) {
                             if (err) return res.send(500, err.message);
                             var indexFollower = -1;
@@ -473,7 +445,6 @@ exports.unfollow = function (req, res) {
                             }
                             if (indexFollower > -1) {
                                 userA.following.splice(indexFollower, 1);
-
                                 /* gamification */
                                 var reward = {
                                     concept: "unfollowed " + userB.name,
@@ -507,23 +478,32 @@ exports.unfollow = function (req, res) {
 
 /**GET '/search/:searchstring' **/
 exports.search = function (req, res) {
-    userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'user'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+    userModel.find({
+        name: new RegExp(req.params.searchstring, "i"),
+        role: 'user'
+    })//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
         .limit(Number(req.query.pageSize))
-        .skip(Number(req.query.pageSize)*Number(req.query.page))
+        .skip(Number(req.query.pageSize) * Number(req.query.page))
         .exec(function (err, users) {
-            //if (err) return res.send(500, err.message);
-            userModel.find({name: new RegExp(req.params.searchstring, "i"), role: 'trainer'})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
+            if (err) return res.send(500, err.message);
+            userModel.find({
+                name: new RegExp(req.params.searchstring, "i"),
+                role: 'trainer'
+            })//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
                 .limit(Number(req.query.pageSize))
-                .skip(Number(req.query.pageSize)*Number(req.query.page))
+                .skip(Number(req.query.pageSize) * Number(req.query.page))
                 .exec(function (err, trainers) {
+                    if (err) return res.send(500, err.message);
                     routineModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
                         .limit(Number(req.query.pageSize))
-                        .skip(Number(req.query.pageSize)*Number(req.query.page))
+                        .skip(Number(req.query.pageSize) * Number(req.query.page))
                         .exec(function (err, routines) {
+                            if (err) return res.send(500, err.message);
                             dietModel.find({title: new RegExp(req.params.searchstring, "i")})//perquè retorni tots els objectes que continguin l'string sense necessitat de que sigui exactament la mateixa string
                                 .limit(Number(req.query.pageSize))
-                                .skip(Number(req.query.pageSize)*Number(req.query.page))
+                                .skip(Number(req.query.pageSize) * Number(req.query.page))
                                 .exec(function (err, diets) {
+                                    if (err) return res.send(500, err.message);
                                     res.json({
                                         users: users,
                                         trainers: trainers,
@@ -540,10 +520,10 @@ exports.search = function (req, res) {
 exports.newMark = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
-        if(!user) {
+        if (!user) {
             res.json({success: false, message: 'user not found.'});
-        }else if(user){
-            var newmark={
+        } else if (user) {
+            var newmark = {
                 title: req.body.title,
                 unit: req.body.unit
             };
@@ -565,39 +545,52 @@ exports.newMark = function (req, res) {
     });
 };
 
+/** DELETE /users/markid'**/
+exports.deleteUserMark = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if (!user) {
+            res.json({success: false, message: 'user not found.'});
+        } else if (user) {
+            for (var i = 0; i < user.marks.length; i++) {
+                if (user.marks[i]._id == req.params.markid) {
+                    //Hemos encontrado la marca del usuario a eliminar
+                    //Aun no tengo ni idea de como eliminar esa maravillosa marca
+                }
+            }
+        }
+    });
+}
+
 /**
-cal rebre:
-_id
-value: 10
-**/
+ cal rebre:
+ _id
+ value: 10
+ **/
 /** POST '/users/:markid/addDayToMark' **/
 exports.addDayToMark = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
         if (err) return res.send(500, err.message);
-        if(!user) {
+        if (!user) {
             res.json({success: false, message: 'user not found.'});
-        }else if(user){
-            var indexMark=-1;
-            var indexDay=-1;
-            for(var i=0; i<user.marks.length; i++)
-            {
-                if(user.marks[i]._id==req.params.markid)
-                {
-                    indexMark=JSON.parse(JSON.stringify(i));
-                    for(var j=0; j<user.marks[i].days.length; j++)
-                    {
-                        if(user.marks[i].days[j].date==Date())
-                        {
-                            indexDay=JSON.parse(JSON.stringify(j));
+        } else if (user) {
+            var indexMark = -1;
+            var indexDay = -1;
+            for (var i = 0; i < user.marks.length; i++) {
+                if (user.marks[i]._id == req.params.markid) {
+                    indexMark = JSON.parse(JSON.stringify(i));
+                    for (var j = 0; j < user.marks[i].days.length; j++) {
+                        if (user.marks[i].days[j].date == Date()) {
+                            indexDay = JSON.parse(JSON.stringify(j));
                         }
                     }
                 }
             }
-            if(indexMark>-1)//si la mark existeix
+            if (indexMark > -1)//si la mark existeix
             {
-                if(indexDay==-1)//però el dia no existeix encara
+                if (indexDay == -1)//però el dia no existeix encara
                 {
-                    var newday={
+                    var newday = {
                         date: Date(),
                         value: req.body.value
                     };
@@ -615,10 +608,10 @@ exports.addDayToMark = function (req, res) {
                         if (err) return res.send(500, err.message);
                         res.status(200).jsonp(user.marks);
                     });
-                }else{
+                } else {
                     res.status(200).jsonp({message: 'mark of day already registered'});
                 }
-            }else{
+            } else {
                 res.status(200).jsonp({message: 'mark not registered'});
             }
         }//end else if user

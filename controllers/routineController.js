@@ -31,6 +31,52 @@ exports.getRoutineById = function (req, res) {
         });
 };
 
+/** DELETE '/routines/:routineid' **/
+exports.deleteRoutineById = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'trainer'}, function (err, trainer) {
+        if (err) return res.send(500, err.message);
+        if (!trainer) {
+            res.json({success: false, message: 'Trainer not found.'});
+        } else if (trainer) {
+            for (var i = 0; i < user.routines.length; i++) {
+                if (user.routines[i].equals(req.params.routineid)) {
+                    user.routines.splice(i, 1);
+                    /* Solo si esa routine ha sido creada por el trainer */
+                    routineModel.findByIdAndRemove({_id: req.params.routineid}, function (err) {
+                        if (err !== null) return res.send(500, err.message);
+                        res.status(200).jsonp('Deleted routine');
+                    });
+                }
+            }
+        }
+    });
+};
+
+/** PUT '/routines/:routineid' **/
+exports.updateRoutineById = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'trainer'}, function (err, trainer) {
+        if (err) return res.send(500, err.message);
+        if (!trainer) {
+            res.json({success: false, message: 'Trainer not found.'});
+        } else if (trainer) {
+            for (var i = 0; i < user.routines.length; i++) {
+                if (user.routines[i].equals(req.params.routineid)) {
+                    user.routines.splice(i, 1);
+                    /* Solo si esa routine ha sido creada por el trainer */
+                    var id = req.params.routineid;
+                    var routine = req.body;
+                    routineModel.update({"_id": id}, routine,
+                        function (err) {
+                            if (err) return console.log(err);
+                            console.log(routine);
+                            res.status(200).jsonp(routine);
+                        });
+                }
+            }
+        }
+    });
+};
+
 /** POST '/routines/addToClient/:clientid' **/
 exports.addRoutineToClient = function (req, res) {
     userModel.findOne({

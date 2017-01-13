@@ -327,14 +327,9 @@ exports.searchByName = function (req, res) {
 };
 
 /** DELETE '/trainers/:trainerid' **/
-exports.removeTrainer = function (req, res) {/* AQUESTA FUNCIÖ CREC QUE ESTÂ MAL PLANTEJADA, DIRIA QUE NO FUNCIONA */
-    trainerModel.remove({_id: req.params.trainerid}, function (err) {
-        if (err)
-            res.send(err);
-        trainerModel.find(function (err, trainer) {
-            if (err)
-                res.send(err);
-            res.json(trainer);
-        });
+exports.removeTrainer = function (req, res) {/* AQUESTA FUNCIÖ CREC QUE ESTÂ MAL PLANTEJADA, DIRIA QUE NO FUNCIONA, si jo també ho diria no es pot trobar despres d'eliminar */
+    userModel.findByIdAndRemove({_id: req.params.trainerid}, function (err) {/**La he corregit, pero tenint en compte que tenim només un model ara potser es redundant no?**/
+        if (err) return res.send(500, err.message);
+        res.status(200).send("Trainer Deleted");
     });
 };

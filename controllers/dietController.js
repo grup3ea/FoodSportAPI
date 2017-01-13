@@ -27,6 +27,52 @@ exports.getDietById = function (req, res) {
     });
 };
 
+/**DELETE '/diets/:dietid' **/
+exports.deleteDietById = function (req, res) {
+    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+        if (err) return res.send(500, err.message);
+        if (!chef) {
+            res.json({success: false, message: 'Chef not found.'});
+        } else if (chef) {
+            for (var i = 0; i < chef.diets.length; i++) {
+                if (chef.diets[i].equals(req.params.dietid)) {
+                    chef.diets.splice(i, 1);
+                    /* Solo si esa dieta ha sido creada por el chef */
+                    dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
+                        if (err !== null) return res.send(500, err.message);
+                        res.status(200).jsonp('Deleted diet');
+                    });
+                }
+            }
+        }
+    });
+};
+
+/** PUT '/diets/:dietid' **/
+exports.updateDietById = function (req, res) {
+    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+        if (err) return res.send(500, err.message);
+        if (!chef) {
+            res.json({success: false, message: 'Chef not found.'});
+        } else if (chef) {
+            for (var i = 0; i < chef.diets.length; i++) {
+                if (chef.diets[i].equals(req.params.dietid)) {
+                    chef.diets.splice(i, 1);
+                    /* Solo si esa dieta ha sido creada por el chef */
+                    var id = req.params.dietid;
+                    var diet = req.body;
+                    dietModel.update({"_id": id}, diet,
+                        function (err) {
+                            if (err) return console.log(err);
+                            console.log(diet);
+                            res.status(200).jsonp(diet);
+                        });
+                }
+            }
+        }
+    });
+};
+
 /**POST '/diets' **/
 exports.createDiet = function (req, res) {
     chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {

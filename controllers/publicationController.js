@@ -120,6 +120,31 @@ exports.deletePublicationById = function (req, res) {
     });
 };
 
+/** PUT '/publications/:publicationid' **/
+exports.updatePublicationById = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if (!user) {
+            res.json({success: false, message: 'user not found.'});
+        } else if (user) {
+            for (var i = 0; i < user.publications.length; i++) {
+                if (user.publications[i].equals(req.params.publicationid)) {
+                    user.publications.splice(i, 1);
+                    //només si el user és qui ha fet la publication la pot modificar
+                    var id = req.params.publicationid;
+                    var publication = req.body;
+                    publicationModel.update({"_id": id}, publication,
+                        function (err) {
+                            if (err) return console.log(err);
+                            console.log(publication);
+                            res.status(200).jsonp(publication);
+                        });
+                }
+            }
+        }
+    });
+};
+
 /** POST '/publications/:publicationid/like' **/
 exports.likePublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
