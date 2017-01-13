@@ -158,7 +158,7 @@ apiRoutes.route('/users/:userid')
     .delete(userCtrl.deleteUserById);
 apiRoutes.route('/users/upload')
     .post(userCtrl.avatarUpload);
-apiRoutes.route('/:userid/diets')
+apiRoutes.route('/users/:userid/diets')
     .get(userCtrl.getDietsFromUserId);
 apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
