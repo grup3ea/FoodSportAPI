@@ -204,6 +204,14 @@ apiRoutes.route('/trainers/searchByDiscipline/:discipline')
     .get(trainerCtrl.searchByDiscipline);
 
 /** ********** **/
+/******CHEFS*****/
+/** ********** **/
+
+apiRoutes.route('/chefs/:chefid')
+    .put(chefCtrl.updateChefById)
+    .delete(chefCtrl.deleteChefById);
+
+/** ********** **/
 /******DIETS*****/
 /** ********** **/
 
