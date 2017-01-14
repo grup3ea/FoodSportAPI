@@ -552,11 +552,31 @@ exports.deleteUserMark = function (req, res) {
         if (!user) {
             res.json({success: false, message: 'user not found.'});
         } else if (user) {
+            var indexMark=-1;
             for (var i = 0; i < user.marks.length; i++) {
                 if (user.marks[i]._id == req.params.markid) {
-                    //Hemos encontrado la marca del usuario a eliminar
-                    //Aun no tengo ni idea de como eliminar esa maravillosa marca
+                    indexMark = JSON.parse(JSON.stringify(i));
                 }
+            }
+            if(indexMark>-1)
+            {
+                user.marks.splice(indexMark, 1);
+                user.save(function (err, user) {//guardem el trainer amb la rutina treta
+                    if (err) return res.send(500, err.message);
+                    userModel.findOne({_id: user._id})
+                        .lean()
+                        .populate('diets', 'title description')
+                        .populate('routines', 'title description')
+                        .populate('trainers', 'name avatar description')
+                        .populate('clients.client', 'name avatar')
+                        .populate('publications')
+                        .exec(function (err, user) {
+                            if (err) return res.send(500, err.message);
+                            res.status(200).jsonp(user);
+                        });
+                });
+            }else{
+                res.status(200).jsonp({message: 'mark not found'});
             }
         }
     });

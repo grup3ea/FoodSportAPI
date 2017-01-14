@@ -164,8 +164,6 @@ apiRoutes.route('/users/:userid/routines')
     .get(userCtrl.getRoutinesFromUserId);
 apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
-apiRoutes.route('/users/:userid/publications/:publicationid')
-    .put(publicationCtrl.putUserPublicationsByPublicationId);
 apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
     .post(userCtrl.sendPetitionToTrainer);
 apiRoutes.route('/users/:userid/getNotifications')
@@ -180,9 +178,9 @@ apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
 apiRoutes.route('/users/newMark')
     .post(userCtrl.newMark);
-apiRoutes.route('/users/:markid')
+apiRoutes.route('/users/marks/:markid')//no podiem posar directament /users/:marksid, pq llavors pilla com si fos /users/:userid i no té forma de saber que ens referim a una mark
     .delete(userCtrl.deleteUserMark);
-apiRoutes.route('/users/:markid/addDayToMark')
+apiRoutes.route('/users/marks/:markid/addDayToMark')
     .post(userCtrl.addDayToMark);
 
 /** *********** **/
@@ -257,8 +255,7 @@ apiRoutes.route('/publications/:publicationid/like')
 apiRoutes.route('/publications/:publicationid/dislike')
     .post(publicationCtrl.dislikePublication);
 apiRoutes.route('/publications/:publicationid')
-    .delete(publicationCtrl.deletePublicationById)
-    .put(publicationCtrl.updatePublicationById);
+    .delete(publicationCtrl.deletePublicationById);
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);
 
