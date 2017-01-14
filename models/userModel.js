@@ -33,6 +33,10 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'publicationModel'
     }],
+    conversations: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'conversationModel'
+    }],
     diets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'dietModel'

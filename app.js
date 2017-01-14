@@ -68,6 +68,8 @@ var chefMdl = require('./models/chefModel')(app, mongoose);
 var chefCtrl = require('./controllers/chefController');
 var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
+var conversationMdl = require('./models/conversationModel')(app, mongoose);
+var conversationCtrl = require('./controllers/conversationController');
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
 /**------------------------------------------------------------------ **/
@@ -258,6 +260,16 @@ apiRoutes.route('/publications/:publicationid')
     .delete(publicationCtrl.deletePublicationById);
 apiRoutes.route('/publications/newsfeed')
     .get(publicationCtrl.getNewsFeed);
+
+/** ********** **/
+/**CONVERSATIONS**/
+/** ********** **/
+
+apiRoutes.route('/conversations')
+    .get(conversationCtrl.getUserConversations)
+    .post(conversationCtrl.createConversation);
+apiRoutes.route('/conversations/:conversationid')
+    .post(conversationCtrl.addMessageToConversation);
 
 app.use('/api', apiRoutes);
 /**-------------------------------------------------------------**/
