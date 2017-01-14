@@ -21,7 +21,10 @@ exports.getDiets = function (req, res) {
 
 /** GET '/diets/:dietid' **/
 exports.getDietById = function (req, res) {
-    dietModel.findOne({_id: req.params.dietid}, function (err, diet) {
+    dietModel.findOne({_id: req.params.dietid})
+    .lean()
+    .populate('chef', 'name avatar')
+    .exec(function (err, diet) {
         if (err) return res.send(500, err.message);
         res.status(200).jsonp(diet);
     });
@@ -239,7 +242,7 @@ exports.completeDayGamificatedDiet = function (req, res) {
                         diet.save(function (err) {
                             if (err)
                                 return res.send(500, err.message);
-                            res.status(200).jsonp(diet.days);
+                            res.status(200).jsonp(diet);
                         });//diet.save
                     }//End if when day foung
                     else {

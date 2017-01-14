@@ -272,7 +272,14 @@ exports.completeDayGamificatedRoutine = function (req, res) {
                         routine.save(function (err) {
                             if (err)
                                 return res.send(500, err.message);
-                            res.status(200).jsonp(routine.days);
+                                routineModel.findOne({_id: routine._id})
+                                    .lean()
+                                    .populate('trainer', 'name avatar')
+                                    .populate('client', 'name avatar points.total')
+                                    .exec(function (err, routine) {
+                                        if (err) return res.send(500, err.message);
+                                        res.status(200).jsonp(routine);
+                                    });
                         });//Routine.save
                     }//End if when day foung
                     else {
