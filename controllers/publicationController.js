@@ -86,7 +86,7 @@ exports.putUserPublicationsByPublicationId = function (req, res) {
             content: req.body.content,
             date: new Date()
         };
-        user.publications.push(publication);//crec que això no funciona, pq no sap d'on està agafant l'user que aquí posa que guarda
+        user.publications.push(publication);//crec que això no funciona, pq no sap d'on està agafant l'user que aquí posa que guarda :O
         user.save(function (err) {
             if (err !== null) return res.send(500, err.message);
             res.status(200).jsonp(user.publications);
@@ -107,12 +107,15 @@ exports.deletePublicationById = function (req, res) {
             res.json({success: false, message: 'user not found.'});
         } else if (user) {
             for (var i = 0; i < user.publications.length; i++) {
-                if (user.publications[i].equals(req.params.publicationid)) {
+                if (user.publications[i].equals(req.params.publicationid)) {//només si el user és qui ha fet la publication la pot esborrar
                     user.publications.splice(i, 1);
-                    //només si el user és qui ha fet la publication la pot esborrar
-                    publicationModel.findByIdAndRemove({_id: req.params.publicationid}, function (err) {
-                        if (err !== null) return res.send(500, err.message);
-                        res.status(200).jsonp('Deleted');
+                    user.save(function (err, user) {//guardem l'user
+                        if (err) return res.send(500, err.message);
+                        
+                        publicationModel.findByIdAndRemove({_id: req.params.publicationid}, function (err) {
+                            if (err !== null) return res.send(500, err.message);
+                            res.status(200).jsonp('Deleted');
+                        });
                     });
                 }
             }
