@@ -38,13 +38,16 @@ exports.deleteRoutineById = function (req, res) {
         if (!trainer) {
             res.json({success: false, message: 'Trainer not found.'});
         } else if (trainer) {
-            for (var i = 0; i < user.routines.length; i++) {
-                if (user.routines[i].equals(req.params.routineid)) {
-                    user.routines.splice(i, 1);
-                    /* Solo si esa routine ha sido creada por el trainer */
-                    routineModel.findByIdAndRemove({_id: req.params.routineid}, function (err) {
-                        if (err !== null) return res.send(500, err.message);
-                        res.status(200).jsonp('Deleted routine');
+            for (var i = 0; i < trainer.routines.length; i++) {
+                if (trainer.routines[i].equals(req.params.routineid)) {//Solo si esa routine ha sido creada por el trainer
+                    trainer.routines.splice(i, 1);
+                    trainer.save(function (err, trainer) {//guardem el trainer amb la rutina treta
+                        if (err) return res.send(500, err.message);
+
+                        routineModel.findByIdAndRemove({_id: req.params.routineid}, function (err) {//elminem la routine
+                            if (err !== null) return res.send(500, err.message);
+                            res.status(200).jsonp('Deleted routine');
+                        });
                     });
                 }
             }
@@ -61,7 +64,7 @@ exports.updateRoutineById = function (req, res) {
         } else if (user) {
             for (var i = 0; i < user.routines.length; i++) {
                 if (user.routines[i].equals(req.params.routineid)) {
-                    user.routines.splice(i, 1);
+                    user.routines.splice(i, 1);// <-- perquè es fa l'splice de user.routines si després no es guarda el user??
                     /* Solo si esa routine ha sido creada por el trainer */
                     var id = req.params.routineid;
                     var routine = req.body;
@@ -160,7 +163,14 @@ exports.addDayToRoutine = function (req, res) {
                         if (err) {
                             return res.status(500).send(err.message);
                         }
-                        res.status(200).jsonp(routine);
+                        routineModel.findOne({_id: routine._id})
+                            .lean()
+                            .populate('trainer', 'name avatar')
+                            .populate('client', 'name avatar points.total')
+                            .exec(function (err, routine) {
+                                if (err) return res.send(500, err.message);
+                                res.status(200).jsonp(routine);
+                            });
                     });
                 }
             });
