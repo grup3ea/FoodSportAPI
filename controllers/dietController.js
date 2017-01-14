@@ -40,10 +40,13 @@ exports.deleteDietById = function (req, res) {
             for (var i = 0; i < chef.diets.length; i++) {
                 if (chef.diets[i].equals(req.params.dietid)) {
                     chef.diets.splice(i, 1);
-                    /* Solo si esa dieta ha sido creada por el chef */
-                    dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
-                        if (err !== null) return res.send(500, err.message);
-                        res.status(200).jsonp('Deleted diet');
+                    chef.save(function (err, chef) {//guardem el chef amb la dieta treta
+                        if (err) return res.send(500, err.message);
+
+                        dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
+                            if (err !== null) return res.send(500, err.message);
+                            res.status(200).jsonp('Deleted diet');
+                        });
                     });
                 }
             }
@@ -60,7 +63,8 @@ exports.updateDietById = function (req, res) {
         } else if (chef) {
             for (var i = 0; i < chef.diets.length; i++) {
                 if (chef.diets[i].equals(req.params.dietid)) {
-                    chef.diets.splice(i, 1);
+                    chef.diets.splice(i, 1); //<-- splice? quan s'està fent un update? no s'hauria d'eliminar
+                    //tot i que no afecta, pq l'splice aquest després no es guarda a la base de dades pq no hi ha cap chef.save
                     /* Solo si esa dieta ha sido creada por el chef */
                     var id = req.params.dietid;
                     var diet = req.body;
@@ -128,14 +132,6 @@ exports.addDayToDiet = function (req, res) {
                 }
             });
         }// end else if
-    });
-};
-
-/** DELETE '/diets/deleteDiet/:dietid' **/
-exports.deleteDietById = function (req, res) {
-    dietModel.findByIdAndRemove({_id: req.params.dietid}, function (err) {
-        if (err) return res.send(500, err.message);
-        res.status(200).send("Deleted");
     });
 };
 

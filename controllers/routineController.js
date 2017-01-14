@@ -41,6 +41,7 @@ exports.deleteRoutineById = function (req, res) {
             for (var i = 0; i < trainer.routines.length; i++) {
                 if (trainer.routines[i].equals(req.params.routineid)) {//Solo si esa routine ha sido creada por el trainer
                     trainer.routines.splice(i, 1);
+                    //també s'hauria de treure la referència al user que és client d'aquesta routine
                     trainer.save(function (err, trainer) {//guardem el trainer amb la rutina treta
                         if (err) return res.send(500, err.message);
 
