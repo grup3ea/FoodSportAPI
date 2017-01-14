@@ -8,7 +8,22 @@ var crypto = require('crypto');
 exports.getUserConversations = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']})
         .lean()
-        .populate('conversations')
+        .populate({//això és per fer deep population
+            path: 'conversations',
+            populate: {
+                path: 'userA userB',
+                model: 'userModel',
+                select: 'name avatar'
+            }
+        })
+        .populate({//això és per fer deep population
+            path: 'conversations',
+            populate: {
+                path: 'messages.user',
+                model: 'userModel',
+                select: 'name avatar'
+            }
+        })
         .exec(function (err, user) {
             if (err) return res.send(500, err.message);
             res.status(200).jsonp(user.conversations);
@@ -44,7 +59,22 @@ exports.createConversation = function (req, res) {//req.body.userB
                                 if (err) return res.send(500, err.message);
                                 userModel.findOne({'tokens.token': req.headers['x-access-token']})
                                     .lean()
-                                    .populate('conversations')
+                                    .populate({//això és per fer deep population
+                                        path: 'conversations',
+                                        populate: {
+                                            path: 'userA userB',
+                                            model: 'userModel',
+                                            select: 'name avatar'
+                                        }
+                                    })
+                                    .populate({//això és per fer deep population
+                                        path: 'conversations',
+                                        populate: {
+                                            path: 'messages.user',
+                                            model: 'userModel',
+                                            select: 'name avatar'
+                                        }
+                                    })
                                     .exec(function (err, user) {
                                         if (err) return res.send(500, err.message);
                                         res.status(200).jsonp(user.conversations);
@@ -110,7 +140,22 @@ exports.addMessageToConversation = function (req, res) {
                                     if (err) return res.send(500, err.message);
                                     userModel.findOne({'tokens.token': req.headers['x-access-token']})
                                         .lean()
-                                        .populate('conversations')
+                                        .populate({//això és per fer deep population
+                                            path: 'conversations',
+                                            populate: {
+                                                path: 'userA userB',
+                                                model: 'userModel',
+                                                select: 'name avatar'
+                                            }
+                                        })
+                                        .populate({//això és per fer deep population
+                                            path: 'conversations',
+                                            populate: {
+                                                path: 'messages.user',
+                                                model: 'userModel',
+                                                select: 'name avatar'
+                                            }
+                                        })
                                         .exec(function (err, user) {
                                             if (err) return res.send(500, err.message);
                                             res.status(200).jsonp(user.conversations);
