@@ -43,45 +43,76 @@ exports.createConversation = function (req, res) {//req.body.userB
                 if (!userB) {
                     res.json({success: false, message: 'userB not found.'});
                 } else if (userB) {
-                    var conversation = new conversationModel({
-                        userA: userA._id,
-                        userB: userB._id,
-                        modifiedDate: Date()
-                    });
-                    conversation.save(function (err, conversation) {
+                    conversationModel.findOne({$or:[{userA: userA._id, userB: userB._id},{userA: userB._id, userB: userA._id}]}, function (err, conversation) {
                         if (err) return res.send(500, err.message);
-
-                        userA.conversations.push(conversation._id);
-                        userA.save(function (err) {
-                            if (err) return res.send(500, err.message);
-                            userB.conversations.push(conversation._id);
-                            userB.save(function (err) {
-                                if (err) return res.send(500, err.message);
-                                userModel.findOne({'tokens.token': req.headers['x-access-token']})
-                                    .lean()
-                                    .populate({//això és per fer deep population
-                                        path: 'conversations',
-                                        populate: {
-                                            path: 'userA userB',
-                                            model: 'userModel',
-                                            select: 'name avatar'
-                                        }
-                                    })
-                                    .populate({//això és per fer deep population
-                                        path: 'conversations',
-                                        populate: {
-                                            path: 'messages.user',
-                                            model: 'userModel',
-                                            select: 'name avatar'
-                                        }
-                                    })
-                                    .exec(function (err, user) {
-                                        if (err) return res.send(500, err.message);
-                                        res.status(200).jsonp(user.conversations);
-                                    });
+                        if (!conversation) {
+                            console.log("conversation no exists, create new one");
+                            var conversation = new conversationModel({
+                                userA: userA._id,
+                                userB: userB._id,
+                                modifiedDate: Date()
                             });
-                        });
-                    });
+                            conversation.save(function (err, conversation) {
+                                if (err) return res.send(500, err.message);
+
+                                userA.conversations.push(conversation._id);
+                                userA.save(function (err) {
+                                    if (err) return res.send(500, err.message);
+                                    userB.conversations.push(conversation._id);
+                                    userB.save(function (err) {
+                                        if (err) return res.send(500, err.message);
+                                        userModel.findOne({'tokens.token': req.headers['x-access-token']})
+                                            .lean()
+                                            .populate({//això és per fer deep population
+                                                path: 'conversations',
+                                                populate: {
+                                                    path: 'userA userB',
+                                                    model: 'userModel',
+                                                    select: 'name avatar'
+                                                }
+                                            })
+                                            .populate({//això és per fer deep population
+                                                path: 'conversations',
+                                                populate: {
+                                                    path: 'messages.user',
+                                                    model: 'userModel',
+                                                    select: 'name avatar'
+                                                }
+                                            })
+                                            .exec(function (err, user) {
+                                                if (err) return res.send(500, err.message);
+                                                res.status(200).jsonp(user.conversations);
+                                            });
+                                    });
+                                });
+                            });
+                        } else if (conversation) {
+                            console.log("conversation exists");
+                            userModel.findOne({'tokens.token': req.headers['x-access-token']})
+                                .lean()
+                                .populate({//això és per fer deep population
+                                    path: 'conversations',
+                                    populate: {
+                                        path: 'userA userB',
+                                        model: 'userModel',
+                                        select: 'name avatar'
+                                    }
+                                })
+                                .populate({//això és per fer deep population
+                                    path: 'conversations',
+                                    populate: {
+                                        path: 'messages.user',
+                                        model: 'userModel',
+                                        select: 'name avatar'
+                                    }
+                                })
+                                .exec(function (err, user) {
+                                    if (err) return res.send(500, err.message);
+                                    res.status(200).jsonp(user.conversations);
+                                });
+                        }
+                    });//end of conversation find
+
                 }//end else if (userB)
             });//end of userB find
         }//end else if (userA)

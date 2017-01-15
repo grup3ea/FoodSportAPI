@@ -45,6 +45,16 @@ exports.register = function (req, res) {
     user.points.history.push(reward);
     user.points.total = user.points.total + 1;
     /* end of gamification */
+    /*notification*/
+    var notification = {
+        state: "pendent",
+        message: "Wellcome! this is your profile, update the Profile picture to let other members recognize you",
+        link: "editUser/" + user._id,
+        icon: "newpetition.png",
+        date: Date()
+    };
+    user.notifications.push(notification);
+    /* end of notification*/
     user.save(function (err, user) {
         if (err) {
             console.log(err.message);
