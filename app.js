@@ -168,8 +168,10 @@ apiRoutes.route('/users/:userid/publications')
     .get(publicationCtrl.getUserPublicationsByUserId);
 apiRoutes.route('/users/sendPetitionToTrainer/:trainerid')
     .post(userCtrl.sendPetitionToTrainer);
-apiRoutes.route('/users/:userid/getNotifications')
+apiRoutes.route('/notifications')
     .get(userCtrl.getNotifications);
+apiRoutes.route('/notificationsNumber')
+    .get(userCtrl.getNumberOfNotifications);
 apiRoutes.route('/users/:userid/deleteSelectedTokens')
     .post(userCtrl.deleteSelectedTokens);
 apiRoutes.route('/users/follow')

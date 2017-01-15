@@ -209,7 +209,20 @@ exports.getUserById = function (req, res) {
         .populate('publications')
         .exec(function (err, user) {
             if (err) return res.send(500, err.message);
-            res.status(200).jsonp(user);
+            if (!user) {
+                res.json({success: false, message: 'User not found.'});
+            } else if (user) {
+                /* aquí va el carro de bucle per acabar retornant només les peticions pendents */
+                var pendentNumber=0;
+                for (var i = 0; i < user.notifications.length; i++) {
+                    if (user.notifications[i].state == "pendent") {
+                        pendentNumber++;
+                    }
+                }
+                user.notifications=pendentNumber;
+                /* fi del carro de bucle de peticions pendents */
+                res.status(200).jsonp(user);
+            }
         });
 };
 
@@ -285,21 +298,53 @@ exports.sendPetitionToTrainer = function (req, res) {
     });
 };
 
-/** GET '/users/:userid/getNotifications' **/
-exports.getNotifications = function (req, res) {
-    userModel.findOne({_id: req.params.userid})
+exports.getNumberOfNotifications = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']})
         .exec(function (err, user) {
             if (err) return res.send(500, err.message);
-            for (var i = 0; i < user.notifications.length; i++) {
-                if (user.notifications[i].state == "pendent") {
-                    user.notifications[i].state = "viewed";
-                    user.notifications[i].dateviewed = Date();
+            if (!user) {
+                res.json({success: false, message: 'User not found.'});
+            } else if (user) {
+                /* aquí va el carro de bucle per acabar retornant només les peticions pendents */
+                var pendentNumber=0;
+                for (var i = 0; i < user.notifications.length; i++) {
+                    if (user.notifications[i].state == "pendent") {
+                        pendentNumber++;
+                    }
                 }
+                /* fi del carro de bucle de peticions pendents */
+                res.status(200).jsonp(pendentNumber);
             }
-            user.save(function (err) {
-                if (err) return res.send(500, err.message);
-                res.status(200).jsonp(user.notifications);
-            });
+        });
+};
+
+/** GET '/users/:userid/getNotifications' **/
+exports.getNotifications = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']})
+        .exec(function (err, user) {
+            if (err) return res.send(500, err.message);
+            if (!user) {
+                res.json({success: false, message: 'User not found.'});
+            } else if (user) {
+                var viewed=[];
+                var pendent=[];
+                for (var i = 0; i < user.notifications.length; i++) {
+                    if (user.notifications[i].state == "pendent") {
+                        pendent.push(user.notifications[i]);
+                        user.notifications[i].state = "viewed";
+                        user.notifications[i].dateviewed = Date();
+                    }else{
+                        viewed.push(user.notifications[i]);
+                    }
+                }
+                user.save(function (err) {
+                    if (err) return res.send(500, err.message);
+                    res.status(200).jsonp({
+                        pendent: pendent,
+                        viewed: viewed
+                    });
+                });
+            }
         });
 };
 

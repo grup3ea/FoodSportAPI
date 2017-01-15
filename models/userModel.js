@@ -76,7 +76,7 @@ var userSchema = new Schema({
       date: {type: Date},
       message: {type: String},//missatge de valoració
       value: {type: Number}//per exemple sistema d'estrelles sobre 5
-  }],//end of trainermodel
+    }],//end of trainermodel
     points: {
         total: {type: Number},
         history: [{
