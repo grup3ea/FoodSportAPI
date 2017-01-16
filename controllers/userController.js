@@ -248,6 +248,35 @@ exports.getUserNetworkById = function (req, res) {
         });
 };
 
+/** GET '/users/:userid/suggestions' **/
+exports.getUserSuggestionsById = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']})
+        .exec(function (err, user) {
+            if (err) return res.send(500, err.message);
+
+            userModel.find({_id: { $nin: user._id}, city: user.city})
+                .limit(Number(req.query.pageSize))
+                .skip(Number(req.query.pageSize) * Number(req.query.page))
+                .select('name role email description avatar')
+                .exec(function (err, users) {
+                    if (err) return res.send(500, err.message);
+                    console.log(users);
+                    if (users.length>0) {
+                        res.status(200).jsonp(users);
+                    } else {
+                        //si no té users a la ciutat, li tornem users igualment (tot i no ser de la mateixa ciutat)
+                        userModel.find({_id: { $nin: user._id}})
+                            .limit(Number(req.query.pageSize))
+                            .skip(Number(req.query.pageSize) * Number(req.query.page))
+                            .select('name role email description avatar')
+                            .exec(function (err, users) {
+                                res.status(200).jsonp(users);
+                            });
+                    }
+                });
+        });
+};
+
 /** GET '/users/:userid/diets' **/
 exports.getDietsFromUserId = function (req, res) {
     userModel.findOne({_id: req.params.userid})

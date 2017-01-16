@@ -180,6 +180,8 @@ apiRoutes.route('/users/unfollow')
     .post(userCtrl.unfollow);
 apiRoutes.route('/users/:userid/network')
     .get(userCtrl.getUserNetworkById);
+apiRoutes.route('/users/:userid/suggestions')
+    .get(userCtrl.getUserSuggestionsById);
 apiRoutes.route('/users/newMark')
     .post(userCtrl.newMark);
 apiRoutes.route('/users/marks/:markid')//no podiem posar directament /users/:marksid, pq llavors pilla com si fos /users/:userid i no té forma de saber que ens referim a una mark
