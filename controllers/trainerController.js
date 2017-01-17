@@ -241,11 +241,14 @@ exports.valorateTrainer = function (req, res) {
                 } else if (trainer) {
                     //comprovem que el client no hagi valorat ja el trainer
                     var javalorat = false;
+
                     for (var i = 0; i < trainer.valorations.length; i++) {
+
                         if (trainer.valorations[i].clientid.equals(user._id)) {
                             javalorat = true;
                         }
                     }
+
                     if (javalorat == false) {
                         var valoration = {
                             clientid: user._id,
@@ -253,7 +256,11 @@ exports.valorateTrainer = function (req, res) {
                             message: req.body.message,
                             value: req.body.value
                         };
+                        var actual = trainer.valoration * trainer.valorations.length;
+                        var valor = (actual + valoration.value) / (trainer.valorations.length + 1);
+                        trainer.valoration = valor;
                         trainer.valorations.push(valoration);
+
                         var notification = {
                             state: "pendent",
                             message: "client has valorated you",
