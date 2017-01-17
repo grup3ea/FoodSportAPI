@@ -60,7 +60,9 @@ exports.register = function (req, res) {
             console.log(err.message);
             return res.status(500).send(err.message);
         }
-        res.status(200).jsonp(user);
+        //res.status(200).jsonp(user); en comptes de retoranr la data del signup, fem el login directament
+        console.log("signup fet correctament, redirigint al login internament automàtic");
+        exports.login(req, res);
     });
 };
 
