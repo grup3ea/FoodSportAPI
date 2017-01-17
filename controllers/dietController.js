@@ -6,7 +6,7 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret);
 var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
-var chefModel = require('../models/chefModel');
+//var chefModel = require('../models/chefModel');
 
 /** GET '/diets' ***/
 exports.getDiets = function (req, res) {
@@ -32,7 +32,7 @@ exports.getDietById = function (req, res) {
 
 /**DELETE '/diets/:dietid' **/
 exports.deleteDietById = function (req, res) {
-    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'chef'}, function (err, chef) {
         if (err) return res.send(500, err.message);
         if (!chef) {
             res.json({success: false, message: 'Chef not found.'});
@@ -56,7 +56,7 @@ exports.deleteDietById = function (req, res) {
 
 /** PUT '/diets/:dietid' **/
 exports.updateDietById = function (req, res) {
-    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'chef'}, function (err, chef) {
         if (err) return res.send(500, err.message);
         if (!chef) {
             res.json({success: false, message: 'Chef not found.'});
@@ -82,7 +82,7 @@ exports.updateDietById = function (req, res) {
 
 /**POST '/diets' **/
 exports.createDiet = function (req, res) {
-    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'chef'}, function (err, chef) {
         if (err) return res.send(500, err.message);
         if (!chef) {
             res.json({success: false, message: 'Diet creation failed. Chef not found.'});
@@ -113,7 +113,7 @@ exports.createDiet = function (req, res) {
 
 /** POST '/diets/:dietid/days' **/
 exports.addDayToDiet = function (req, res) {
-    chefModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, chef) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token'], role:'chef'}, function (err, chef) {
         if (err) return res.send(500, err.message);
         if (!chef) {
             res.json({success: false, message: 'Diet day addition failed. Trainer not found.'});

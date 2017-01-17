@@ -67,7 +67,7 @@ exports.register = function (req, res) {
 /** POST '/users/login' **/
 exports.login = function (req, res) {
     userModel.findOne({
-        email: req.body.email, role: 'user'
+        email: req.body.email
     })
         .select('+password')
         .exec(function (err, user) {

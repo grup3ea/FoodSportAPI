@@ -7,13 +7,13 @@ var crypto = require('crypto');
 app.set('superSecret', config.secret);
 
 /*******MODELS*********/
-var chefModel = require('../models/chefModel');
+//var chefModel = require('../models/chefModel');
 var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
 
 /**GET '/chefs' **/
 exports.getChefs = function (req, res) {
-    chefModel.find()
+    userModel.find({role: 'chef'})
     .limit(Number(req.query.pageSize))
     .skip(Number(req.query.pageSize)*Number(req.query.page))
     .exec(function (err, chefs) {
@@ -24,7 +24,7 @@ exports.getChefs = function (req, res) {
 
 /** GET '/chefs/:chefid' **/
 exports.getChefById = function (req, res) {
-    chefModel.findOne({_id: req.params.chefid})
+    userModel.findOne({_id: req.params.chefid})
         .lean()
         .populate('diets', 'title description')
         .exec(function (err, chef) {
@@ -37,7 +37,7 @@ exports.getChefById = function (req, res) {
 exports.updateChefById = function (req, res) {
     var id = req.params.chefid;
     var chef = req.body;
-    chefModel.update({"_id": id}, chef,
+    userModel.update({"_id": id}, chef,
         function (err) {
             if (err) return console.log(err);
             console.log(chef);
@@ -47,7 +47,7 @@ exports.updateChefById = function (req, res) {
 
 /** DELETE '/chefs/:chefid' **/
 exports.deleteChefById = function (req, res) {
-    chefModel.findByIdAndRemove({_id: req.params.chefid}, function (err) {
+    userModel.findByIdAndRemove({_id: req.params.chefid}, function (err) {
         if (err) return res.send(500, err.message);
         res.status(200).send("Chef deleted");
     });
@@ -55,7 +55,7 @@ exports.deleteChefById = function (req, res) {
 
 /** POST '/chefs/register' **/
 exports.register = function (req, res) {
-    var chef = new chefModel({
+    var chef = new userModel({
         name: req.body.name,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
@@ -69,7 +69,7 @@ exports.register = function (req, res) {
 
 /** POST '/chefs/login' **/
 exports.login = function (req, res) {
-    chefModel.findOne({
+    userModel.findOne({
         email: req.body.email
     })
     .select('+password')
