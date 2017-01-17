@@ -218,7 +218,7 @@ exports.acceptClientPetition = function (req, res) {
 /** PUT '/trainers/:trainerid' **/
 exports.updateTrainer = function (req, res) {
     var trainer = req.body;
-    userModel.update({"_id": req.params.trainerid, role: 'trainer'}, trainer,
+    userModel.update({'tokens.token': req.headers['x-access-token']}, trainer,
         function (err) {
             if (err) return console.log(err);
             console.log(trainer);

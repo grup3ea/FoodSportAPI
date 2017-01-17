@@ -53,7 +53,7 @@ exports.register = function (req, res) {
         icon: "newpetition.png",
         date: Date()
     };
-    user.notifications.push(notification);
+    user.notifications=[notification];
     /* end of notification*/
     user.save(function (err, user) {
         if (err) {
@@ -181,7 +181,7 @@ exports.avatarUpload = function (req, res) {/* no sé si s'ha provat si funciona
 exports.updateUser = function (req, res) {//funciona
     var id = req.params.userid;
     var user = req.body;
-    userModel.update({"_id": id, role: 'user'}, user,
+    userModel.update({'tokens.token': req.headers['x-access-token']}, user,
         function (err) {
             if (err) return console.log(err);
             console.log(user);
@@ -254,7 +254,12 @@ exports.getUserSuggestionsById = function (req, res) {
         .exec(function (err, user) {
             if (err) return res.send(500, err.message);
 
-            userModel.find({_id: { $nin: user._id}, city: user.city})
+            userModel.find({
+                $and: [
+                    {_id: { $nin: user._id}},
+                    {_id: { $nin: user.following}}
+                ],
+                city: user.city})
                 .limit(Number(req.query.pageSize))
                 .skip(Number(req.query.pageSize) * Number(req.query.page))
                 .select('name role email description avatar')
@@ -265,7 +270,11 @@ exports.getUserSuggestionsById = function (req, res) {
                         res.status(200).jsonp(users);
                     } else {
                         //si no té users a la ciutat, li tornem users igualment (tot i no ser de la mateixa ciutat)
-                        userModel.find({_id: { $nin: user._id}})
+                        userModel.find({
+                            $and: [
+                                {_id: { $nin: user._id}},
+                                {_id: { $nin: user.following}}
+                            ]})
                             .limit(Number(req.query.pageSize))
                             .skip(Number(req.query.pageSize) * Number(req.query.page))
                             .select('name role email description avatar')
