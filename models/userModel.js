@@ -68,6 +68,7 @@ var userSchema = new Schema({
       message: {type: String},
       state: {type: String}//pendent, accepted, declined
     }],
+    valoration:  {type:String}, //La media de todas las valoraciones
     valorations: [{
       clientid: {
           type: mongoose.Schema.Types.ObjectId,
