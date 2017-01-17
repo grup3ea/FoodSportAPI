@@ -53,7 +53,7 @@ exports.register = function (req, res) {
         icon: "newpetition.png",
         date: Date()
     };
-    user.notifications=[notification];
+    user.notifications.push(notification);
     /* end of notification*/
     user.save(function (err, user) {
         if (err) {
@@ -229,7 +229,7 @@ exports.getUserById = function (req, res) {
                         pendentNumber++;
                     }
                 }
-                user.notifications=pendentNumber;
+                user.pendentNotificationsNumber=pendentNumber;
                 /* fi del carro de bucle de peticions pendents */
                 res.status(200).jsonp(user);
             }
@@ -654,6 +654,15 @@ exports.deleteUserMark = function (req, res) {
             if(indexMark>-1)
             {
                 user.marks.splice(indexMark, 1);
+                /* gamification */
+                var reward = {
+                    concept: "mark deleted",
+                    date: Date(),
+                    value: -3
+                };
+                user.points.history.push(reward);
+                user.points.total = user.points.total - 3;
+                /* end of gamification */
                 user.save(function (err, user) {//guardem el trainer amb la rutina treta
                     if (err) return res.send(500, err.message);
                     userModel.findOne({_id: user._id})
