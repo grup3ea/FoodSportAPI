@@ -273,7 +273,17 @@ exports.valorateTrainer = function (req, res) {
                         trainer.save(function (err) {
                             if (err) return res.send(500, err.message);
 
-                            res.status(200).jsonp(trainer);
+                            userModel.findOne({_id: trainer._id})
+                                .lean()
+                                .populate('diets', 'title description')
+                                .populate('routines', 'title description')
+                                .populate('trainers', 'name avatar description')
+                                .populate('clients.client', 'name avatar')
+                                .populate('publications')
+                                .exec(function (err, trainer) {
+                                    if (err) return res.send(500, err.message);
+                                    res.status(200).jsonp(trainer);
+                            });
                         });
                     } else {//end if javalorat==false
                         res.json({
