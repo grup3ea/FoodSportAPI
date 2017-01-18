@@ -142,7 +142,7 @@ exports.chooseDiet = function (req, res) {
         if (!user) {
             res.json({success: false, message: 'choosing diet failed. user not found.'});
         } else if (user) {
-            user.diets.push(req.body.dietid);
+            user.diets.push(req.params.dietid);
             /* gamification */
             var reward = {
                 concept: "choosing diet",
@@ -169,7 +169,7 @@ exports.unchooseDiet = function (req, res) {
             res.json({success: false, message: 'user not found.'});
         } else if (user) {
             for (var i = 0; i < user.diets.length; i++) {
-                if (user.diets[i]._id.equals(req.body.dietid)) {//deletes the diets of the user with the dietid
+                if (user.diets[i].equals(req.params.dietid)) {//deletes the diets of the user with the dietid
                     user.diets.splice(i, 1);
                 }
             }

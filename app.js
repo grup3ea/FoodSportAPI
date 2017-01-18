@@ -64,7 +64,6 @@ var dietCtrl = require('./controllers/dietController');
 var routineMdl = require('./models/routineModel')(app, mongoose);
 var routineCtrl = require('./controllers/routineController');
 var trainerCtrl = require('./controllers/trainerController');
-var chefMdl = require('./models/chefModel')(app, mongoose);
 var chefCtrl = require('./controllers/chefController');
 var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
@@ -226,7 +225,7 @@ apiRoutes.route('/diets/:dietid/days')
 apiRoutes.route('/diets/:dietid')
     .delete(dietCtrl.deleteDietById)
     .put(dietCtrl.updateDietById);
-apiRoutes.route('/diets/choose')
+apiRoutes.route('/diets/choose/:dietid')
     .post(dietCtrl.chooseDiet)
     .delete(dietCtrl.unchooseDiet);
 apiRoutes.route('/diets/completeDay/:dietid')
