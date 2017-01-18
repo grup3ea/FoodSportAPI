@@ -315,7 +315,7 @@ exports.valorateTrainer = function (req, res) {
                             message: req.body.message,
                             value: req.body.value
                         };
-                        var actual = ((+trainer.valoration) - (+trainer.valorations[indexValoration].value)) * ((+trainer.valorations.length) - 1);
+                        var actual = ((+trainer.valoration) * (+trainer.valorations.length)) - (+trainer.valorations[indexValoration].value);//suma total valoracions sense la que estic canviant
                         var valor = ((+actual) + (+valoration.value)) / (trainer.valorations.length);
                         console.log(actual + ", " + valor);
                         trainer.valoration = valor;
