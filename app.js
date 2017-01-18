@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
+var https = require('https');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 var app = express();
@@ -12,6 +14,12 @@ var config = require('./config/config');
 var app = express();
 var server = require('http').Server(app);
 var secret = config.secret;
+
+var options = {
+    key  : fs.readFileSync('server.key'),
+    cert : fs.readFileSync('server.crt')
+};
+
 /** Express Session **/
 app.use(session({
     secret: secret,
@@ -289,4 +297,8 @@ mongoose.connect(config.database, function (err) {
 /** Start server **/
 server.listen(config.port, function () {
     console.log("Servidor en http://localhost:" + config.port);
+});
+
+https.createServer(options, app).listen(3000, function () {
+    console.log('Started!');
 });
