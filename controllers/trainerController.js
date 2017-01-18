@@ -241,11 +241,12 @@ exports.valorateTrainer = function (req, res) {
                 } else if (trainer) {
                     //comprovem que el client no hagi valorat ja el trainer
                     var javalorat = false;
-
+                    var indexValoration=-1;
                     for (var i = 0; i < trainer.valorations.length; i++) {
 
                         if (trainer.valorations[i].clientid.equals(user._id)) {
                             javalorat = true;
+                            indexValoration=JSON.parse(JSON.stringify(i));
                         }
                     }
 
@@ -256,14 +257,73 @@ exports.valorateTrainer = function (req, res) {
                             message: req.body.message,
                             value: req.body.value
                         };
-                        var actual = trainer.valoration * trainer.valorations.length;
-                        var valor = (actual + valoration.value) / (trainer.valorations.length + 1);
+                        if(!trainer.valoration)
+                        {
+                            trainer.valoration=0;
+                        }
+                        var actual = (+trainer.valoration) * trainer.valorations.length;
+                        var valor = ((+actual) + (+valoration.value)) / (trainer.valorations.length + 1);
                         trainer.valoration = valor;
                         trainer.valorations.push(valoration);
 
                         var notification = {
                             state: "pendent",
                             message: "client has valorated you",
+                            link: "dashboard",
+                            icon: "newvaloration.png",
+                            date: Date()
+                        };
+                        trainer.notifications.push(notification);
+
+                        trainer.save(function (err) {
+                            if (err) return res.send(500, err.message);
+
+                            //aquí la gamificació de l'user que fa la valoració per primer cop
+                            /* gamification */
+                            var reward = {
+                                concept: "valorating trainer",
+                                date: Date(),
+                                value: +1
+                            };
+                            user.points.history.push(reward);
+                            user.points.total = user.points.total + 1;
+                            /* end of gamification */
+                            user.save(function (err) {
+                                /*if (err) return res.send(500, err.message);
+
+                                 res.status(200).jsonp(routine);*/
+                                console.log("points of gamification on trainer valorating added to user");
+                            });
+
+                            userModel.findOne({_id: trainer._id})
+                                .lean()
+                                .populate('diets', 'title description')
+                                .populate('routines', 'title description')
+                                .populate('trainers', 'name avatar description')
+                                .populate('clients.client', 'name avatar')
+                                .populate('publications')
+                                .exec(function (err, trainer) {
+                                    if (err) return res.send(500, err.message);
+                                    res.status(200).jsonp(trainer);
+                            });
+                        });
+                    } else {//end if javalorat==false
+                        console.log("user already has valorated trainer, updating valoration and recalculating total");
+                        var valoration = {
+                            clientid: user._id,
+                            date: Date(),
+                            message: req.body.message,
+                            value: req.body.value
+                        };
+                        var actual = ((+trainer.valoration) - (+trainer.valorations[indexValoration].value)) * ((+trainer.valorations.length) - 1);
+                        var valor = ((+actual) + (+valoration.value)) / (trainer.valorations.length);
+                        console.log(actual + ", " + valor);
+                        trainer.valoration = valor;
+                        trainer.valorations[indexValoration]=valoration;
+
+                        var notification = {
+                            state: "pendent",
+                            message: "client has updated the valoration on you",
                             link: "dashboard",
                             icon: "newvaloration.png",
                             date: Date()
@@ -285,28 +345,8 @@ exports.valorateTrainer = function (req, res) {
                                     res.status(200).jsonp(trainer);
                             });
                         });
-                    } else {//end if javalorat==false
-                        res.json({
-                            success: false,
-                            message: 'sending valoration failed. user has already valorated this trainer.'
-                        });
                     }
                 }//end else if
-            });
-            /* gamification */
-            var reward = {
-                concept: "valorating trainer",
-                date: Date(),
-                value: +1
-            };
-            user.points.history.push(reward);
-            user.points.total = user.points.total + 1;
-            /* end of gamification */
-            user.save(function (err) {
-                /*if (err) return res.send(500, err.message);
-
-                 res.status(200).jsonp(routine);*/
-                console.log("points of gamification on trainer valorating added to user");
             });
         }//end else if
     });

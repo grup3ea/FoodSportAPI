@@ -198,7 +198,7 @@ apiRoutes.route('/trainers/:trainerid')
     .delete(trainerCtrl.removeTrainer);
 apiRoutes.route('/trainers/acceptClientPetition')
     .post(trainerCtrl.acceptClientPetition);
-apiRoutes.route('/trainers/valorateTrainer/:trainerid')
+apiRoutes.route('/trainers/valorate/:trainerid')
     .post(trainerCtrl.valorateTrainer);
 apiRoutes.route('/trainers/:trainerid/getNotifications')
     .get(trainerCtrl.getNotifications);
