@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var passport = require('passport');
 var publicationModel = require('../models/publicationModel');
 var userModel = require('../models/userModel');
 //var trainerModel = require('../models/trainerModel');

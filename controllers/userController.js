@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-var passport = require('passport');
 var config = require('../config/config');
 var crypto = require('crypto');
 var formidable = require('formidable');
