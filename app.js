@@ -214,6 +214,8 @@ apiRoutes.route('/trainers/searchByName/:trainername')
     .get(trainerCtrl.searchByName);
 apiRoutes.route('/trainers/searchByDiscipline/:discipline')
     .get(trainerCtrl.searchByDiscipline);
+apiRoutes.route('/trainersSuggestionsByDisciplines')
+    .get(trainerCtrl.getTrainersByDisciplinesArray);
 
 /** ********** **/
 /******CHEFS*****/

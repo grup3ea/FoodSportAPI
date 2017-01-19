@@ -22,6 +22,29 @@ exports.getTrainers = function (req, res) {
             res.status(200).jsonp(trainers);
         });
 };
+exports.getTrainersByDisciplinesArray = function (req, res) {
+    userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
+        if (err) return res.send(500, err.message);
+        if (!user) {
+            res.json({success: false, message: 'sending petition failed. user not found.'});
+        } else if (user) {
+            userModel.find({
+                    role: 'trainer',
+                    $and: [
+                        {_id: { $nin: user._id}},
+                        {_id: { $nin: user.trainers}}
+                    ],
+                    'disciplines.name': user.disciplines[0].name//per ara torna els trainers que tinguin la discipline[0] del user client
+                })
+                .limit(Number(req.query.pageSize))
+                .skip(Number(req.query.pageSize)*Number(req.query.page))
+                .exec(function (err, trainers) {
+                    if (err) return res.send(500, err.message);
+                    res.status(200).jsonp(trainers);
+                });
+        }
+    });
+};
 
 /** GET '/trainers/:trainerid' **/
 exports.getTrainerById = function (req, res) {

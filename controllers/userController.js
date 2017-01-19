@@ -215,7 +215,7 @@ exports.getUserById = function (req, res) {
         .lean()
         .populate('diets', 'title description')
         .populate('routines', 'title description')
-        .populate('trainers', 'name avatar description')
+        .populate('trainers', 'name avatar description disciplines')
         .populate('clients.client', 'name avatar')
         .populate('publications')
         .exec(function (err, user) {
@@ -670,7 +670,7 @@ exports.deleteUserMark = function (req, res) {
                         .lean()
                         .populate('diets', 'title description')
                         .populate('routines', 'title description')
-                        .populate('trainers', 'name avatar description')
+                        .populate('trainers', 'name avatar description disciplines')
                         .populate('clients.client', 'name avatar')
                         .populate('publications')
                         .exec(function (err, user) {
