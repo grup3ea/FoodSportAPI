@@ -17,6 +17,7 @@ var userSchema = new Schema({
         lastLogin: {type: Date},
         birthdate: {type: Date},
     }],
+    testimonial: {type :String},//Para la landing page, sera como una review del sitio
     email: {type: String, required: true, unique: true},
     description: {type: String},
     direction: {type: String},
