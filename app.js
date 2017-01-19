@@ -77,6 +77,8 @@ var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
 var conversationMdl = require('./models/conversationModel')(app, mongoose);
 var conversationCtrl = require('./controllers/conversationController');
+var contactModel = require('./models/contactModel')(app, mongoose);
+var contactCtrl = require('./controllers/contactController');
 var adminCtrl = require('./controllers/adminController');
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
@@ -122,6 +124,13 @@ apiRoutes.route('/routines')
     .get(routineCtrl.getRoutines);
 apiRoutes.route('/routines/:routineid')
     .get(routineCtrl.getRoutineById);
+/**Contact**/
+apiRoutes.route('/contacts')
+    .get(contactCtrl.getContacts)
+    .post(contactCtrl.createContact);
+apiRoutes.route('/contacts/:contactid')
+    .get(contactCtrl.getContactById);
+
 /**------------------------------------------------------------------ **/
 /**-----------------------API routes Protected----------------------- **/
 /**------------------------------------------------------------------ **/
