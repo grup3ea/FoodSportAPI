@@ -266,6 +266,8 @@ apiRoutes.route('/routines/completeDay/:routineid')
 apiRoutes.route('/publications')
     .get(publicationCtrl.getAllPublications)
     .post(publicationCtrl.postPublication);
+apiRoutes.route('/publications/getById/:publicationid')
+    .get(publicationCtrl.getPublicationById);
 apiRoutes.route('/publications/:publicationid/like')
     .post(publicationCtrl.likePublication);
 apiRoutes.route('/publications/:publicationid/dislike')

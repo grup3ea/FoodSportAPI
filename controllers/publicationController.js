@@ -21,7 +21,20 @@ exports.getAllPublications = function (req, res) {
         }
     });
 };
-
+/** GET '/publications/getById/:publicationid' **/
+exports.getPublicationById = function (req, res) {
+    publicationModel.findOne({_id: req.params.publicationid})
+        .lean()
+        .populate('likes', 'name avatar')
+        .exec(function (err, publication) {
+            if (err) return res.send(500, err.message);
+            if (!publication) {
+                res.json({success: false, message: 'publication not found.'});
+            } else if (publication) {
+                res.status(200).jsonp(publication);
+            }
+        });
+};
 /**POST '/publications' **/
 exports.postPublication = function (req, res) {
     userModel.findOne({'tokens.token': req.headers['x-access-token']}, function (err, user) {
