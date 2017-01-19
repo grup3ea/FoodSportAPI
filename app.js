@@ -77,6 +77,7 @@ var publicationMdl = require('./models/publicationModel')(app, mongoose);
 var publicationCtrl = require('./controllers/publicationController');
 var conversationMdl = require('./models/conversationModel')(app, mongoose);
 var conversationCtrl = require('./controllers/conversationController');
+var adminCtrl = require('./controllers/adminController');
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
 /**------------------------------------------------------------------ **/
@@ -281,6 +282,17 @@ apiRoutes.route('/conversations')
     .post(conversationCtrl.createConversation);
 apiRoutes.route('/conversations/:conversationid')
     .post(conversationCtrl.addMessageToConversation);
+
+
+/** ********** **/
+/**ADMIN**/
+/** ********** **/
+
+apiRoutes.route('/admin/users')
+    .get(adminCtrl.getUsers);
+
+apiRoutes.route('/admin/nodesMap/:userid')
+    .get(adminCtrl.getUserById);
 
 app.use('/api', apiRoutes);
 /**-------------------------------------------------------------**/
