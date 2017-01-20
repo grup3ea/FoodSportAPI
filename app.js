@@ -80,6 +80,9 @@ var conversationCtrl = require('./controllers/conversationController');
 var contactModel = require('./models/contactModel')(app, mongoose);
 var contactCtrl = require('./controllers/contactController');
 var adminCtrl = require('./controllers/adminController');
+var runMdl = require('./models/runModel')(app, mongoose);
+var runCtrl = require('./controllers/runController');
+
 /**------------------------------------------------------------------ **/
 /**-----------------------------API routes--------------------------- **/
 /**------------------------------------------------------------------ **/
@@ -295,6 +298,17 @@ apiRoutes.route('/conversations')
     .post(conversationCtrl.createConversation);
 apiRoutes.route('/conversations/:conversationid')
     .post(conversationCtrl.addMessageToConversation);
+
+/** ********** **/
+/**RUNS**/
+/** ********** **/
+
+apiRoutes.route('/runs')
+    .post(runCtrl.postRun);
+apiRoutes.route('/runs/byUserId/:userid')
+    .get(runCtrl.getRunsByUserId);
+apiRoutes.route('/runs/byRunId/:runid')
+    .get(runCtrl.getRunByRunId);
 
 
 /** ********** **/
