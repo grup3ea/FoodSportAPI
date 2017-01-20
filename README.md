@@ -8,6 +8,8 @@ Combining Nutrition with Physical preparation this application acts as a hub bet
 
 [![bitHound Code](https://www.bithound.io/github/grup3ea/FoodSportAPI/badges/code.svg)](https://www.bithound.io/github/grup3ea/FoodSportAPI)
 
+[![Build Status](https://travis-ci.org/grup3ea/FoodSportAPI.svg?branch=master)](https://travis-ci.org/grup3ea/FoodSportAPI)
+
 The technologies used are part of the MEAN 2.0:
  * MongoDB
  * NodeJS
