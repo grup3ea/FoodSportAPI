@@ -38,6 +38,7 @@ var userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'runModel'
     }],
+    totalkm: {type: Number},
     conversations: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'conversationModel'

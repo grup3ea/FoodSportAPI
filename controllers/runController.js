@@ -61,6 +61,13 @@ exports.postRun = function (req, res) {
                         user.points.history.push(reward);
                         user.points.total = user.points.total + 1;
                         /* end of gamification */
+
+                        if(!user.totalkm)
+                        {
+                            user.totalkm=0;
+                        }
+                        user.totalkm=user.totalkm + run.distance;
+                        
                         user.save(function (err, user) {
                             if (err) return res.send(500, err.message);
                             res.status(200).jsonp(user);
