@@ -10,10 +10,12 @@ var runSchema = new Schema({
     },
     datestart: {type: Date},
     datefinish: {type: Date},
+    distance: {type: Number},
     positions: [{
         date: {type: Date},
         lat: {type: Number},
-        long: {type: Number}
+        long: {type: Number},
+        distance: {type: Number}
     }]
 });
 
