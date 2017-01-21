@@ -9,6 +9,7 @@ var https = require('https');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 var app = express();
+var passport = require('passport');
 var config = require('./config/config');
 /**Inicio Express**/
 var app = express();
@@ -16,9 +17,9 @@ var server = require('http').Server(app);
 var secret = config.secret;
 
 
-var passport = require('passport');
-var auth = require('./config/auth');
-var auth = require('./config/passport');
+require('./config/passport')(passport);
+//var auth = require('./config/auth');
+//var auth = require('./config/passport');
 var google = require('passport-google-oauth').OAuth2Strategy;
 
 var options = {
@@ -160,12 +161,12 @@ apiRoutes.get('/auth/google/callback',
         }
         if(!user) {
             console.log(user);
-            return res.redirect('http://localhost:8000');
+            return res.redirect('http://localhost:3005');
         }
         console.log(user);
         UserDB.findOne({email: user._json.email},function(err,usr) {
             res.writeHead(302, {
-                'Location': 'http://localhost:8000/#/index?token=' + usr.token + '&user=' + usr.email
+                'Location': 'http://localhost:3005/#/index?token=' + usr.token + '&user=' + usr.email
             });
             res.end();
         });
