@@ -15,6 +15,12 @@ var app = express();
 var server = require('http').Server(app);
 var secret = config.secret;
 
+
+var passport = require('passport');
+var auth = require('./config/auth');
+var auth = require('./config/passport');
+var google = require('passport-google-oauth').OAuth2Strategy;
+
 var options = {
     key  : fs.readFileSync('server.key'),
     cert : fs.readFileSync('server.crt')
@@ -134,6 +140,37 @@ apiRoutes.route('/contacts')
 apiRoutes.route('/contacts/:contactid')
     .get(contactCtrl.getContactById);
 
+
+// =====================================
+// GOOGLE ROUTES =======================
+// =====================================
+// send to google to do the authentication
+// profile gets us their basic information including their name
+// email gets their emails
+apiRoutes.get('/auth/google',
+    passport.authenticate('google',
+        { scope : 'https://www.googleapis.com/auth/userinfo.email' })
+);
+
+// the callback after google has authenticated the user
+apiRoutes.get('/auth/google/callback',
+    passport.authenticate('google',function(err, user, info) {
+        if(err) {
+            return next(err);
+        }
+        if(!user) {
+            console.log(user);
+            return res.redirect('http://localhost:8000');
+        }
+        console.log(user);
+        UserDB.findOne({email: user._json.email},function(err,usr) {
+            res.writeHead(302, {
+                'Location': 'http://localhost:8000/#/index?token=' + usr.token + '&user=' + usr.email
+            });
+            res.end();
+        });
+    })
+);
 /**------------------------------------------------------------------ **/
 /**-----------------------API routes Protected----------------------- **/
 /**------------------------------------------------------------------ **/
