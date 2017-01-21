@@ -14,6 +14,24 @@ var userModel = require('../models/userModel');
 var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
 
+
+var passport = require('passport');
+require('../config/passport')(passport);
+var google = require('passport-google-oauth').OAuth2Strategy;
+
+exports.authGoogle = function (req, res) {
+    passport.authenticate('google',
+        { scope : 'https://www.googleapis.com/auth/userinfo.email' });
+};
+exports.authGoogleCallback = function (req, res) {
+    passport.authenticate('google', {
+        successRedirect : '/profile',
+        failureRedirect : '/'
+    });
+};
+exports.authProfile = function (req, res) {
+    console.log(req.user);
+};
 /** POST '/users/register' **/
 exports.register = function (req, res) {
     console.log(req.body);

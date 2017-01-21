@@ -119,7 +119,13 @@ var userSchema = new Schema({
     following: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'userModel'
-    }]
+    }],
+    google: {
+        id: {type: String},
+        token: {type: String},
+        email: {type: String},
+        name: {type: String},
+    }
 });
 userSchema.plugin(mongooseUniqueValidator);
 module.exports = mongoose.model('userModel', userSchema);

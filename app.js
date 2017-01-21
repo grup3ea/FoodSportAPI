@@ -9,7 +9,6 @@ var https = require('https');
 var expressValidator = require('express-validator');
 var session = require('express-session');
 var app = express();
-var passport = require('passport');
 var config = require('./config/config');
 /**Inicio Express**/
 var app = express();
@@ -17,9 +16,8 @@ var server = require('http').Server(app);
 var secret = config.secret;
 
 
+var passport = require('passport');
 require('./config/passport')(passport);
-//var auth = require('./config/auth');
-//var auth = require('./config/passport');
 var google = require('passport-google-oauth').OAuth2Strategy;
 
 var options = {
@@ -148,30 +146,28 @@ apiRoutes.route('/contacts/:contactid')
 // send to google to do the authentication
 // profile gets us their basic information including their name
 // email gets their emails
-apiRoutes.get('/auth/google',
+apiRoutes.route('/api/auth/google')
+    .get(userCtrl.authGoogle);
+/*apiRoutes.get('/auth/google',
     passport.authenticate('google',
         { scope : 'https://www.googleapis.com/auth/userinfo.email' })
-);
+);*/
 
+apiRoutes.route('/api/auth/google/callback')
+    .get(userCtrl.authGoogleCallback);
 // the callback after google has authenticated the user
-apiRoutes.get('/auth/google/callback',
-    passport.authenticate('google',function(err, user, info) {
-        if(err) {
-            return next(err);
-        }
-        if(!user) {
-            console.log(user);
-            return res.redirect('http://localhost:3005');
-        }
-        console.log(user);
-        UserDB.findOne({email: user._json.email},function(err,usr) {
-            res.writeHead(302, {
-                'Location': 'http://localhost:3005/#/index?token=' + usr.token + '&user=' + usr.email
-            });
-            res.end();
-        });
+/*apiRoutes.get('/auth/google/callback',
+    passport.authenticate('google', {
+        successRedirect : '/profile',
+        failureRedirect : '/'
     })
-);
+);*/
+
+apiRoutes.route('/profile')
+    .get(userCtrl.authProfile);
+/*apiRoutes.get('/profile', function(req, res) {
+    console.log(req.user);
+});*/
 /**------------------------------------------------------------------ **/
 /**-----------------------API routes Protected----------------------- **/
 /**------------------------------------------------------------------ **/
