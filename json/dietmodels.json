@@ -1,0 +1,49 @@
+{  "title": "Dieta basura",
+    "description": "La dieta de los que quieren engordar y contraer diabetes",
+    "startingDay": "2016-12-12T18:26:37.667Z",
+    "price": 20,
+    "image": "http://3www.ecestaticos.com/imagestatic/clipping/30c/07e/30c07ee22ed273aa6817dccd2118d171/como-hacer-la-hamburguesa-perfecta-segun-la-tradicion-yankee.jpg",
+    "clients": [],
+    "chef": {},
+    "days": [{
+        "date": "2016-12-12T18:26:37.667Z",
+        "name": "2016-12-13T18:26:37.667Z",
+        "description": "Primer día",
+        "meals": [{
+            "title": "Hamburguesa con bebida",
+            "img": "",
+            "submeals": [{
+                "title": "Coca-cola",
+                "description": "Bebida azucarada",
+                "amount": {
+                    "unit": "l",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "Hamburguesa",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 2000,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+            
+            }]
+        }],
+        "done": false
+    }]
+}

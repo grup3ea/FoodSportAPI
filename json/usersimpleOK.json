@@ -1,0 +1,37 @@
+{
+    "name" : "Juan",
+    "role" : "user",
+    "password" : "A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=",
+    "email" : "galgo2@upc.edu",
+    "clients" : [],
+    "clientsPetitions" : [],
+    "conversations" : [],
+    "diets" : [],
+    "disciplines" : [ 
+        {
+            "name" : "Hàndbol"
+        }
+    ],
+    "followers" : [],
+    "following" : [],
+    "marks" : [],
+    "notifications" : [],
+    "points" : {
+        "history" : []
+    },
+    "publications" : [],
+    "routines" : [],
+    "runs" : [],
+    "trainers" : [],
+    "valorations" : [],
+    "tokens" : [],
+    "city" : "Manresa (Catalunya)",
+    "direction" : "Carrer Sant Josep, 11",
+    "attributes" : {
+        "height" : 12,
+        "weight" : 5,
+        "gender" : "Home",
+        "age" : 25
+    },
+    "description" : "Hola"
+}

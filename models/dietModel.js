@@ -6,7 +6,7 @@ var dietSchema = new Schema({
     title: {type: String},
     description: {type: String},
     startingDay: {type: Date},
-    price: { type: String },
+    price: { type: Number },
     image: { type: String },
     clients: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -18,7 +18,7 @@ var dietSchema = new Schema({
     },
     days: [{
         date: {type: Date}, //Ha de ser realmente un día que empiezas por ejemplo 12/12/2016 para poder ir completando según la fecha, comer comes cada día
-        name: {type:String},
+        name: {type:Date},
         description: {type: String},
         meals: [{
             title: {type: String},
@@ -28,18 +28,18 @@ var dietSchema = new Schema({
                 description: {type: String},
                 amount: {
                     unit: {type: String},
-                    quantity: {type: String}
+                    quantity: {type: Number}
                 },
                 nutritional: {
-                    kcal: {type: String},
-                    proteins: {type: String},
-                    carbohidrates: {type: String},
-                    fats: {type: String},
-                    vitamins: {type: String}
+                    kcal: {type: Number},
+                    proteins: {type: Number},
+                    carbohidrates: {type: Number},
+                    fats: {type: Number},
+                    vitamins: {type: Number}
                 }
             }]
         }],
-        done: {type: String, default: false}//si ha complert el dia
+        done: {type: Boolean, default: false}
     }]
 });
 dietSchema.plugin(mongooseUniqueValidator);

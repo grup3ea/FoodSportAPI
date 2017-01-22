@@ -26,27 +26,7 @@
 			"value": 25
 		}
 	},
-	"runs": [{
-		"title": "Pujada al Puigmal",
-		"user": {
-			"name": "Juan"
-		},
-		"datestart": "2017-10-12T11:26:37.667Z",
-		"datefinish": "2017-10-12T15:26:37.667Z",
-		"distance": 5.5,
-		"positions": [{
-			"date": "2017-10-12T11:26:37.667Z",
-			"lat": 42.3964063,
-			"long": 2.1521888,
-			"distance": 0
-		}, {
-			"date": "2017-10-12T15:26:37.667Z",
-			"lat": 42.3824226,
-			"long": 2.1162391,
-			"distance": 5.5
-
-		}]
-	}],
+	"runs": [],
 	"totalkm": 40,
 	"conversations": [],
 	"trainers": [],

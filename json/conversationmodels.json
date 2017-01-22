@@ -1,0 +1,15 @@
+{
+    "userA": {
+        "name": "Juan"
+    },
+    "userB": {
+        "name": "Juan2"
+    },
+    "messages": [{
+        "user": {
+            "name": "Juan"
+        },
+        "content": "Noruega se ha atrevido a hacer lo que nadie mas ha hecho. El apagón de la FM empieza oficialmente hoy día 11 de enero de 2017 a las 11:11:11 de la mañana en la provincia de Nordland. Las emisoras de radio locales seguirán emitiendo por FM hasta 2022. Espero que el gobierno de España aprenda de Noruega y ponga radio digital DAB+ en toda España",
+        "date": "2017-01-21T18:26:37.667Z"
+    }],
+}
