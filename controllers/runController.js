@@ -43,7 +43,7 @@ exports.postRun = function (req, res) {
                         content: "distance of: " + run.distance + ". View my runs at my profile",
                         date: new Date(),
                         user: user._id,
-                        photo: "img/photoRun.png"
+                        photo: run.photo
                     });
                     //fins aquí tenim la variable publication amb els continguts
                     //ara cal 1r guardar el model publication a la base de dades
@@ -67,7 +67,7 @@ exports.postRun = function (req, res) {
                             user.totalkm=0;
                         }
                         user.totalkm=user.totalkm + run.distance;
-                        
+
                         user.save(function (err, user) {
                             if (err) return res.send(500, err.message);
                             res.status(200).jsonp(user);
