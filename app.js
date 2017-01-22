@@ -215,16 +215,21 @@ passport.deserializeUser(function(id, done) {
     });
 });
 apiRoutes.get('/auth/twitter', passport.authenticate('twitter'));
-apiRoutes.get('/auth/twitter/callback', passport.authenticate('twitter', 
-    function(req, res, err, user, info) {
-    console.log(user);
-    console.log(info);
+apiRoutes.get('/auth/twitter/callback', passport.authenticate('twitter',
+    {
+        failureRedirect : 'http://localhost:8000/#!/login'
+    },
+    function(req, res, err, user) {
+        console.log("res");
+        console.log(res);
+        //res.redirect('/api/passport');
+    })
+);
+
+apiRoutes.get('/passport', function(req, res){
     console.log(req);
-    console.log(res);
-        /*successRedirect : '/api/passport?' + user,
-        failureRedirect : 'http://localhost:8000/#!/login'*/
-    }
-));
+    res.send(200, "a");
+});
 /**------------------------------------------------------------------ **/
 /**-----------------------API routes Protected----------------------- **/
 /**------------------------------------------------------------------ **/
