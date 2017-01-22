@@ -341,7 +341,7 @@ apiRoutes.route('/diets')
     .post(dietCtrl.createDiet);
 apiRoutes.route('/diets/:dietid/days')
     .post(dietCtrl.addDayToDiet);
-apiRoutes.route('/diets/:dietid')
+apiRoutes.route('/diets/byId/:dietid')
     .delete(dietCtrl.deleteDietById)
     .put(dietCtrl.updateDietById);
 apiRoutes.route('/diets/choose/:dietid')
