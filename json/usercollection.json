@@ -1,0 +1,108 @@
+{
+    "_id" : ObjectId("5845b15d254908182201466f"),
+    "name" : "Juan",
+    "role" : "user",
+    "password" : "A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=",
+    "email" : "galgo2@upc.edu",
+    "routines" : [],
+    "diets" : [],
+    "twitter" : {
+        "createdAt" : ISODate("2016-12-05T18:26:37.667Z")
+    },
+    "publications" : {
+        "title": "Sóc una persona competitiva",
+        "content": "Perquè faig esport i rivalitzo amb els altres companys. Adjunto foto de la meva noia",
+        "user": {
+            "_id" : ObjectId("5845b15d254908182201466f") 
+        },
+        "photo": "https://cdn29.elitedaily.com/content/uploads/2016/04/11092358/schoolgirl.jpg",
+        "date": ISODate("2017-01-21T18:26:37.667Z"),
+        "likes": {
+            "_id" : ObjectId("5845b15d254908182201466f")
+    },
+    "attributes" : {
+        "height" : 160,
+        "weight" : 80,
+        "gender" : "Home",
+        "age" : 30
+    },
+    "testimonial": "Aquest lloc web m'agrada molt!",
+    "description": "Sóc un tio guai i m'agraden les noies de gran atractiu",
+    "direction": "Carrer Sant Josep, 11",
+    "city": "Manresa, Catalunya",
+    "points" : {
+        "total": 180,
+        "history": {
+            "concept": "Partit d'hàndbol",
+            "date": ISODate("2017-01-12T16:26:37.667Z"),
+            "value": 25
+        }
+    },
+    "runs": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'runModel'
+    }],
+    "totalkm": 40,
+    "conversations": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'conversationModel'
+    }],
+    "diets": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'dietModel'
+    }],
+    "trainers": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userModel'
+    }],
+    "routines": [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'routineModel'
+    }],
+    "disciplines" : {
+        "name": "Hàndbol"
+    },
+    "clients": {
+      "client": {
+        "_id" : ObjectId("5845b15d254908182201466f")
+      },
+      "petitionMessage": "Presta'm un baló d'hàndbol",
+      "date": ISODate("2017-01-18T16:26:37.667Z")
+    },
+    "clientsPetitions": {
+      "clientid": {
+          "_id" : ObjectId("5845b15d254908182201466f")
+      },
+      "message": "Em pregunto a mi mateix, què serà de mi?",
+      "state": "pendent"
+    },
+    "valorations": {
+      "clientid": {
+          "_id" : ObjectId("5845b15d254908182201466f")
+      },
+      "date": ISODate("2017-01-16T16:26:37.667Z"),
+      "message": "Segueix així",
+      "value": 4
+    },
+    "marks": {
+        "title": "Baixada de pes de 5",
+        "unit": "kg",
+        "best": {
+            "date": ISODate("2017-01-12T16:26:37.667Z"),
+            "value": "85kg"
+        },
+        "days":{
+            "date": ISODate("2017-01-10T16:26:37.667Z"),
+            "value": "2"
+        }
+    },
+    "notifications": {
+        "state": "pendent",
+        "message": "Hola, ¿cómo va la fabricación de polvorones?",
+        "date": ISODate("2017-01-17T16:26:37.667Z"),
+    },
+    "followers": [],
+    "following": []
+    
+}
+
