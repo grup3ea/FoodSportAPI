@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
     name: {type: String, required: true, unique: true},
     role: {type: String, required: true},
-    password: {type: String, required: true, select: false},
+    password: {type: String, select: false},
     tokens: [{
         userAgent: {type: String},
         token: {type: String},
@@ -121,6 +121,12 @@ var userSchema = new Schema({
         ref: 'userModel'
     }],
     google: {
+        id: {type: String},
+        token: {type: String},
+        email: {type: String},
+        name: {type: String},
+    },
+    twitter: {
         id: {type: String},
         token: {type: String},
         email: {type: String},

@@ -15,23 +15,6 @@ var dietModel = require('../models/dietModel');
 var routineModel = require('../models/routineModel');
 
 
-var passport = require('passport');
-require('../config/passport')(passport);
-var google = require('passport-google-oauth').OAuth2Strategy;
-
-exports.authGoogle = function (req, res) {
-    passport.authenticate('google',
-        { scope : 'https://www.googleapis.com/auth/userinfo.email' });
-};
-exports.authGoogleCallback = function (req, res) {
-    passport.authenticate('google', {
-        successRedirect : '/profile',
-        failureRedirect : '/'
-    });
-};
-exports.authProfile = function (req, res) {
-    console.log(req.user);
-};
 /** POST '/users/register' **/
 exports.register = function (req, res) {
     console.log(req.body);
@@ -40,7 +23,7 @@ exports.register = function (req, res) {
         role: req.body.role,
         password: crypto.createHash('sha256').update(req.body.password).digest('base64'),
         email: req.body.email,
-        description: req.body.description,
+        description: "Hi, i'm here to train.",
         avatar: 'img/user.png',
         background: 'img/background.png',
         attributes: {
