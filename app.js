@@ -18,7 +18,9 @@ var secret = config.secret;
 
 var passport = require('passport');
 require('./config/passport')(passport);
+var configAuth = require('./config/auth');
 var google = require('passport-google-oauth').OAuth2Strategy;
+var TwitterStrategy  = require('passport-twitter').Strategy;
 
 var options = {
     key  : fs.readFileSync('server.key'),
@@ -70,7 +72,7 @@ app.get('/', function (req, res) {
 /**------------------------------------------------------------------ **/
 /**--------------------IMPORT of Models & Controllers---------------- **/
 /**------------------------------------------------------------------ **/
-var userMdl = require('./models/userModel')(app, mongoose);
+var userMdl = require('./models/userModel');
 var userCtrl = require('./controllers/userController');
 var dietMdl = require('./models/dietModel')(app, mongoose);
 var dietCtrl = require('./controllers/dietController');
@@ -139,35 +141,68 @@ apiRoutes.route('/contacts')
 apiRoutes.route('/contacts/:contactid')
     .get(contactCtrl.getContactById);
 
+passport.use(new TwitterStrategy({
+    consumerKey     : configAuth.twitterAuth.consumerKey,
+    consumerSecret  : configAuth.twitterAuth.consumerSecret,
+    callbackURL     : configAuth.twitterAuth.callbackURL
+}, function(token, refreshToken, profile, done) {
+        console.log("profile");
+        //console.log(profile);
 
-// =====================================
-// GOOGLE ROUTES =======================
-// =====================================
-// send to google to do the authentication
-// profile gets us their basic information including their name
-// email gets their emails
-apiRoutes.route('/api/auth/google')
-    .get(userCtrl.authGoogle);
-/*apiRoutes.get('/auth/google',
-    passport.authenticate('google',
-        { scope : 'https://www.googleapis.com/auth/userinfo.email' })
-);*/
+        userMdl.findOne({ 'twitter.id' : profile.id }, function(err, user) {
+console.log("usermodel");
+            // if there is an error, stop everything and return that
+            // ie an error connecting to the database
+            if (err)
+            {
+                console.log(err);
+                return done(err);
+            }
 
-apiRoutes.route('/api/auth/google/callback')
-    .get(userCtrl.authGoogleCallback);
-// the callback after google has authenticated the user
-/*apiRoutes.get('/auth/google/callback',
-    passport.authenticate('google', {
-        successRedirect : '/profile',
+            // if the user is found then log them in
+            if (user) {
+                console.log("user exists");
+                return done(null, user); // user found, return that user
+            } else {
+                console.log("user no exists");
+                // if there is no user, create them
+                var newUser                 = new userMdl();
+
+                // set all of the user data that we need
+                newUser.twitter.id          = profile.id;
+                newUser.twitter.token       = token;
+                newUser.twitter.username    = profile.username;
+                newUser.twitter.displayName = profile.displayName;
+
+
+                newUser.avatar      = profile.profile_image_url;
+                newUser.background  = profile.profile_background_image_url;
+                newUser.name = profile.displayName;
+                newUser.role = "user";
+                newUser.email = profile.username + "@web.com";
+
+                console.log("saving");
+
+                // save our user into the database
+                newUser.save(function(err) {
+                    if (err)
+                        throw err;
+                    console.log("saved");
+                    return done(null, newUser);
+                });
+            }
+        });
+
+}));
+apiRoutes.get('/auth/twitter', passport.authenticate('twitter'));
+apiRoutes.get('/auth/twitter/callback', passport.authenticate('twitter', {
+        successRedirect : '/api/profile',
         failureRedirect : '/'
-    })
-);*/
-
-apiRoutes.route('/profile')
-    .get(userCtrl.authProfile);
-/*apiRoutes.get('/profile', function(req, res) {
-    console.log(req.user);
-});*/
+    }, function(req, res) {
+        // Successful authentication
+        console.log("success callback");
+    }
+));
 /**------------------------------------------------------------------ **/
 /**-----------------------API routes Protected----------------------- **/
 /**------------------------------------------------------------------ **/
