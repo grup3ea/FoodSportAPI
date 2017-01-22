@@ -6,6 +6,7 @@ var config = require('../config/config');
 var crypto = require('crypto');
 var formidable = require('formidable');
 var fs = require('fs');
+var https = require('https');
 app.set('superSecret', config.secret);
 
 /*******MODELS*********/
