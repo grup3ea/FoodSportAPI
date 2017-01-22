@@ -39,6 +39,8 @@
     "mongoose": "4.7.7",
     "mongoose-middleware": "1.0.0",
     "mongoose-unique-validator": "1.0.3",
-    "morgan": "1.7.0"
+    "morgan": "1.7.0",
+    "passport":"0.3.2",
+    "passport-google-oauth": "^1.0.0"
   }
 }
