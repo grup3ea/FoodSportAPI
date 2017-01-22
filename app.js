@@ -17,10 +17,11 @@ var secret = config.secret;
 
 
 var passport = require('passport');
-require('./config/passport')(passport);
+//require('./config/passport')(passport);
 var configAuth = require('./config/auth');
 var google = require('passport-google-oauth').OAuth2Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
+app.use(passport.initialize());
 
 var options = {
     key  : fs.readFileSync('server.key'),
@@ -146,11 +147,8 @@ passport.use(new TwitterStrategy({
     consumerSecret  : configAuth.twitterAuth.consumerSecret,
     callbackURL     : configAuth.twitterAuth.callbackURL
 }, function(token, refreshToken, profile, done) {
-        console.log("profile");
-        //console.log(profile);
 
         userMdl.findOne({ 'twitter.id' : profile.id }, function(err, user) {
-console.log("usermodel");
             // if there is an error, stop everything and return that
             // ie an error connecting to the database
             if (err)
@@ -161,10 +159,19 @@ console.log("usermodel");
 
             // if the user is found then log them in
             if (user) {
-                console.log("user exists");
-                return done(null, user); // user found, return that user
+                var newToken = {
+                    token: token,
+                    lastLogin: Date()
+                };
+                user.tokens[0]=newToken;
+                // save our user into the database
+                user.save(function(err) {
+                    if (err)
+                        throw err;
+
+                    return done(null, user); // user found, return that user
+                });
             } else {
-                console.log("user no exists");
                 // if there is no user, create them
                 var newUser                 = new userMdl();
 
@@ -174,33 +181,48 @@ console.log("usermodel");
                 newUser.twitter.username    = profile.username;
                 newUser.twitter.displayName = profile.displayName;
 
-
-                newUser.avatar      = profile.profile_image_url;
-                newUser.background  = profile.profile_background_image_url;
+                newUser.avatar      = profile._json.profile_image_url;
+                newUser.background  = profile._json.profile_background_image_url;
                 newUser.name = profile.displayName;
                 newUser.role = "user";
-                newUser.email = profile.username + "@web.com";
-
-                console.log("saving");
+                newUser.email = profile.username + "@foodsports.com";
+                newUser.tokens=[];
+                var newToken = {
+                    token: token,
+                    lastLogin: Date()
+                };
+                newUser.tokens.push(newToken);
 
                 // save our user into the database
                 newUser.save(function(err) {
                     if (err)
                         throw err;
-                    console.log("saved");
                     return done(null, newUser);
                 });
             }
         });
 
 }));
+passport.serializeUser(function(user, done) {
+    console.log("serialize");
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    console.log("deserialize");
+    userMdl.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
 apiRoutes.get('/auth/twitter', passport.authenticate('twitter'));
-apiRoutes.get('/auth/twitter/callback', passport.authenticate('twitter', {
-        successRedirect : '/api/profile',
-        failureRedirect : '/'
-    }, function(req, res) {
-        // Successful authentication
-        console.log("success callback");
+apiRoutes.get('/auth/twitter/callback', passport.authenticate('twitter', 
+    function(req, res, err, user, info) {
+    console.log(user);
+    console.log(info);
+    console.log(req);
+    console.log(res);
+        /*successRedirect : '/api/passport?' + user,
+        failureRedirect : 'http://localhost:8000/#!/login'*/
     }
 ));
 /**------------------------------------------------------------------ **/
