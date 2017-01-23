@@ -47,3 +47,249 @@
         "done": false
     }]
 }
+
+{  "title": "Dieta para adelgazar",
+    "description": "La dieta de los que quieren adelgazar",
+    "startingDay": "2016-12-23T18:26:37.667Z",
+    "price": 40,
+    "image": "http://www.dmedicina.com/sites/default/files/styles/natural/public/dieta-vino-jamon.jpg",
+    "clients": [],
+    "chef": {},
+    "days": [{
+        "date": "2016-12-12T18:26:37.667Z",
+        "name": "2016-12-13T18:26:37.667Z",
+        "description": "Primer día",
+        "meals": [{
+            "title": "Comida",
+            "img": "",
+            "submeals": [{
+                "title": "Vino tinto",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "Berenjena rellena de carne picada",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 200,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+
+            }]
+        },
+        { "title": "Cena",
+             "img": "",
+            "submeals": [{
+                "title": "Vino tinto",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "Un tazón de caldo de verduras",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 200,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+            }
+            ]}
+            ]},
+    {
+        "date": "2016-12-12T18:26:37.667Z",
+        "name": "2016-12-14T18:26:37.667Z",
+        "description": "Segundo día",
+        "meals": [{
+            "title": "Seguimos el ritmo",
+            "img": "",
+            "submeals": [{
+                "title": "Vino tinto",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "Acelgas rehogadas con aceite de oliva, ajo y diez piñones",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 2000,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+            
+            }]
+            }],
+     "done": false
+        }]
+}
+
+{  "title": "Dieta para adelgazar 5kg",
+    "description": "La dieta de los que quieren adelgazar rápido",
+    "startingDay": "2016-12-23T18:26:37.667Z",
+    "price": 30,
+    "image": "http://www.dmedicina.com/sites/default/files/styles/natural/public/dieta-vino-jamon.jpg",
+    "clients": [],
+    "chef": {},
+    "days": [{
+        "date": "2016-12-12T18:26:37.667Z",
+        "name": "2016-12-13T18:26:37.667Z",
+        "description": "Primer día",
+        "meals": [{
+            "title": "Comida",
+            "img": "",
+            "submeals": [{
+                "title": "Agua",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "100 gramos de carne magra y 1 taza de judías verdes",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 200,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+
+            }]
+        },
+        { "title": "Cena",
+             "img": "",
+            "submeals": [{
+                "title": "Té",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "1/2 lata de atún al natural y 1 tostada de pan integral",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 200,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+            }
+            ]}
+            ]},
+    {
+        "date": "2016-12-12T18:26:37.667Z",
+        "name": "2016-12-14T18:26:37.667Z",
+        "description": "Segundo día",
+        "meals": [{
+            "title": "Seguimos el ritmo",
+            "img": "",
+            "submeals": [{
+                "title": "Vino tinto",
+                "description": "Bebida",
+                "amount": {
+                    "unit": "ml",
+                    "quantity": 150
+                },
+                "nutritional": {
+                    "kcal": 20,
+                    "proteins": 10,
+                    "carbohidrates": 12,
+                    "fats": 23,
+                    "vitamins": 1
+                }
+            },
+            {
+            "title": "Acelgas rehogadas con aceite de oliva, ajo y diez piñones",
+                "description": "Comida",
+                "amount": {
+                    "unit": "ración",
+                    "quantity": 1
+                },
+                "nutritional": {
+                    "kcal": 2000,
+                    "proteins": 10,
+                    "carbohidrates": 120,
+                    "fats": 230,
+                    "vitamins": 1
+                }
+            
+            }]
+            }],
+     "done": false
+        }]
+}
