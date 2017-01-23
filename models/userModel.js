@@ -58,6 +58,9 @@ var userSchema = new Schema({
     disciplines : [{
         name: {type: String}
     }],
+    specialties : [{
+        name: {type: String}
+    }],
     clients: [{
       client: {
         type: mongoose.Schema.Types.ObjectId,

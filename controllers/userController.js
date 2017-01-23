@@ -6,6 +6,7 @@ var config = require('../config/config');
 var crypto = require('crypto');
 var formidable = require('formidable');
 var fs = require('fs');
+var https = require('https');
 app.set('superSecret', config.secret);
 
 /*******MODELS*********/
@@ -66,8 +67,28 @@ exports.register = function (req, res) {
     });
 };
 
+var SECRET = "6LcyxhIUAAAAAPkCdz5HoBPN5--RhP7mpIE-V2CL";
+
+function verifyRecaptcha(key, callback) {
+    https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET + "&response=" + key, function(res) {
+        var data = "";
+        res.on('data', function (chunk) {
+            data += chunk.toString();
+        });
+        res.on('end', function() {
+            try {
+                var parsedData = JSON.parse(data);
+                callback(parsedData.success);
+            } catch (e) {
+                callback(false);
+            }
+        });
+    });
+}
+
 /** POST '/users/login' **/
 exports.login = function (req, res) {
+    verifyRecaptcha(req.body["g-recaptcha-response"], function() {
     userModel.findOne({
         email: req.body.email
     })
@@ -127,7 +148,7 @@ exports.login = function (req, res) {
                 }
             }
         });
-};
+})};
 
 /** POST '/logout' **/
 exports.logout = function (req, res, callback) {
